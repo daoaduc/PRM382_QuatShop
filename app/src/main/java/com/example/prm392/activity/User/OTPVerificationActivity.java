@@ -64,4 +64,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
             }
         }).start();
     }
+    public void goToSignIn(View view) {
+        Intent intent = new Intent(OTPVerificationActivity.this, RegisterActivity.class);
+        startActivity(intent);
+    }
 }
