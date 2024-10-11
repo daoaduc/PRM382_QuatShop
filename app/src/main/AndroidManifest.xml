@@ -17,7 +17,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".activity.User.RegisterActivity"
+            android:name=".activity.User.MainActivityViewHolder"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
