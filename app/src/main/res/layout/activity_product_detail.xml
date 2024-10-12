@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.User.ProductDetailActivity">
+
+    <!-- Toolbar/Action Bar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Product Image -->
+    <ImageView
+        android:id="@+id/product_image"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:src=""
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Product Name -->
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/product_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"/>
+
+    <!-- Product Details -->
+    <TextView
+        android:id="@+id/product_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Product Details"
+        android:textSize="14sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/product_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"/>
+
+    <!-- Price and Quantity -->
+    <TextView
+        android:id="@+id/product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/product_details"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="8dp"
+        android:layout_marginStart="16dp"/>
+
+    <TextView
+        android:id="@+id/quantity_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_details"
+        app:layout_constraintStart_toEndOf="@+id/product_price"
+        android:padding="8dp"
+        android:layout_marginStart="16dp"/>
+
+    <EditText
+        android:id="@+id/product_quantity"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:text="1"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/product_details"
+        app:layout_constraintStart_toEndOf="@+id/quantity_label"
+        android:padding="8dp"
+        android:layout_marginStart="8dp" />
+
+    <!-- Add to Cart and Buy Now Buttons -->
+    <Button
+        android:id="@+id/add_to_cart_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"
+        android:backgroundTint="@color/be"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/product_quantity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.45"
+        android:layout_margin="16dp"/>
+
+    <Button
+        android:id="@+id/buy_now_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Buy Now"
+        android:backgroundTint="@color/be"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/product_quantity"
+        app:layout_constraintStart_toEndOf="@+id/add_to_cart_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.45"
+        android:layout_margin="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
