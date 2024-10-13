@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PRM392</string>
+    <string name="main_home">Home</string>
+    <string name="main_category">Category</string>
+    <string name="main_cart">Cart</string>
+    <string name="main_mine">Mine</string>
+</resources>
