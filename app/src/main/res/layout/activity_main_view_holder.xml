@@ -5,10 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_search_input"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp"
+            android:background="@null"
+            android:hint="search product"
+            android:imeOptions="actionSearch"
+            android:paddingLeft="8dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textSize="15sp" />
+    </LinearLayout>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_above="@id/bottom"/>
+
     <FrameLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"

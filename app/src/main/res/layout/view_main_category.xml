@@ -3,9 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:overScrollMode="never"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/products"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tab Category"
-        android:textSize="30dp"/>
+        android:overScrollMode="never"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:nestedScrollingEnabled="false"/>
 </FrameLayout>
