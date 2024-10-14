@@ -37,8 +37,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="130dp"
                             android:overScrollMode="never"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="20dp"/>
+                            android:orientation="horizontal"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Best Seller"
+                            android:textStyle="bold"
+                            android:textSize="20sp" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/best_seller_products"
@@ -48,6 +55,14 @@
                             android:orientation="horizontal"
                             android:layout_marginBottom="20dp"/>
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Products"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:paddingTop="2dp" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/products"
                             android:layout_width="match_parent"
