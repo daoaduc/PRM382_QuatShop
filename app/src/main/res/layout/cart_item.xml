@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp"
     android:gravity="center_vertical"
     android:background="@drawable/border_background"
     android:layout_marginBottom="8dp">
 
-<!--Product Image-->
+    <!-- Product Image -->
     <ImageView
         android:id="@+id/imgProduct"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"/>
-<!--Product Details-->
+
+    <!-- Product Details -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -67,10 +68,11 @@
                 android:src="@drawable/ic_plus"/>
         </LinearLayout>
     </LinearLayout>
+
     <ImageButton
         android:id="@+id/btnDelete"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/ic_delete"
-        android:background="?attr/selectableItemBackground" />
+        android:background="?attr/selectableItemBackground"/>
 </LinearLayout>

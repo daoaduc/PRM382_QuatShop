@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,14 +27,16 @@
             android:textStyle="bold"
             android:textColor="@color/black"/>
     </RelativeLayout>
-<!--Cart Items-->
+
+    <!-- Cart Items -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylcerViewCart"
+        android:id="@+id/recyclerViewCart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:layout_weight="1"/> <!-- Tạo độ cao cho RecyclerView -->
 
-<!--Pricing Section-->
+    <!-- Pricing Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +50,8 @@
             android:textSize="16sp"
             android:textColor="@color/black"/>
     </LinearLayout>
-<!--Check Out Button-->
+
+    <!-- Check Out Button -->
     <Button
         android:id="@+id/btnCheckOut"
         android:layout_width="match_parent"
