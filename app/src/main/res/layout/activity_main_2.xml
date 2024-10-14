@@ -13,11 +13,11 @@
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@color/purple"
-            android:padding="10dp">
+            android:padding="13dp">
 
             <ImageView
                 android:id="@+id/logo"

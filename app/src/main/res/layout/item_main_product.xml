@@ -11,7 +11,7 @@
     android:layout_margin="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/category_image"
+        android:id="@+id/recImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
@@ -21,7 +21,7 @@
         app:shapeAppearanceOverlay="@style/conrner_item" />
 
     <TextView
-        android:id="@+id/category_name"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Panasonic"

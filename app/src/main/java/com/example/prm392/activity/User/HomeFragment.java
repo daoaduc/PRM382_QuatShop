@@ -1,11 +1,13 @@
 package com.example.prm392.activity.User;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +15,20 @@ import android.view.ViewGroup;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.example.prm392.DAO.ProductDAO;
 import com.example.prm392.R;
 import com.example.prm392.adapter.MainBestSellerAdapter;
 import com.example.prm392.adapter.MainCategoryItemAdapter;
 import com.example.prm392.adapter.MainProductsAdapter;
+import com.example.prm392.adapter.ProductListAdminAdapter;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.MainCategoryItemModel;
 import com.example.prm392.model.Product;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HomeFragment extends Fragment {
     private View view;
@@ -32,7 +39,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.view_main_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         setupSlide();
         setupCategory();
         setupBestSeller();
@@ -70,7 +77,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupBestSeller() {
-        MainBestSellerAdapter bestSellerAdapter = new MainBestSellerAdapter(getContext(), getBestSeller());
+        MainBestSellerAdapter bestSellerAdapter = new MainBestSellerAdapter(getContext());
+        setBestSellerData(bestSellerAdapter);
         bestSellerAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
             @Override
             public void onItemClick(Product item, int position) {
@@ -105,13 +113,23 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
-    private ArrayList<Product> getBestSeller() {
-        ArrayList<Product> list = new ArrayList<>();
+    private void setBestSellerData(MainBestSellerAdapter adapter) {
 
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        return list;
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        // Thực thi task trong background thread
+        executorService.execute(() -> {
+            ProductDAO productDAO = new ProductDAO();
+            List<Product> productList = productDAO.getAllProducts();
+
+            if (productList != null && !productList.isEmpty()) {
+                getActivity().runOnUiThread(() -> {
+                    adapter.setList(productList);
+                });
+            } else {
+                Log.d("PRODUCT", "No products found or connection failed.");
+            }
+        });
     }
 
     private ArrayList<Product> getProducts() {
