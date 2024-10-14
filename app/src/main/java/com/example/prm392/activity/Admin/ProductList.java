@@ -1,91 +1,99 @@
 package com.example.prm392.activity.Admin;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+
+import com.example.prm392.DAO.ProductDAO;
+import com.example.prm392.R;
+import com.example.prm392.adapter.ProductListAdminAdapter;
+import com.example.prm392.model.Product;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ProductList extends AppCompatActivity {
     FloatingActionButton fab;
-    DatabaseReference databaseReference;
-    ValueEventListener eventListener;
-    RecyclerView recyclerView;
-    List<DataClass> dataList;
-    MyAdapter adapter;
-    SearchView searchView;
+    private RecyclerView recyclerView;
+    private ProductListAdminAdapter adapter;
+    private List<Product> dataList; // Danh sách chứa tất cả sản phẩm
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        recyclerView = findViewById(R.id.recyclerView);
+        setContentView(R.layout.activity_admin_crud);
+
         fab = findViewById(R.id.fab);
-        searchView = findViewById(R.id.search);
-        searchView.clearFocus();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 1);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setCancelable(false);
-        builder.setView(R.layout.progress_layout);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        dataList = new ArrayList<>();
-        adapter = new MyAdapter(MainActivity.this, dataList);
-        recyclerView.setAdapter(adapter);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Android Tutorials");
-        dialog.show();
-        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                dataList.clear();
-                for (DataSnapshot itemSnapshot: snapshot.getChildren()){
-                    DataClass dataClass = itemSnapshot.getValue(DataClass.class);
-                    dataClass.setKey(itemSnapshot.getKey());
-                    dataList.add(dataClass);
-                }
-                adapter.notifyDataSetChanged();
-                dialog.dismiss();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                dialog.dismiss();
+
+        // Khởi tạo RecyclerView
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Khởi tạo SearchView
+        SearchView searchView = findViewById(R.id.search);
+
+        // Khởi tạo ExecutorService để xử lý trên background thread
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        // Thực thi task trong background thread
+        executorService.execute(() -> {
+            ProductDAO productDAO = new ProductDAO();
+            List<Product> productList = productDAO.getAllProducts();
+
+            if (productList != null && !productList.isEmpty()) {
+                runOnUiThread(() -> {
+                    dataList = productList;
+                    adapter = new ProductListAdminAdapter(this, dataList);
+                    recyclerView.setAdapter(adapter);
+                });
+            } else {
+                Log.d("PRODUCT", "No products found or connection failed.");
             }
         });
+
+        // Thiết lập listener cho SearchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchList(query);
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 searchList(newText);
-                return true;
+                return false;
             }
         });
+
+        // Đừng quên shutdown executor service sau khi hoàn thành
+        executorService.shutdown();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, UploadActivity.class);
+                Intent intent = new Intent(ProductList.this, UploadActivity.class);
                 startActivity(intent);
             }
         });
     }
-    public void searchList(String text){
-        ArrayList<DataClass> searchList = new ArrayList<>();
-        for (DataClass dataClass: dataList){
-            if (dataClass.getDataTitle().toLowerCase().contains(text.toLowerCase())){
-                searchList.add(dataClass);
+
+    public void searchList(String text) {
+        ArrayList<Product> searchList = new ArrayList<>();
+        for (Product product : dataList) {
+            if (product.getProductName().toLowerCase().contains(text.toLowerCase())) {
+                searchList.add(product);
             }
         }
         adapter.searchDataList(searchList);
