@@ -20,6 +20,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private List<Cart> cartItemList;
     private Context context;
 
+    public CartAdapter(List<Cart> cartItemList) {
+        this.cartItemList = cartItemList;
+    }
+
     public CartAdapter(Context context, List<Cart> cartItemList) {
         this.context = context;
         this.cartItemList = cartItemList;

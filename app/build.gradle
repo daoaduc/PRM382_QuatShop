@@ -37,8 +37,9 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.room:room-common:2.6.1'
-    implementation 'androidx.room:room-common-jvm:2.7.0-alpha09'
+    def room_version = "2.5.2" // Kiểm tra version mới nhất tại trang https://developer.android.com/jetpack/androidx/releases/room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version" // Dành cho Java
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
