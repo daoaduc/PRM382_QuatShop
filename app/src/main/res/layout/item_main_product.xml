@@ -16,7 +16,6 @@
         android:layout_height="100dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="7dp"
-        android:src="@drawable/dung_1"
         android:layout_gravity="center_horizontal"
         app:shapeAppearanceOverlay="@style/conrner_item" />
 

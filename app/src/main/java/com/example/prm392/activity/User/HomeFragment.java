@@ -43,6 +43,7 @@ public class HomeFragment extends Fragment {
         setupCategory();
         setupBestSeller();
         setupProducts();
+        setupMapFragment();
         return view;
     }
 
@@ -80,7 +81,7 @@ public class HomeFragment extends Fragment {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
-            List<Product> productList = productDAO.getTop3BestSellers(); // Implemented in ProductDAO
+            List<Product> productList = productDAO.getTop3BestSellers();
 
             if (productList != null && !productList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {
@@ -168,11 +169,10 @@ public class HomeFragment extends Fragment {
         });
     }
 
-//    private ArrayList<Product> getProductsFromDB() {
-//        ArrayList<Product> productsList = new ArrayList<>();
-//        productsList.add(new Product("Test Product", 1000000, "test_image_url"));
-//        return productsList;
-//    }
+    private void setupMapFragment() {
+        Fragment mapFragment = new MapFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.map_container, mapFragment).commit();
+    }
 
 
 }

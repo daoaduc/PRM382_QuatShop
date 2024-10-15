@@ -47,20 +47,6 @@
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
-<!--        <com.google.android.material.appbar.AppBarLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?attr/actionBarSize"-->
-<!--                android:background="?attr/colorPrimary"-->
-<!--                android:title="Movies"-->
-<!--                app:titleTextColor="@android:color/white"-->
-<!--                app:popupTheme="@style/AppTheme.PopupOverlay" />-->
-
-<!--        </com.google.android.material.appbar.AppBarLayout>-->
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
