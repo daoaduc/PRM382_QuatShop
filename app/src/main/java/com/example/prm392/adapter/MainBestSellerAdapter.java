@@ -8,16 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.prm392.R;
 import com.example.prm392.common.OnItemClickListener;
-import com.example.prm392.model.MainCategoryItemModel;
 import com.example.prm392.model.Product;
-
-import java.util.ArrayList;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.List;
 
 public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAdapter.Vh>{
@@ -53,16 +51,17 @@ public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAd
     @Override
     public void onBindViewHolder(@NonNull Vh holder, int position) {
         Product product = mList.get(position);
-        holder.recTitle.setText(mList.get(position).getProductName());
-
-        int price = mList.get(position).getQuantity();
-        holder.recPrice.setText(String.valueOf(price));
-
+        holder.recTitle.setText(product.getProductName());
+        // Format product price
+        String formattedPrice = NumberFormat.getInstance(new Locale("vi", "VN")).format(product.getPrice());
+        holder.recPrice.setText(formattedPrice + " ₫");
+        // Load product image using Glide
         Glide.with(mContext)
-                .load(product.getProductIMG()) // Đường dẫn hình ảnh từ Firebase
-                .placeholder(R.drawable.uploadimg) // Hình ảnh thay thế khi đang tải
+                .load(product.getProductIMG())  // Load image from URL or Firebase
+                .placeholder(R.drawable.uploadimg)  // Placeholder image
                 .into(holder.recImage);
     }
+
 
     @Override
     public int getItemCount() {

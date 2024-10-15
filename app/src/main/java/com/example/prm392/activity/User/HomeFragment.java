@@ -1,12 +1,11 @@
 package com.example.prm392.activity.User;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +17,11 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.prm392.DAO.ProductDAO;
 import com.example.prm392.R;
 import com.example.prm392.adapter.MainBestSellerAdapter;
-import com.example.prm392.adapter.MainCategoryItemAdapter;
-import com.example.prm392.adapter.MainProductsAdapter;
-import com.example.prm392.adapter.ProductListAdminAdapter;
+import com.example.prm392.adapter.MainCategoryAdapter;
+import com.example.prm392.adapter.MainProductAdapter;
 import com.example.prm392.common.OnItemClickListener;
-import com.example.prm392.model.MainCategoryItemModel;
 import com.example.prm392.model.Product;
+import com.example.prm392.model.ProductCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +34,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mCategories;
     private RecyclerView mBestSellerProducts;
     private RecyclerView mProducts;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,33 +46,17 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void setupSlide(){
+    private void setupSlide() {
         imageSlider = view.findViewById(R.id.image_slider);
         imageSlider.setImageList(getImageSlider(), ScaleTypes.FIT);
     }
 
-    private ArrayList<SlideModel> getImageSlider(){
+    private ArrayList<SlideModel> getImageSlider() {
         ArrayList<SlideModel> slideModels = new ArrayList<>();
-
         slideModels.add(new SlideModel(R.drawable.slide_1, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.slide_2, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.slide_3, ScaleTypes.FIT));
-
         return slideModels;
-    }
-
-    private void setupCategory(){
-        MainCategoryItemAdapter categoryItemAdapter = new MainCategoryItemAdapter(getContext(), getCategories());
-        categoryItemAdapter.setOnItemClickListener(new OnItemClickListener<MainCategoryItemModel>() {
-            @Override
-            public void onItemClick(MainCategoryItemModel item, int position) {
-                // change activity or change tab
-                // ...
-            }
-        });
-        mCategories = view.findViewById(R.id.categories);
-        mCategories.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
-        mCategories.setAdapter(categoryItemAdapter);
     }
 
     private void setupBestSeller() {
@@ -82,45 +65,22 @@ public class HomeFragment extends Fragment {
         bestSellerAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
             @Override
             public void onItemClick(Product item, int position) {
-
+                // Handle what happens when a bestseller product is clicked
             }
         });
+
+        // Find the RecyclerView for best sellers and set its adapter and layout manager
         mBestSellerProducts = view.findViewById(R.id.best_seller_products);
         mBestSellerProducts.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
         mBestSellerProducts.setAdapter(bestSellerAdapter);
     }
 
-    private void setupProducts(){
-        MainProductsAdapter productsAdapter = new MainProductsAdapter(getContext(), getProducts());
-        productsAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
-            @Override
-            public void onItemClick(Product item, int position) {
-
-            }
-        });
-        mProducts = view.findViewById(R.id.products);
-        mProducts.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
-        mProducts.setAdapter(productsAdapter);
-    }
-
-    private ArrayList<MainCategoryItemModel> getCategories(){
-        ArrayList<MainCategoryItemModel> list = new ArrayList<>();
-
-        list.add(new MainCategoryItemModel(1, "mom"));
-        list.add(new MainCategoryItemModel(2, "daddy"));
-        list.add(new MainCategoryItemModel(3, "baby"));
-
-        return list;
-    }
-
+    // Fetch the top 3 bestseller products
     private void setBestSellerData(MainBestSellerAdapter adapter) {
-
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-
-        // Thực thi task trong background thread
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
-            List<Product> productList = productDAO.getAllProducts();
+            List<Product> productList = productDAO.getTop3BestSellers(); // Implemented in ProductDAO
 
             if (productList != null && !productList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {
@@ -132,18 +92,87 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private ArrayList<Product> getProducts() {
-        ArrayList<Product> list = new ArrayList<>();
+    private void setupCategory() {
+        MainCategoryAdapter categoryAdapter = new MainCategoryAdapter(getContext(), new ArrayList<>());
 
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
-        list.add(new Product());
+        // Fetch the category data
+        setCategoryData(categoryAdapter);
 
-        return list;
+        categoryAdapter.setOnItemClickListener(new OnItemClickListener<ProductCategory>() {
+            @Override
+            public void onItemClick(ProductCategory item, int position) {
+                // Handle what happens when a category is clicked
+                Log.d("CATEGORY_CLICK", "Category clicked: " + item.getCategoryName());
+            }
+        });
+
+        // Find the RecyclerView for categories and set its adapter and layout manager
+        mCategories = view.findViewById(R.id.categories);
+        mCategories.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
+        mCategories.setAdapter(categoryAdapter);
     }
+
+    // Fetch categories and update the adapter
+    private void setCategoryData(MainCategoryAdapter adapter) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            ProductDAO productDAO = new ProductDAO();
+            List<ProductCategory> categoryList = productDAO.getAllCategories(); // Implemented in ProductDAO
+
+            if (categoryList != null && !categoryList.isEmpty()) {
+                getActivity().runOnUiThread(() -> {
+                    adapter.setList(categoryList);
+                });
+            } else {
+                Log.d("CATEGORY", "No categories found or connection failed.");
+            }
+        });
+    }
+
+    private void setupProducts() {
+        // Initialize the product adapter
+        MainProductAdapter productAdapter = new MainProductAdapter(getContext(), new ArrayList<>());
+
+        // Fetch the product data
+        setProductData(productAdapter);
+
+        // Set click listener for each product item
+        productAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
+            @Override
+            public void onItemClick(Product item, int position) {
+                // Handle what happens when a product is clicked
+                Log.d("PRODUCT_CLICK", "Product clicked: " + item.getProductName());
+            }
+        });
+
+        // Find the RecyclerView for products and set its adapter and layout manager
+        mProducts = view.findViewById(R.id.products);
+        mProducts.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
+        mProducts.setAdapter(productAdapter);
+    }
+
+    // Fetch all products from the database and update the adapter
+    private void setProductData(MainProductAdapter adapter) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            ProductDAO productDAO = new ProductDAO();
+            List<Product> productList = productDAO.getAllProducts2(); // Implemented in ProductDAO
+
+            if (productList != null && !productList.isEmpty()) {
+                getActivity().runOnUiThread(() -> {
+                    adapter.setList(productList);
+                });
+            } else {
+                Log.d("PRODUCT", "No products found or connection failed.");
+            }
+        });
+    }
+
+//    private ArrayList<Product> getProductsFromDB() {
+//        ArrayList<Product> productsList = new ArrayList<>();
+//        productsList.add(new Product("Test Product", 1000000, "test_image_url"));
+//        return productsList;
+//    }
+
+
 }
