@@ -4,35 +4,27 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.prm392.R;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.ProductCategory;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-public class MainCategoryAdapter extends RecyclerView.Adapter<MainCategoryAdapter.Vh> {
-
+public class SubTabCategoryAdapter extends RecyclerView.Adapter<SubTabCategoryAdapter.Vh> {
     private List<ProductCategory> mList;
     private Context mContext;
     private View.OnClickListener mOnClickListener;
     private OnItemClickListener<ProductCategory> mOnItemClickListener;
 
-    public MainCategoryAdapter(Context context) {
+    public SubTabCategoryAdapter(Context context) {
         mContext = context;
-        if(mList == null ){
+        if (mList == null){
             mList = new ArrayList<ProductCategory>();
         }
         mOnClickListener = new View.OnClickListener() {
@@ -52,21 +44,15 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<MainCategoryAdapte
 
     @NonNull
     @Override
-    public Vh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Vh(LayoutInflater.from(mContext).inflate(R.layout.item_main_category, parent, false));
+    public SubTabCategoryAdapter.Vh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new SubTabCategoryAdapter.Vh(LayoutInflater.from(mContext).inflate(R.layout.btn_category, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Vh holder, int position) {
+    public void onBindViewHolder(@NonNull SubTabCategoryAdapter.Vh holder, int position) {
         ProductCategory category = mList.get(position);
-        holder.categoryName.setText(category.getCategoryName());
-
-        Glide.with(mContext)
-                .load(category.getCategoryIMG())  // Load image from URL or drawable
-                .placeholder(R.drawable.uploadimg) // Placeholder image while loading
-                .into(holder.categoryImage);
-
-        holder.itemView.setTag(position);
+        holder.categoryBtn.setText(category.getCategoryName());
+        holder.categoryBtn.setTag(position);
     }
 
     @Override
@@ -79,14 +65,12 @@ public class MainCategoryAdapter extends RecyclerView.Adapter<MainCategoryAdapte
     }
 
     public class Vh extends RecyclerView.ViewHolder {
-        ImageView categoryImage;
-        TextView categoryName;
+        Button categoryBtn;
 
         public Vh(View itemView) {
             super(itemView);
             itemView.setOnClickListener(mOnClickListener);
-            categoryImage = itemView.findViewById(R.id.category_image);
-            categoryName = itemView.findViewById(R.id.category_name);
+            categoryBtn = itemView.findViewById(R.id.categoryBtn);
         }
     }
 

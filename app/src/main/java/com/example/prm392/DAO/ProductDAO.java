@@ -116,13 +116,14 @@ public class ProductDAO {
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
-            String query = "SELECT productName, price, productIMG FROM products";
+            String query = "SELECT productID, productName, price, productIMG FROM products";
             try {
                 PreparedStatement stmt = connection.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
                     Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
                     product.setProductName(rs.getString("productName"));
                     product.setPrice(rs.getLong("price"));
                     product.setProductIMG(rs.getString("productIMG"));
@@ -137,4 +138,30 @@ public class ProductDAO {
         return productList;
     }
 
+    public List<Product> getProductsBySearching() {
+        List<Product> productList = new ArrayList<>();
+        Connection connection = connectionClass.CONN();
+
+        if (connection != null) {
+            String query = "SELECT productID, productName, price, productIMG FROM products";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setPrice(rs.getLong("price"));
+                    product.setProductIMG(rs.getString("productIMG"));
+                    productList.add(product);
+                }
+                rs.close();
+                stmt.close();
+            } catch (Exception e) {
+                Log.e("DB_ERROR", "Error fetching products: " + e.getMessage());
+            }
+        }
+        return productList;
+    }
 }

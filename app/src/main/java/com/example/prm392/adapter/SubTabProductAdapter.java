@@ -14,19 +14,19 @@ import com.bumptech.glide.Glide;
 import com.example.prm392.R;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.Product;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 
-public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAdapter.Vh>{
-
+public class SubTabProductAdapter extends RecyclerView.Adapter<SubTabProductAdapter.Vh>{
     private List<Product> mList;
     private Context mContext;
     private View.OnClickListener mOnClickListener;
     private OnItemClickListener<Product> mOnItemClickListener;
 
-    public MainBestSellerAdapter(Context context){
+    public SubTabProductAdapter(Context context){
         mContext = context;
         if(mList == null){
             mList = new ArrayList<Product>();
@@ -35,7 +35,7 @@ public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAd
             @Override
             public void onClick(View v) {
                 Object tag = v.getTag();
-                if (tag != null && mList != null && mList.size() > 0) {
+                if (tag != null) {
                     int position = (int) tag;
                     Product item = mList.get(position);
                     if (mOnItemClickListener != null) {
@@ -48,24 +48,25 @@ public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAd
 
     @NonNull
     @Override
-    public Vh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Vh(LayoutInflater.from(mContext).inflate(R.layout.item_main_product, parent, false));
+    public SubTabProductAdapter.Vh onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new SubTabProductAdapter.Vh(LayoutInflater.from(mContext).inflate(R.layout.item_main_product, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Vh holder, int position) {
+    public void onBindViewHolder(@NonNull SubTabProductAdapter.Vh holder, int position) {
         Product product = mList.get(position);
-        holder.recTitle.setText(product.getProductName());
-        // Format product price
+        holder.productTitle.setText(product.getProductName());
+        //format price
         String formattedPrice = NumberFormat.getInstance(new Locale("vi", "VN")).format(product.getPrice());
-        holder.recPrice.setText(formattedPrice + " ₫");
-        // Load product image using Glide
-        Glide.with(mContext)
-                .load(product.getProductIMG())  // Load image from URL or Firebase
-                .placeholder(R.drawable.uploadimg)  // Placeholder image
-                .into(holder.recImage);
-    }
+        holder.productPrice.setText(formattedPrice + " ₫");
 
+        Glide.with(mContext)
+                .load(product.getProductIMG())  // Load image from Firebase or URL
+                .placeholder(R.drawable.uploadimg) // Placeholder image
+                .into(holder.productImage);
+
+        holder.itemView.setTag(position);
+    }
 
     @Override
     public int getItemCount() {
@@ -76,16 +77,16 @@ public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAd
         mOnItemClickListener = onItemClickListener;
     }
 
-    public class Vh extends RecyclerView.ViewHolder{
-        ImageView recImage;
-        TextView recTitle, recPrice;
+    public class Vh extends RecyclerView.ViewHolder {
+        ImageView productImage;
+        TextView productTitle, productPrice;
 
-        public Vh(View itemView){
+        public Vh(View itemView) {
             super(itemView);
             itemView.setOnClickListener(mOnClickListener);
-            recImage = itemView.findViewById(R.id.recImage);
-            recPrice = itemView.findViewById(R.id.productPrice);
-            recTitle = itemView.findViewById(R.id.title);
+            productImage = itemView.findViewById(R.id.recImage);
+            productTitle = itemView.findViewById(R.id.title);
+            productPrice = itemView.findViewById(R.id.productPrice);
         }
     }
 

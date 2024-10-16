@@ -34,11 +34,13 @@ public class HomeFragment extends Fragment {
     private RecyclerView mCategories;
     private RecyclerView mBestSellerProducts;
     private RecyclerView mProducts;
+    private ExecutorService executorService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        executorService = Executors.newFixedThreadPool(5);
         setupSlide();
         setupCategory();
         setupBestSeller();
@@ -78,7 +80,6 @@ public class HomeFragment extends Fragment {
 
     // Fetch the top 3 bestseller products
     private void setBestSellerData(MainBestSellerAdapter adapter) {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
             List<Product> productList = productDAO.getTop3BestSellers();
@@ -94,7 +95,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupCategory() {
-        MainCategoryAdapter categoryAdapter = new MainCategoryAdapter(getContext(), new ArrayList<>());
+        MainCategoryAdapter categoryAdapter = new MainCategoryAdapter(getContext());
 
         // Fetch the category data
         setCategoryData(categoryAdapter);
@@ -115,7 +116,6 @@ public class HomeFragment extends Fragment {
 
     // Fetch categories and update the adapter
     private void setCategoryData(MainCategoryAdapter adapter) {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
             List<ProductCategory> categoryList = productDAO.getAllCategories(); // Implemented in ProductDAO
@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
 
     private void setupProducts() {
         // Initialize the product adapter
-        MainProductAdapter productAdapter = new MainProductAdapter(getContext(), new ArrayList<>());
+        MainProductAdapter productAdapter = new MainProductAdapter(getContext());
 
         // Fetch the product data
         setProductData(productAdapter);
@@ -154,7 +154,6 @@ public class HomeFragment extends Fragment {
 
     // Fetch all products from the database and update the adapter
     private void setProductData(MainProductAdapter adapter) {
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
             List<Product> productList = productDAO.getAllProducts2(); // Implemented in ProductDAO
@@ -173,6 +172,4 @@ public class HomeFragment extends Fragment {
         Fragment mapFragment = new MapFragment();
         getChildFragmentManager().beginTransaction().replace(R.id.map_container, mapFragment).commit();
     }
-
-
 }

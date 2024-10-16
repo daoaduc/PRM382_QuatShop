@@ -16,6 +16,7 @@ import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.Product;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,9 +27,11 @@ public class MainProductAdapter extends RecyclerView.Adapter<MainProductAdapter.
     private View.OnClickListener mOnClickListener;
     private OnItemClickListener<Product> mOnItemClickListener;
 
-    public MainProductAdapter(Context context, List<Product> list) {
+    public MainProductAdapter(Context context) {
         mContext = context;
-        mList = list;
+        if(mList == null){
+            mList = new ArrayList<Product>();
+        }
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
