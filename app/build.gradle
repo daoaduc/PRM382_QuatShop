@@ -26,6 +26,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // Add packagingOptions to handle duplicate files
+    packagingOptions {
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {
