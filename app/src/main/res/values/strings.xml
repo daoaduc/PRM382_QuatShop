@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">PRM392</string>
+    <string name="welcome_to_fan_shop">Welcome to fan shop</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="password">Password</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="btn_login">Login</string>
+    <string name="sign_up_link_content">Don\'t have an account? Sign Up</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="save_login_checkbox">Save login</string>
 </resources>
