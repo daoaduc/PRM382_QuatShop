@@ -4,6 +4,13 @@ public class ProductStatus {
     private int statusID;
     private String statusName;
 
+    public ProductStatus() {
+    }
+
+    public ProductStatus(int statusID) {
+        this.statusID = statusID;
+    }
+
     public ProductStatus(int statusID, String statusName) {
         this.statusID = statusID;
         this.statusName = statusName;

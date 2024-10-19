@@ -15,14 +15,26 @@
         android:theme="@style/Theme.PRM392"
         tools:targetApi="31">
 
+
+
+            <activity
+                android:name=".activity.Admin.ProductList"
+                android:exported="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+
         <activity
-            android:name=".activity.Admin.ProductList"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".activity.Admin.DetailActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".activity.Admin.UpdateActivity"
+            android:exported="true" />
+
+
 
         <activity
             android:name=".activity.User.OTPVerificationActivity"

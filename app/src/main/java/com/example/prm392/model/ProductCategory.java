@@ -3,6 +3,9 @@ public class ProductCategory {
     private int categoryID;
     private String categoryName;
 
+    public ProductCategory() {
+    }
+
     public ProductCategory(int categoryID, String categoryName) {
         this.categoryID = categoryID;
         this.categoryName = categoryName;
@@ -22,5 +25,10 @@ public class ProductCategory {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    @Override
+    public String toString() {
+        return categoryName; // Hiển thị tên trong Spinner
     }
 }

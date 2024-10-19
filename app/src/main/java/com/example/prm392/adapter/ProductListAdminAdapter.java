@@ -1,6 +1,8 @@
 package com.example.prm392.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.prm392.R;
+import com.example.prm392.activity.Admin.DetailActivity;
 import com.example.prm392.model.Product;
 
 import java.util.ArrayList;
@@ -36,27 +39,38 @@ public class ProductListAdminAdapter extends RecyclerView.Adapter<MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Product product = dataList.get(position);
         holder.recTitle.setText(dataList.get(position).getProductName());
-
         int quantity = dataList.get(position).getQuantity();
-        holder.recQuantity.setText("Số lượng: " + String.valueOf(quantity));
+        holder.recQuantity.setText("Số lượng còn: " + String.valueOf(quantity));
+
+        String status = dataList.get(position).getStatus().getStatusName();
+        holder.recStatus.setText(status);
 
         Glide.with(context)
                 .load(product.getProductIMG()) // Đường dẫn hình ảnh từ Firebase
                 .placeholder(R.drawable.uploadimg) // Hình ảnh thay thế khi đang tải
                 .into(holder.recImage);
 
-//
-//        holder.recCard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(context, DetailActivity.class);
-//                intent.putExtra("Image", dataList.get(holder.getAdapterPosition()).getDataImage());
-//                intent.putExtra("Description", dataList.get(holder.getAdapterPosition()).getDataDesc());
-//                intent.putExtra("Title", dataList.get(holder.getAdapterPosition()).getDataTitle());
-//                context.startActivity(intent);
-//            }
-//        });
+
+        holder.recCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String description = product.getDescription();
+                Log.d("ProductDescription", "Description: " + description);
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("ProductID", product.getProductID());
+                intent.putExtra("Price", product.getPrice());
+                intent.putExtra("Image", product.getProductIMG());
+                intent.putExtra("Description", description);
+                intent.putExtra("Title", product.getProductName());
+                intent.putExtra("Status", product.getStatus().getStatusName());
+                int quantity = product.getQuantity();
+                intent.putExtra("Quantity", quantity);
+                context.startActivity(intent);
+            }
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -71,7 +85,7 @@ public class ProductListAdminAdapter extends RecyclerView.Adapter<MyViewHolder> 
 
 class MyViewHolder extends RecyclerView.ViewHolder {
     ImageView recImage;
-    TextView recTitle, recQuantity;
+    TextView recTitle, recQuantity,recStatus;
     CardView recCard;
 
     public MyViewHolder(@NonNull View itemView) {
@@ -80,5 +94,6 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         recCard = itemView.findViewById(R.id.recCard);
         recQuantity = itemView.findViewById(R.id.recQuantity);
         recTitle = itemView.findViewById(R.id.recTitle);
+        recStatus = itemView.findViewById(R.id.recStatus);
     }
 }
