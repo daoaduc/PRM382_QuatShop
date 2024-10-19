@@ -1,34 +1,41 @@
 package com.example.prm392.model;
-
-import java.io.File;
 import java.util.Date;
 
 public class Account {
-    private int id;
+    private int accID;
+    private String fullname;
+    private int gender;
     private String email;
     private String password;
-    private String fullname;
-    private String phone;
-    private boolean gender;
-    private int role, status;
-    private File profileImage;
-    private Date createAt, updateAt;
+    private String phoneNumber;
+    private int roleID;
+    private int status;
+    private String profilePicture;
+    private Date createAt;
+    private Date updateAt;
 
-    public Account() {
-
-    }
-
-    public Account(int id, String email, String password, String fullname, String phone, boolean gender, int role, int status, File profileImage, Date createAt, Date updateAt) {
-        this.id = id;
+    public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, int roleID, int status, String profilePicture, Date createAt, Date updateAt) {
+        this.accID = accID;
+        this.fullname = fullname;
+        this.gender = gender;
         this.email = email;
         this.password = password;
-        this.fullname = fullname;
-        this.phone = phone;
-        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.roleID = roleID;
+        this.status = status;
+        this.profilePicture = profilePicture;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
     }
 
-    public int getId() {
-        return id;
+    public Account() {}
+
+    public int getAccID() {
+        return accID;
+    }
+
+    public void setAccID(int accID) {
+        this.accID = accID;
     }
 
     public String getFullname() {
@@ -39,20 +46,20 @@ public class Account {
         this.fullname = fullname;
     }
 
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getPassword() {
@@ -63,20 +70,20 @@ public class Account {
         this.password = password;
     }
 
-    public boolean isGender() {
-        return gender;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setGender(boolean gender) {
-        this.gender = gender;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public int getRole() {
-        return role;
+    public int getRoleID() {
+        return roleID;
     }
 
-    public void setRole(int role) {
-        this.role = role;
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
     }
 
     public int getStatus() {
@@ -87,19 +94,27 @@ public class Account {
         this.status = status;
     }
 
-    public File getProfileImage() {
-        return profileImage;
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setProfileImage(File profileImage) {
-        this.profileImage = profileImage;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public Date getCreateAt() {
         return createAt;
     }
 
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
     public Date getUpdateAt() {
         return updateAt;
+    }
+
+    public void setUpdateAt(Date updateAt) {
+        this.updateAt = updateAt;
     }
 }
