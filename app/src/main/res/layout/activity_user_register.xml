@@ -60,6 +60,7 @@
         android:textColor="#000"
         android:textSize="18sp"
         android:textStyle="bold" />
+
     <EditText
         android:id="@+id/edtEmail"
         android:layout_width="match_parent"
@@ -68,8 +69,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="35dp"
         android:background="@drawable/shape"
-        android:inputType="textEmailAddress"
-        android:hint="Enter your email" />
+        android:hint="Enter your email"
+        android:inputType="textEmailAddress" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -89,8 +90,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="35dp"
         android:background="@drawable/shape"
-        android:inputType="textPassword"
-        android:hint="Enter your password"/>
+        android:hint="Enter your password"
+        android:inputType="textPassword" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -110,8 +111,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="35dp"
         android:background="@drawable/shape"
-        android:inputType="textPassword"
-        android:hint="Re-enter password" />
+        android:hint="Re-enter password"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btnRegister"
@@ -120,19 +121,19 @@
         android:layout_marginLeft="35dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/button"
+        android:onClick="registerUser"
         android:text="Register"
-        android:textColor="#fff"
-        android:onClick="registerUser"/>
+        android:textColor="#fff" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="18dp"
+        android:clickable="true"
+        android:onClick="goToSignIn"
         android:text="Do you have an account? Sign In"
         android:textColor="#ad168b"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:onClick="goToSignIn"/>
+        android:textStyle="bold" />
 </LinearLayout>
