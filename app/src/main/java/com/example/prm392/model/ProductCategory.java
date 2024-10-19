@@ -9,6 +9,10 @@ public class ProductCategory {
         this.categoryIMG = categoryIMG;
     }
 
+    public ProductCategory() {
+
+    }
+
     public int getCategoryID() {
         return categoryID;
     }

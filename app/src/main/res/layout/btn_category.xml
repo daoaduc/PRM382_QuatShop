@@ -5,5 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="13sp"
-    android:text="Button">
+    android:text="Button"
+    android:textColor="@drawable/fg_btn_select_category"
+    android:backgroundTint="@drawable/bg_btn_select_category">
 </Button>

@@ -3,6 +3,7 @@ package com.example.prm392.DAO;
 import android.util.Log;
 
 import com.example.prm392.ConnectionClass;
+import com.example.prm392.common.Constants;
 import com.example.prm392.model.Product;
 import com.example.prm392.model.ProductCategory;
 
@@ -138,14 +139,31 @@ public class ProductDAO {
         return productList;
     }
 
-    public List<Product> getProductsBySearching() {
+    public List<Product> getProductsBySearching(String productName, Integer productID) {
         List<Product> productList = new ArrayList<>();
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
-            String query = "SELECT productID, productName, price, productIMG FROM products";
+            StringBuilder queryBuilder = new StringBuilder("SELECT productID, productName, price, productIMG FROM products WHERE 1=1");
+
+            if (productName != null && !productName.isEmpty()) {
+                queryBuilder.append(" AND productName LIKE ?");
+            }
+            if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
+                queryBuilder.append(" AND categoryID = ?");
+            }
+
             try {
-                PreparedStatement stmt = connection.prepareStatement(query);
+                PreparedStatement stmt = connection.prepareStatement(queryBuilder.toString());
+
+                int paramIndex = 1;
+                if (productName != null && !productName.isEmpty()) {
+                    stmt.setString(paramIndex++, "%" + productName + "%");
+                }
+                if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
+                    stmt.setInt(paramIndex++, productID);
+                }
+
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
