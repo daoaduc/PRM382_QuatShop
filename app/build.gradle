@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.example.prm392'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.prm392"
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -48,7 +48,7 @@ dependencies {
     // Firebase Storage
     implementation 'com.google.firebase:firebase-storage:21.0.1'
     implementation 'com.google.firebase:firebase-database:21.0.0'
-    implementation 'androidx.activity:activity:1.9.2'
+//    implementation 'androidx.activity:activity:1.9.2'
 
     // Testing dependencies
     testImplementation 'junit:junit:4.13.2'
