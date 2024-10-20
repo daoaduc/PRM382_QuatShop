@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    
 
 
     <LinearLayout
@@ -114,7 +115,10 @@
         android:background="@drawable/button"
         android:text="@string/login"
         android:textColor="#fff"
-        android:onClick="loginUser"/>
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:onClick="loginUser"
+        />
 
     <TextView
         android:layout_width="wrap_content"

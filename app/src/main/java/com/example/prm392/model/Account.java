@@ -1,7 +1,10 @@
 package com.example.prm392.model;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Account {
+public class Account implements Serializable {
     private int accID;
     private String fullname;
     private int gender;
@@ -116,5 +119,22 @@ public class Account {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accID=" + accID +
+                ", fullname='" + fullname + '\'' +
+                ", gender=" + gender +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", roleID=" + roleID +
+                ", status=" + status +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                '}';
     }
 }
