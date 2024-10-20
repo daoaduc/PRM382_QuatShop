@@ -1,7 +1,9 @@
 package com.example.prm392.model;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Account {
+public class Account implements Serializable {
     private int accID;
     private String fullname;
     private int gender;
@@ -14,6 +16,7 @@ public class Account {
     private Date createAt;
     private Date updateAt;
 
+    // Constructors
     public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, int roleID, int status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
         this.fullname = fullname;
@@ -30,6 +33,7 @@ public class Account {
 
     public Account() {}
 
+    // Getters and setters
     public int getAccID() {
         return accID;
     }
@@ -116,5 +120,22 @@ public class Account {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accID=" + accID +
+                ", fullname='" + fullname + '\'' +
+                ", gender=" + gender +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", roleID=" + roleID +
+                ", status=" + status +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                '}';
     }
 }
