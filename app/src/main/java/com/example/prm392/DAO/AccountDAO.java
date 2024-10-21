@@ -29,7 +29,7 @@ public class AccountDAO {
                 PreparedStatement preparedStatement = con.prepareStatement(query);
                 preparedStatement.setString(1, newPassword);
                 preparedStatement.setString(2, email);
-                isPasswordChanged = preparedStatement.executeUpdate() > 0;
+                isPasswordChanged = (preparedStatement.executeUpdate() > 0);
                 preparedStatement.close();
                 con.close();
             } catch (Exception e) {

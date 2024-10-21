@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             if (account != null) {
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(this, HomeFragment.class);
+                    Intent intent = new Intent(this, MainActivity2.class);
                     intent.putExtra("account", account);
                     startActivity(intent);
                 });
