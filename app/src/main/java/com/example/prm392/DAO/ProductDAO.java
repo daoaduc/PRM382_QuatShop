@@ -118,6 +118,60 @@ public class ProductDAO {
         }
     }
 
+    public void updateProduct(Product product) {
+        Connection connection = connectionClass.CONN();
+
+        if (connection != null) {
+            String query = "UPDATE products SET productName = ?, quantity = ?, description = ?, price = ?, productIMG = ?, status = ? WHERE productID = ?";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                stmt.setString(1, product.getProductName());
+                stmt.setInt(2, product.getQuantity());
+                stmt.setString(3, product.getDescription());
+                stmt.setLong(4, product.getPrice());
+                stmt.setString(5, product.getProductIMG());
+                stmt.setInt(6, product.getStatus().getStatusID());
+                stmt.setInt(7, product.getProductID());
+
+                // Thực hiện cập nhật dữ liệu
+                stmt.executeUpdate();
+                stmt.close();
+                connection.close();
+            } catch (Exception e) {
+                Log.e("ERROR", "Error while updating product: " + e.getMessage());
+            }
+        } else {
+            Log.e("ERROR", "Connection to database failed");
+        }
+    }
+
+    public int getLastProductID() {
+        Connection connection = connectionClass.CONN();
+        int lastProductID = -1;  // Biến để lưu trữ productID cuối cùng, mặc định là -1 nếu không tìm thấy
+
+        if (connection != null) {
+            String query = "SELECT MAX(productID) AS lastProductID FROM products";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    lastProductID = rs.getInt("lastProductID");  // Lấy productID cuối cùng
+                }
+
+                rs.close();
+                stmt.close();
+                connection.close();
+            } catch (Exception e) {
+                Log.e("ERROR", "Error while fetching last productID: " + e.getMessage());
+            }
+        } else {
+            Log.e("ERROR", "Connection to database failed");
+        }
+
+        return lastProductID;
+    }
+
 
 
 

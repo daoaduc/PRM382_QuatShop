@@ -96,15 +96,34 @@
                 android:spinnerMode="dropdown"
                 android:dropDownWidth="match_parent"/>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Update"
-                android:id="@+id/updateButton"
-                android:textSize="18sp"
-                android:layout_marginTop="20dp"
-                app:cornerRadius = "20dp"
-                android:background="@color/tim"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="Update"
+                    android:id="@+id/updateButton"
+                    android:textSize="18sp"
+                    app:cornerRadius="20dp"
+                    android:background="@color/tim"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:id="@+id/cancelButton"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    app:cornerRadius="20dp"
+                    android:background="@color/tim_nhat"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

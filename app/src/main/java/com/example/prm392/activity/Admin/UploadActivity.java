@@ -29,14 +29,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -176,69 +173,73 @@ public class UploadActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng nhập số lượng sản phẩm", Toast.LENGTH_SHORT).show();
                 return;
             }
+            final long finalPrice = price;
+            final int  finalQuantity = quantity;
+            // Tạo ExecutorService để tải sản phẩm lên
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-            String fileName = productName + ".jpg";
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                    .child("Sản phẩm")
-                    .child(fileName);
+            executorService.execute(() -> {
+                ProductDAO productDAO = new ProductDAO();
+                int productID = productDAO.getLastProductID() + 1; // Lấy productID + 1
+                String fileName = productID + ".jpg"; // Đặt tên ảnh bằng productID + 1
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
-            builder.setCancelable(false);
-            builder.setView(R.layout.progress_layout);
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                        .child("Sản phẩm")
+                        .child(fileName);
 
-            // Tải hình ảnh lên Firebase Storage
-            long finalPrice = price;
-            int finalQuantity = quantity;
+                runOnUiThread(() -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+                    builder.setCancelable(false);
+                    builder.setView(R.layout.progress_layout);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-            // Tải hình ảnh lên Firebase
-            storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    dialog.dismiss();
-                    Toast.makeText(UploadActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
-                    Log.d("UploadActivity", "Image Uploaded");
-
-                    // Lấy URL hình ảnh sau khi tải lên thành công
-                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    uriTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    // Tải hình ảnh lên Firebase
+                    storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                Uri urlImage = task.getResult();
-                                Log.d("UploadActivity", "Image URL: " + urlImage.toString());
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            dialog.dismiss();
+                            Toast.makeText(UploadActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                            Log.d("UploadActivity", "Image Uploaded");
 
-                                // Tạo ExecutorService
-                                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                            // Lấy URL hình ảnh sau khi tải lên thành công
+                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            uriTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        Uri urlImage = task.getResult();
+                                        Log.d("UploadActivity", "Image URL: " + urlImage.toString());
 
-                                // Thực thi task trong background thread
-                                executorService.execute(() -> {
-                                    // Cập nhật URL hình ảnh vào đối tượng Product
-                                    Product p = new Product(productName, productDesc, finalPrice, finalQuantity, selectedCategory, urlImage.toString());
-                                    // Thêm sản phẩm vào cơ sở dữ liệu
-                                    ProductDAO pdao = new ProductDAO();
-                                    pdao.insertProduct(p); // Chèn sản phẩm vào cơ sở dữ liệu
-                                    // Gọi phương thức để upload dữ liệu lên Realtime Database
-                                    // uploadData(productName, urlImage.toString());
-                                    runOnUiThread(() -> Toast.makeText(UploadActivity.this, "Product uploaded successfully", Toast.LENGTH_SHORT).show());
-                                    setResult(Activity.RESULT_OK);
-                                    finish();
-                                });
-                            } else {
-                                Toast.makeText(UploadActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
-                                Log.d("UploadActivity", "Failed to get download URL");
-                            }
+                                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                                        // Thực thi task trong background thread
+                                        executorService.execute(() -> {
+                                            // Cập nhật URL hình ảnh vào đối tượng Product
+                                            Product p = new Product(productName, productDesc, finalPrice, finalQuantity, selectedCategory, urlImage.toString());
+                                            // Thêm sản phẩm vào cơ sở dữ liệu
+                                            ProductDAO pdao = new ProductDAO();
+                                            pdao.insertProduct(p);
+
+                                            runOnUiThread(() -> Toast.makeText(UploadActivity.this, "Product uploaded successfully", Toast.LENGTH_SHORT).show());
+                                            finish();
+                                        });
+                                    } else {
+                                        Toast.makeText(UploadActivity.this, "Failed to get download URL", Toast.LENGTH_SHORT).show();
+                                        Log.d("UploadActivity", "Failed to get download URL");
+                                    }
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            dialog.dismiss();
+                            Toast.makeText(UploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("UploadActivity", "Upload Failed: " + e.getMessage());
                         }
                     });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    dialog.dismiss();
-                    Toast.makeText(UploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.d("UploadActivity", "Upload Failed: " + e.getMessage());
-                }
+                });
             });
         } else {
             Toast.makeText(this, "No Image Selected", Toast.LENGTH_SHORT).show();
@@ -246,27 +247,5 @@ public class UploadActivity extends AppCompatActivity {
         }
     }
 
-
-//
-//    private void uploadData(String productName, String imageURL) {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance("https://prm392-f39b8-default-rtdb.asia-southeast1.firebasedatabase.app/");
-//
-//        Product dataClass = new Product(productName, imageURL);
-//        String currentDate = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
-//
-//        database.getReference("Sản phẩm").child(currentDate)
-//                .setValue(dataClass).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void unused) {
-//                        Toast.makeText(UploadActivity.this, "Product Data Uploaded", Toast.LENGTH_SHORT).show();
-//                        finish(); // Kết thúc activity
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(UploadActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 }
 

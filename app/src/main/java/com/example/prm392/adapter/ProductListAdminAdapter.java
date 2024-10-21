@@ -63,6 +63,7 @@ public class ProductListAdminAdapter extends RecyclerView.Adapter<MyViewHolder> 
                 intent.putExtra("Description", description);
                 intent.putExtra("Title", product.getProductName());
                 intent.putExtra("Status", product.getStatus().getStatusName());
+                intent.putExtra("StatusID", product.getStatus().getStatusID());
                 int quantity = product.getQuantity();
                 intent.putExtra("Quantity", quantity);
                 context.startActivity(intent);

@@ -113,6 +113,15 @@
                 app:fab_showShadow="true"
                 app:fab_size="mini" />
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/returnButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_keyboard_return_24"
+                app:fab_colorNormal="@color/tim_dam_hon"
+                app:fab_showShadow="true"
+                app:fab_size="mini" />
+
         </com.github.clans.fab.FloatingActionMenu>
 
     </RelativeLayout>

@@ -47,6 +47,16 @@ public class Product {
         this.creat_at = creat_at;
     }
 
+    public Product(int productID, String productName, long price, int quantity, String description, ProductStatus status, String productIMG) {
+        this.productID = productID;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.status = status;
+        this.productIMG = productIMG;
+    }
+
     public int getProductID() {
         return productID;
     }

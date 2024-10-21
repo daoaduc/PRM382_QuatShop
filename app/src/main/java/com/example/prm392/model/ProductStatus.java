@@ -31,4 +31,7 @@ public class ProductStatus {
     public void setStatusName(String statusName) {
         this.statusName = statusName;
     }
+    public String toString() {
+        return statusName; // Hiển thị tên trong Spinner
+    }
 }

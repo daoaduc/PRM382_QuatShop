@@ -24,7 +24,8 @@ import java.util.concurrent.Executors;
 public class DetailActivity extends AppCompatActivity {
     TextView detailDesc, detailTitle, detailPrice, detailStatus, detailQuantity;
     ImageView detailImage;
-    FloatingActionButton deleteButton, editButton;
+    FloatingActionButton deleteButton, editButton, returnButton;
+    int currentStatusID;
     String imageUrl = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class DetailActivity extends AppCompatActivity {
         detailStatus = findViewById(R.id.detailStatus);
         deleteButton = findViewById(R.id.deleteButton);
         editButton = findViewById(R.id.editButton);
+        returnButton = findViewById(R.id.returnButton);
         detailQuantity = findViewById(R.id.detailQuantity);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
@@ -50,9 +52,14 @@ public class DetailActivity extends AppCompatActivity {
             detailTitle.setText(bundle.getString("Title"));
             detailQuantity.setText("Số lượng còn lại: " + String.valueOf(quantity));
             detailStatus.setText(bundle.getString("Status"));
+            currentStatusID = bundle.getInt("StatusID");
+            Log.d("DetailActivity", "currentStatusID: " + currentStatusID);
+
             imageUrl = bundle.getString("Image");
             Glide.with(this).load(bundle.getString("Image")).into(detailImage);
         }
+
+
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,28 +87,59 @@ public class DetailActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         // Cập nhật UI trên main thread sau khi xóa sản phẩm
                         Toast.makeText(DetailActivity.this, "Sản phẩm đã được xóa", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(DetailActivity.this, ProductList.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
                         finish();
                     });
                 });
             }
         });
 
+       returnButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent intent = new Intent(DetailActivity.this, ProductList.class);
+               startActivity(intent);
+           }
+        });
 
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DetailActivity.this, UpdateActivity.class)
+                        .putExtra("ProductID", bundle.getInt("ProductID"))
                         .putExtra("Title", bundle.getString("Title"))
                         .putExtra("Description", bundle.getString("Description"))
                         .putExtra("Price", bundle.getLong("Price"))
+                        .putExtra("StatusID", bundle.getInt("StatusID"))
                         .putExtra("Quantity",bundle.getInt("Quantity"))
                         .putExtra("Image", imageUrl);
                 startActivity(intent);
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Cập nhật lại giao diện khi quay lại Activity
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            long price = bundle.getLong("Price");
+            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            String formattedPrice = formatter.format(price) + " VND";
+            int quantity = bundle.getInt("Quantity");
+            // Hiển thị giá trị trong TextView
+            detailPrice.setText(formattedPrice);
+            detailDesc.setText(bundle.getString("Description"));
+            detailTitle.setText(bundle.getString("Title"));
+            detailQuantity.setText("Số lượng còn lại: " + String.valueOf(quantity));
+            detailStatus.setText(bundle.getString("Status"));
+            Log.d("ReturnActivity", "currentStatus: " + bundle.getString("Status"));
+            currentStatusID = bundle.getInt("StatusID");
+
+            imageUrl = bundle.getString("Image");
+            Glide.with(this).load(bundle.getString("Image")).into(detailImage);
+        }
+    }
+
 }

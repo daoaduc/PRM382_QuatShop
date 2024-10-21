@@ -60,9 +60,15 @@ public class ProductList extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProductList.this, UploadActivity.class);
-                startActivityForResult(intent, 1); // 1 là mã yêu cầu
+                startActivity(intent);
             }
         });
+    }
+
+    protected void onResume() {
+        super.onResume();
+        // Tải lại dữ liệu sản phẩm khi quay lại màn hình
+        loadProducts();
     }
 
     private void loadProducts() {
@@ -83,14 +89,6 @@ public class ProductList extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            // Tải lại danh sách sản phẩm
-            loadProducts();
-        }
-    }
 
     public void searchList(String text) {
         ArrayList<Product> searchList = new ArrayList<>();
