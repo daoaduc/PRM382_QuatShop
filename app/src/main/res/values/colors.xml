@@ -6,8 +6,11 @@
     <color name= "red">#DC143C</color>
     <color name="global">#ff5878</color>
     <color name="textColor2">#646464</color>
+    <color name="gray2">#f5f5f5</color>
+    <color name="purple">#7D2A90</color>
     <color name= "tim">#ad168b</color>
     <color name ="tim_nhat">#F68ED7</color>
     <color name="tim_dam">#742C6A</color>
     <color name="tim_dam_hon">#4C1C41</color>
+    <color name= "orange">#FF7A00</color>
 </resources>
