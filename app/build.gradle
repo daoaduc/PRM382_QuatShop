@@ -48,6 +48,7 @@ dependencies {
     // Firebase Storage
     implementation 'com.google.firebase:firebase-storage:21.0.1'
     implementation 'com.google.firebase:firebase-database:21.0.0'
+//    implementation 'androidx.activity:activity:1.9.2'
 
     // Testing dependencies
     testImplementation 'junit:junit:4.13.2'
@@ -57,6 +58,9 @@ dependencies {
     // MySQL connector (Chú ý: thường không dùng cho Android)
     implementation 'mysql:mysql-connector-java:5.1.49'
     implementation("com.squareup.picasso:picasso:2.8")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.0")
+
 
     // SwipeRefreshLayout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
@@ -66,6 +70,8 @@ dependencies {
     implementation 'com.sun.mail:android-activation:1.6.7'
 
     // Glide for image loading
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    //GG Map
+    implementation ("com.google.android.gms:play-services-maps:17.0.0")
 }

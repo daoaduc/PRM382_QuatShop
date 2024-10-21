@@ -10,30 +10,27 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.prm392.ConnectionClass;
 import com.example.prm392.R;
+import com.example.prm392.DAO.AccountDAO;
+import com.example.prm392.model.Account;
 import com.example.prm392.utils.SendMail;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText edtFullname, edtEmail, edtPassword, edtConfirmPassword;
-    private ConnectionClass connectionClass;
+    private AccountDAO accountDAO;
     private String generatedOTP;
-    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_register);
 
-        connectionClass = new ConnectionClass();
+        accountDAO = new AccountDAO();
 
         edtFullname = findViewById(R.id.edtFullname);
         edtEmail = findViewById(R.id.edtEmail);
@@ -68,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         new Thread(() -> {
-            if (emailExists(email)) {
+            if (accountDAO.emailExists(email)) {
                 runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Email already exists!", Toast.LENGTH_SHORT).show());
             } else {
                 generatedOTP = SendMail.generateOTP();
@@ -76,9 +73,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (emailSent) {
                     String hashedPassword = hashPassword(password);
-                    saveUserToDatabase(fullname, email, hashedPassword);
+                    Account newAccount = new Account();
+                    newAccount.setFullname(fullname);
+                    newAccount.setEmail(email);
+                    newAccount.setPassword(hashedPassword);
+                    newAccount.setRoleID(2); // customer
+                    newAccount.setStatus(2); // Unverified
+                    accountDAO.saveUserToDatabase(newAccount);
 
-                    Intent intent = new Intent(RegisterActivity.this, OTPVerificationActivity.class);
+                    Intent intent = new Intent(this, OTPVerificationActivity.class);
                     intent.putExtra("generatedOTP", generatedOTP);
                     intent.putExtra("email", email);
                     startActivity(intent);
@@ -89,67 +92,16 @@ public class RegisterActivity extends AppCompatActivity {
         }).start();
     }
 
-    // Android's built-in Patterns class
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private boolean emailExists(String email) {
-        boolean exists = false;
-
-        try {
-            Connection con = connectionClass.CONN();
-            if (con != null) {
-                String query = "SELECT * FROM `account` WHERE `email` = ?";
-                PreparedStatement preparedStatement = con.prepareStatement(query);
-                preparedStatement.setString(1, email);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-                exists = resultSet.next();
-                resultSet.close();
-                preparedStatement.close();
-                con.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return exists;
-    }
-
-    private void saveUserToDatabase(String fullname, String email, String password) {
-        new Thread(() -> {
-            try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    runOnUiThread(() -> Toast.makeText(RegisterActivity.this, "Connection failed", Toast.LENGTH_SHORT).show());
-                } else {
-                    String query = "INSERT INTO `account` (`fullname`, `email`, `password`, `roleID`, `status`) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement preparedStatement = con.prepareStatement(query);
-                    preparedStatement.setString(1, fullname);
-                    preparedStatement.setString(2, email);
-                    preparedStatement.setString(3, password);
-                    preparedStatement.setInt(4, 2); // customer
-                    preparedStatement.setInt(5, 2); // Unverified
-
-                    preparedStatement.executeUpdate();
-                    preparedStatement.close();
-                    con.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-    // hash the password using MD5
     private String hashPassword(String password) {
         String hashedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] hashedBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
-            // Convert the byte array into a hex string
             StringBuilder sb = new StringBuilder();
             for (byte b : hashedBytes) {
                 sb.append(String.format("%02x", b));
@@ -160,8 +112,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
         return hashedPassword;
     }
+
     public void goToSignIn(View view) {
-//        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

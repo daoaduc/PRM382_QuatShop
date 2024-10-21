@@ -8,16 +8,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.prm392.ConnectionClass;
+import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 public class OTPVerificationActivity extends AppCompatActivity {
 
     private EditText edtOTP;
-    private ConnectionClass connectionClass;
+    private AccountDAO accountDAO;
     private String generatedOTP;
     private String userEmail;
 
@@ -27,7 +24,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_verify_register);
 
         edtOTP = findViewById(R.id.edtOTP);
-        connectionClass = new ConnectionClass();
+        accountDAO = new AccountDAO();
 
         generatedOTP = getIntent().getStringExtra("generatedOTP");
         userEmail = getIntent().getStringExtra("email");
@@ -36,36 +33,22 @@ public class OTPVerificationActivity extends AppCompatActivity {
     public void verifyOTP(View view) {
         String enteredOTP = edtOTP.getText().toString().trim();
         if (enteredOTP.equals(generatedOTP)) {
-            updateAccountStatus(userEmail);
+            new Thread(() -> {
+                accountDAO.updateAccountStatus(userEmail);
+                runOnUiThread(() -> {
+                    Toast.makeText(OTPVerificationActivity.this, "Account verified!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(OTPVerificationActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+            }).start();
         } else {
             Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateAccountStatus(String email) {
-        new Thread(() -> {
-            try {
-                Connection con = connectionClass.CONN();
-                if (con != null) {
-                    String query = "UPDATE `account` SET `status` = 1 WHERE `email` = ?";
-                    PreparedStatement preparedStatement = con.prepareStatement(query);
-                    preparedStatement.setString(1, email);
-                    preparedStatement.executeUpdate();
-                    con.close();
-                    runOnUiThread(() -> {
-                        Toast.makeText(OTPVerificationActivity.this, "Account verified!", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(OTPVerificationActivity.this, LoginActivity.class);
-//                        startActivity(intent);
-                        finish();
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
     public void goToSignIn(View view) {
-        Intent intent = new Intent(OTPVerificationActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(OTPVerificationActivity.this,LoginActivity.class);
         startActivity(intent);
     }
 }

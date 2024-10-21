@@ -4,4 +4,27 @@
     <string name="main_category">Category</string>
     <string name="main_cart">Cart</string>
     <string name="main_mine">Mine</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_to_fan_shop">Welcome to fan shop</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="password">Password</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="btn_login">Login</string>
+    <string name="sign_up_link_content">Don\'t have an account? Sign Up</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="save_login_checkbox">Save login</string>
+    <string name="back_to_login">Back to login</string>
+    <string name="reset_password">Reset password</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="verify_otp">Verify</string>
+    <string name="otp">OTP</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="new_password">New Password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="change_password">Change password</string>
+    <string name="enter_confirm_password">Enter confirm password</string>
 </resources>
