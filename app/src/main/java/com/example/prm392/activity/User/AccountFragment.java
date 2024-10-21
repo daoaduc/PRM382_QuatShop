@@ -1,6 +1,7 @@
 package com.example.prm392.activity.User;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class AccountFragment extends Fragment {
     private RecyclerView optionsRecyclerView;
     private MainAccountViewAdapter optionsAdapter;
     private List<OptionItem> optionList;
+    Intent intent;
 
     @Nullable
     @Override
@@ -59,10 +61,13 @@ public class AccountFragment extends Fragment {
                 // Handle option click based on position
                 switch (position) {
                     case 0:
-                        // Edit Profiles clicked
+                        intent = new Intent(getActivity(), AccountProfileActivity.class);
+                        intent.putExtra("accountID", 1);
+                        startActivity(intent);
                         break;
                     case 1:
-                        // My Order clicked
+                        intent = new Intent (getActivity(), OrderHistoryActivity.class);
+                        intent.putExtra("accountID", 1);
                         break;
                     case 2:
                         // Shipping Address clicked

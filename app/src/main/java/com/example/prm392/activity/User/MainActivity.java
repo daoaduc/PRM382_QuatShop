@@ -2,6 +2,7 @@ package com.example.prm392.activity.User;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -27,9 +28,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        connectionClass = new ConnectionClass();
-        connect();
+        setContentView(R.layout.activity_product_detail);
+        Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
+        intent.putExtra("productID" ,1);
+        startActivity(intent);
     }
 
     public void btnClick(View view){

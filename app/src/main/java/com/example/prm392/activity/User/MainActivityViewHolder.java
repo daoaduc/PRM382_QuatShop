@@ -87,8 +87,7 @@ public class MainActivityViewHolder extends AppCompatActivity {
                     vh = mMainCartViewHolder;
                 }
                 else if(position == 3){
-                    mMainAccountViewHolder = new AccountFragment(this, parent);
-                    vh = mMainAccountViewHolder;
+                    //vh = mMainAccountViewHolder;
                 }
                 mViewHolders[position] = vh;
                 vh.addToParent();
