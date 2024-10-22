@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 public class ProductDAO {
@@ -98,6 +99,7 @@ public class ProductDAO {
             Log.e("ERROR", "Connection to database failed");
         }
     }
+
 
     public void deleteProduct(int productId) {
         Connection connection = connectionClass.CONN();

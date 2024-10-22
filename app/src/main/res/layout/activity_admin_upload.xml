@@ -5,17 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.Admin.UploadActivity">
+     tools:context=".activity.Admin.UploadActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_margin="20dp"
         app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
+        app:cardElevation="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,12 +29,13 @@
                 android:text="Upload Product"
                 android:textAlignment="center"
                 android:textColor="@color/tim"
-                android:textSize="30sp" />
+                android:textSize="34sp"
+                android:textStyle="bold"/>
 
             <ImageView
                 android:id="@+id/uploadImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_marginTop="10dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/uploadimg" />
@@ -45,20 +43,20 @@
             <EditText
                 android:id="@+id/uploadProductName"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/tim_border"
                 android:gravity="start|center_vertical"
                 android:hint="Nhập tên sản phẩm"
+                android:inputType="text|textCapSentences"
                 android:padding="16dp"
-                android:textColor="@color/tim"
-                android:inputType="text|textCapSentences"/>
+                android:textColor="@color/tim" />
 
             <EditText
                 android:id="@+id/uploadDesc"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/tim_border"
                 android:gravity="start|center_vertical"
                 android:hint="Nhập desc của sản phẩm"
@@ -70,7 +68,7 @@
                 android:id="@+id/uploadPrice"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/tim_border"
                 android:gravity="start|center_vertical"
                 android:hint="Nhập giá sản phẩm"
@@ -82,7 +80,7 @@
                 android:id="@+id/uploadQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/tim_border"
                 android:gravity="start|center_vertical"
                 android:hint="Nhập số lượng sản phẩm"
@@ -94,22 +92,41 @@
                 android:id="@+id/uploadCategory"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/tim_border"
                 android:gravity="start|center_vertical"
                 android:padding="16dp"
                 android:spinnerMode="dropdown"
                 android:dropDownWidth="match_parent"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/saveButton"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/tim"
-                android:text="Save"
-                android:textSize="18sp"
-                app:cornerRadius="20dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/saveButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/tim"
+                    android:text="Save"
+                    android:textSize="18sp"
+                    app:cornerRadius="20dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cancelButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/tim_nhat"
+                    android:text="Cancel"
+                    android:textSize="18sp"
+                    app:cornerRadius="20dp" />
+            </LinearLayout>
 
         </LinearLayout>
 

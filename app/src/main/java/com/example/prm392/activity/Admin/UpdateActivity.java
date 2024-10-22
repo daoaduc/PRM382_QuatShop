@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 public class UpdateActivity extends AppCompatActivity {
 
     ImageView updateImage;
-    Button updateButton;
+    Button updateButton, cancelButton;
     EditText updateDesc, updateProductName, updatePrice, updateQuantity;
     Spinner updateStatus;
     Uri uri;
@@ -61,6 +61,7 @@ public class UpdateActivity extends AppCompatActivity {
 
         updateImage = findViewById(R.id.updateImage);
         updateButton = findViewById(R.id.updateButton);
+        cancelButton = findViewById(R.id.cancelButton);
         updateDesc = findViewById(R.id.updateDesc);
         updateProductName = findViewById(R.id.updateProductName);
         updatePrice = findViewById(R.id.updatePrice);
@@ -119,6 +120,13 @@ public class UpdateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 updateProduct();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

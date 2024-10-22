@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 
 public class UploadActivity extends AppCompatActivity {
     ImageView uploadImage;
-    Button saveButton;
+    Button saveButton, cancelButton;
     EditText uploadProductName, uploadDesc, uploadPrice, uploadQuantity;
     Spinner uploadCategory;
     Uri uri;
@@ -56,6 +56,7 @@ public class UploadActivity extends AppCompatActivity {
 
         uploadImage = findViewById(R.id.uploadImage);
         saveButton = findViewById(R.id.saveButton);
+        cancelButton = findViewById(R.id.cancelButton);
         uploadProductName = findViewById(R.id.uploadProductName);
         uploadDesc = findViewById(R.id.uploadDesc);
         uploadPrice = findViewById(R.id.uploadPrice);
@@ -103,6 +104,13 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 uploadImageToFirebase();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
             }
         });
     }
