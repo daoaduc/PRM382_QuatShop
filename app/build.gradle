@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.example.prm392'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.prm392"
         minSdk 24
-        targetSdk 33
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -48,6 +48,12 @@ dependencies {
     // Firebase Storage
     implementation 'com.google.firebase:firebase-storage:21.0.1'
     implementation 'com.google.firebase:firebase-database:21.0.0'
+
+    //Zalopay
+    implementation fileTree(dir: 'F:\\download\\ZaloPayArr', include: ['*.aar', '*.jar'], exclude: [])
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
+    implementation 'androidx.activity:activity:1.9.3'
 //    implementation 'androidx.activity:activity:1.9.2'
 
     // Testing dependencies
@@ -78,6 +84,5 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:17.0.0")
 
     //Zalopay
-    
 
 }
