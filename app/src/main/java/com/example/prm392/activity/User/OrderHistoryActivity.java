@@ -14,6 +14,7 @@ import com.example.prm392.model.Account;
 import com.example.prm392.model.Order;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class OrderHistoryActivity extends AppCompatActivity {
 
@@ -21,6 +22,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
     private OrderAdapter orderAdapter;
     private List<Order> orderList;  // Assuming you have an Order model
     OrderDAO orderDAO;
+    ExecutorService executorService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +35,32 @@ public class OrderHistoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Account account = (Account) intent.getSerializableExtra("account");
         assert account != null;
-        if(account.getRoleID()==0){
-            orderList = orderDAO.getOrderByAccount(account.getAccID());
-        }else if(account.getRoleID()==1){
-            orderList = orderDAO.getAllOrders();
-        }
+        fetchOrderData(account);
+    }
 
-        orderAdapter = new OrderAdapter(orderList);
-        orderRecyclerView.setAdapter(orderAdapter);
+    public void fetchOrderData(Account account){
+        executorService.submit(() -> {
+            if (account.getRoleID() == 0) {
+                // Fetch orders for a specific account
+                orderList = orderDAO.getOrderByAccount(account.getAccID());
+            } else if (account.getRoleID() == 1) {
+                // Fetch all orders for admin
+                orderList = orderDAO.getAllOrders();
+            }
+
+            // Update the UI on the main thread
+            runOnUiThread(() -> {
+                orderAdapter = new OrderAdapter(orderList);
+                orderRecyclerView.setAdapter(orderAdapter);
+            });
+        });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Shut down ExecutorService to avoid memory leaks
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 }

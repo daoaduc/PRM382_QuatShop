@@ -2,19 +2,8 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="LoginActivity">
         <option name="selectionMode" value="DROPDOWN" />
-<<<<<<< HEAD
-=======
-        <DropdownSelection timestamp="2024-10-20T14:41:59.332356600Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=LMG820UMc9fbb5f5" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
->>>>>>> 1a14550 (- Update login, forgot password function)
       </SelectionState>
     </selectionStates>
   </component>
