@@ -161,7 +161,7 @@ public class ProductDAO {
                     stmt.setString(paramIndex++, "%" + productName + "%");
                 }
                 if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
-                    stmt.setInt(paramIndex++, productID);
+                    stmt.setInt(paramIndex, productID);
                 }
 
                 ResultSet rs = stmt.executeQuery();

@@ -96,10 +96,8 @@ public class HomeFragment extends Fragment {
 
     private void setupCategory() {
         MainCategoryAdapter categoryAdapter = new MainCategoryAdapter(getContext());
-
         // Fetch the category data
         setCategoryData(categoryAdapter);
-
         categoryAdapter.setOnItemClickListener(new OnItemClickListener<ProductCategory>() {
             @Override
             public void onItemClick(ProductCategory item, int position) {
@@ -107,7 +105,6 @@ public class HomeFragment extends Fragment {
                 Log.d("CATEGORY_CLICK", "Category clicked: " + item.getCategoryName());
             }
         });
-
         // Find the RecyclerView for categories and set its adapter and layout manager
         mCategories = view.findViewById(R.id.categories);
         mCategories.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
@@ -118,7 +115,7 @@ public class HomeFragment extends Fragment {
     private void setCategoryData(MainCategoryAdapter adapter) {
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
-            List<ProductCategory> categoryList = productDAO.getAllCategories(); // Implemented in ProductDAO
+            List<ProductCategory> categoryList = productDAO.getAllCategories();
 
             if (categoryList != null && !categoryList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {
@@ -156,7 +153,7 @@ public class HomeFragment extends Fragment {
     private void setProductData(MainProductAdapter adapter) {
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
-            List<Product> productList = productDAO.getAllProducts2(); // Implemented in ProductDAO
+            List<Product> productList = productDAO.getAllProducts2();
 
             if (productList != null && !productList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {

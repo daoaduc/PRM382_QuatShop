@@ -2,10 +2,8 @@ package com.example.prm392.activity.User;
 
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -17,10 +15,8 @@ import android.widget.LinearLayout;
 
 import com.example.prm392.DAO.ProductDAO;
 import com.example.prm392.R;
-import com.example.prm392.adapter.SubTabCategoryAdapter;
 import com.example.prm392.adapter.SubTabProductAdapter;
 import com.example.prm392.common.Constants;
-import com.example.prm392.common.OnGetSearchProduct;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.Product;
 import com.example.prm392.model.ProductCategory;
@@ -32,10 +28,8 @@ import java.util.concurrent.Executors;
 
 public class CategoryFragment extends Fragment {
     private View view;
-    private RecyclerView mCategories;
     private RecyclerView mProducts;
     private ExecutorService executorService;
-    private int mCurrentIdBtn;
     private LinearLayout mCategoryContainer;
     private int mCurrentCategory;
     private String mCurrentSearchText;
@@ -95,10 +89,6 @@ public class CategoryFragment extends Fragment {
                 Log.d("CATEGORY", "No categories found or connection failed.");
             }
         });
-    }
-
-    private void setCategoryData(SubTabCategoryAdapter adapter) {
-
     }
 
     private void setUpProducts(){
