@@ -29,7 +29,7 @@ public class AccountDAO {
                 PreparedStatement preparedStatement = con.prepareStatement(query);
                 preparedStatement.setString(1, newPassword);
                 preparedStatement.setString(2, email);
-                isPasswordChanged = preparedStatement.executeUpdate() > 0;
+                isPasswordChanged = (preparedStatement.executeUpdate() > 0);
                 preparedStatement.close();
                 con.close();
             } catch (Exception e) {
@@ -126,32 +126,5 @@ public class AccountDAO {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Account getAccountByID(int accID) {
-        Account account = null;
-        try {
-            //connect to database
-            Connection con = connectionClass.CONN();
-            //check if database is connected
-            if(con!=null){
-                String query = "SELECT * FROM `account` where `accID` = ?";
-                PreparedStatement stm = con.prepareStatement(query);
-                stm.setInt(1,accID);
-                ResultSet rs = stm.executeQuery();
-                if(rs.next()){
-                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
-                }
-                rs.close();
-                stm.close();
-                con.close();
-            }else{
-                Log.e("ERROR", "Connection failed");
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
-            Log.e("ERROR", e.getMessage());
-        }
-        return account;
     }
 }

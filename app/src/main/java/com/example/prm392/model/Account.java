@@ -1,4 +1,5 @@
 package com.example.prm392.model;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +17,6 @@ public class Account implements Serializable {
     private Date createAt;
     private Date updateAt;
 
-    // Constructors
     public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, int roleID, int status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
         this.fullname = fullname;
@@ -33,7 +33,6 @@ public class Account implements Serializable {
 
     public Account() {}
 
-    // Getters and setters
     public int getAccID() {
         return accID;
     }

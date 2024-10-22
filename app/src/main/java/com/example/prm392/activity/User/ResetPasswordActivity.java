@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-//import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -29,14 +28,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reset_password);
         edtNewPassword = findViewById(R.id.edtNewPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         tvMessage = findViewById(R.id.tvMessage);
         tvTimer = findViewById(R.id.tvTimer);
-        accountDAO = new AccountDAO();
-
     }
 
     public void goToSignIn(View view) {
@@ -46,6 +42,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceAsColor")
     public void changePassword(View view) {
+        accountDAO = new AccountDAO();
         // Check input empty
         if(edtNewPassword.getText().toString().isEmpty() || edtConfirmPassword.getText().toString().isEmpty()){
             tvMessage.setTextColor(R.color.red);
@@ -66,19 +63,26 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // Check if password is same as old password
 
 
-        String newPassword = edtNewPassword.getText().toString();
-        newPassword = hashPassword(newPassword);
-        String email = getIntent().getStringExtra("email");
-        // Update password in database
-        boolean isPasswordChanged = accountDAO.changePassword(newPassword, email);
-        if(isPasswordChanged){
-            tvMessage.setText("Password changed successfully");
-        }else{
-            tvMessage.setTextColor(R.color.red);
-            tvMessage.setText("Failed to change password");
-            tvMessage.setTextColor(tvMessage.getTextColors().getDefaultColor());
-        }
 
+        // Update password in database
+        new Thread(() -> {
+            String newPassword = edtNewPassword.getText().toString();
+            newPassword = hashPassword(newPassword);
+            String email = getIntent().getStringExtra("email");
+            boolean isPasswordChanged = accountDAO.changePassword(newPassword, email);
+            if(isPasswordChanged){
+                runOnUiThread(()->{
+                    tvMessage.setText("Password changed successfully");
+                });
+            }else{
+                runOnUiThread(()->{
+                    tvMessage.setTextColor(R.color.red);
+                    tvMessage.setText("Failed to change password");
+                    tvMessage.setTextColor(tvMessage.getTextColors().getDefaultColor());
+                });
+            }
+
+        }).start();
     }
 
     private String hashPassword(String password) {

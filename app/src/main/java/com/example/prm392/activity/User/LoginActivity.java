@@ -1,10 +1,12 @@
 package com.example.prm392.activity.User;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
     AccountDAO accountDAO;
+    CheckBox saveLoginCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.edtEmail);
         passwordEditText = findViewById(R.id.edtPassword);
         accountDAO = new AccountDAO();
+        saveLoginCheckBox = findViewById(R.id.chkSaveLogin);
+        getLoginInfo();
     }
 
     private boolean isValidEmail(String email) {
@@ -94,6 +99,10 @@ public class LoginActivity extends AppCompatActivity {
             String hashedPassword = hashPassword(password);
             Account account = accountDAO.checkAccountExists(email, hashedPassword);
             if (account != null) {
+                // check user want to save login information
+                if (saveLoginCheckBox.isChecked()) {
+                    saveLoginInfo(email, password);
+                }
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, MainActivity2.class);
@@ -106,5 +115,39 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    // Save login information function
+    private void saveLoginInfo(String username, String password) {
+        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.apply();
+    }
+
+    // Get login information function
+    private void getLoginInfo() {
+        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        String username = sharedPref.getString("username", "");
+        String password = sharedPref.getString("password", "");
+
+        if (!username.isEmpty() && !password.isEmpty()) {
+            emailEditText.setText(username);
+            passwordEditText.setText(password);
+            saveLoginCheckBox.setChecked(true);
+            loginUser(null);
+        }
+    }
+
+    // Clear login information function
+    private void clearLoginInfo() {
+        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if(editor != null){
+            editor.clear();
+            editor.apply();
+        }
     }
 }
