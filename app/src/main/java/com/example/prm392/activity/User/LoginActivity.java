@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
                     // save user id for later use
-//                    saveUserID(account.getAccID());
+                    saveUserID(account.getAccID());
                     // intent to main activity
                     Intent intent = new Intent(this, MainActivity2.class);
                     startActivity(intent);
@@ -122,7 +122,13 @@ public class LoginActivity extends AppCompatActivity {
         }).start();
     }
 
-
+    // Save user id function
+    private void saveUserID(int userID) {
+        SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("userID", userID);
+        editor.apply();
+    }
 
     // Save login information function
     private void saveLogin(String username, String password) {
