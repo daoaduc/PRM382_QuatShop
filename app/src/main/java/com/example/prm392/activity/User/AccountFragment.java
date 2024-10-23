@@ -1,7 +1,10 @@
 package com.example.prm392.activity.User;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.activity.User.AccountProfileActivity;
 import com.example.prm392.activity.User.LoginActivity;
@@ -27,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AccountFragment extends Fragment {
 
@@ -35,7 +41,7 @@ public class AccountFragment extends Fragment {
     private MainAccountViewAdapter optionsAdapter;
     private List<OptionItem> optionList;
     ExecutorService executorService;
-
+    AccountDAO accountDAO;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,9 +60,7 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         optionsRecyclerView = view.findViewById(R.id.optionsList);
         optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        Intent intent = getActivity().getIntent();
-        Account account = (Account) intent.getSerializableExtra("account");
-
+        Account account = getAccount();
         // Initialize the list of options
         optionList = new ArrayList<>();
         optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground));
@@ -144,4 +148,22 @@ public class AccountFragment extends Fragment {
             }
         });
     }
+
+    public Account getAccount() {
+        // Use AtomicReference to hold the account object
+        AtomicReference<Account> accountRef = new AtomicReference<>();
+
+        Future<?> future = executorService.submit(() -> {
+            getActivity().runOnUiThread(() -> {
+                SharedPreferences sharedPref = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                String username = sharedPref.getString("username", "");
+                // Set the account in AtomicReference
+                accountRef.set(accountDAO.getAccountbyUsername(username));
+            });
+        });
+
+        // Return the account from the AtomicReference
+        return accountRef.get();
+    }
+
 }

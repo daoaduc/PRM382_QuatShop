@@ -127,4 +127,48 @@ public class AccountDAO {
             }
         }
     }
+
+    public Account getAccountbyUsername(String username){
+        Connection connection = connectionClass.CONN();
+        Account account = null;
+        if(connection!=null){
+            String query = "SELECT * FROM `account` WHERE email = ?";
+            try{
+                PreparedStatement st = connection.prepareStatement(query);
+                st.setString(1, username);
+                ResultSet rs = st.executeQuery();
+                if(rs.next()){
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                }
+                rs.close();
+                st.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return account;
+    }
+
+    public Account getAccountByID(int accID){
+        Connection connection = connectionClass.CONN();
+        Account account = null;
+        if(connection!=null){
+            String query = "SELECT * FROM `account` WHERE accID = ?";
+            try{
+                PreparedStatement st = connection.prepareStatement(query);
+                st.setInt(1, accID);
+                ResultSet rs = st.executeQuery();
+                if(rs.next()){
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                }
+                rs.close();
+                st.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return account;
+    }
 }

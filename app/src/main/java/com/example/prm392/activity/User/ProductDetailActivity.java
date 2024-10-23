@@ -53,18 +53,6 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         fetchProductDetails(productID);
 
-        ProductDAO pd = new ProductDAO();
-        Product product = pd.getProductById(productID);
-//        if (product != null) {
-//            productName.setText(product.getProductName());
-//            productPrice.setText("đ" + product.getPrice());
-//            productDetails.setText(product.getDescription());
-//            Picasso.get().load(product.getProductIMG()).into(productImage);
-//        } else {
-//            Toast.makeText(ProductDetailActivity.this, "Product not found", Toast.LENGTH_SHORT).show();
-//            finish();  // Optionally close the activity if product is not found
-//        }
-
         addToCartButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
