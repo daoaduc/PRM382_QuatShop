@@ -101,8 +101,18 @@ public class HomeFragment extends Fragment {
         categoryAdapter.setOnItemClickListener(new OnItemClickListener<ProductCategory>() {
             @Override
             public void onItemClick(ProductCategory item, int position) {
-                // Handle what happens when a category is clicked
-                Log.d("CATEGORY_CLICK", "Category clicked: " + item.getCategoryName());
+                Log.d("CATEGORY_CLICK", "Category clicked: " + item.getCategoryID());
+                // Create a bundle to send the category ID to CategoryFragment
+                Bundle bundle = new Bundle();
+                bundle.putInt("categoryID", item.getCategoryID());
+
+                Fragment categoryFragment = new CategoryFragment();
+                categoryFragment.setArguments(bundle);
+
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.container, categoryFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         // Find the RecyclerView for categories and set its adapter and layout manager

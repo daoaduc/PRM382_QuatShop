@@ -39,13 +39,23 @@ public class CategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category, container, false);
         executorService = Executors.newFixedThreadPool(5);
-        if(getArguments() != null){
-            mCurrentSearchText = getArguments().getString("searchText");
-        } else {
-            mCurrentSearchText = "";
+
+        if (getArguments() != null) {
+            if (getArguments().containsKey("searchText")) {
+                mCurrentSearchText = getArguments().getString("searchText", "");
+                setUpProducts();
+            }
+            else if (getArguments().containsKey("categoryID")) {
+                mCurrentCategory = getArguments().getInt("categoryID", Constants.ALL_BTN_CATEGORY);
+                setUpProductsByCategory();
+            }
         }
+        else {
+            mCurrentSearchText = "";
+            setUpProducts();
+        }
+
         setUpCategories();
-        setUpProducts();
         return view;
     }
 
@@ -137,4 +147,30 @@ public class CategoryFragment extends Fragment {
             }
         }
     }
+
+    private void setUpProductsByCategory() {
+        mProductAdapter = new SubTabProductAdapter(getContext());
+
+        mProducts = view.findViewById(R.id.recycler_view_products);
+        mProducts.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
+        mProducts.setAdapter(mProductAdapter);
+
+        // Fetch products for the selected category
+        fetchProductsByCategory(mCurrentCategory);
+    }
+
+    private void fetchProductsByCategory(int categoryID) {
+        executorService.execute(() -> {
+            ProductDAO productDAO = new ProductDAO();
+
+            List<Product> productList = productDAO.getProductsByCategory(categoryID);
+
+            if (productList != null && !productList.isEmpty()) {
+                getActivity().runOnUiThread(() -> mProductAdapter.setList(productList));
+            } else {
+                Log.d("PRODUCT", "No products found for category: " + categoryID);
+            }
+        });
+    }
+
 }

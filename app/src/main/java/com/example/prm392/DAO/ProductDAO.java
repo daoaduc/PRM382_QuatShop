@@ -182,4 +182,35 @@ public class ProductDAO {
         }
         return productList;
     }
+
+    public List<Product> getProductsByCategory(int categoryID) {
+        List<Product> productList = new ArrayList<>();
+        Connection connection = connectionClass.CONN();
+
+        if (connection != null) {
+            String query = "SELECT productID, productName, price, productIMG FROM products WHERE categoryID = ?";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                stmt.setInt(1, categoryID); // Bind categoryID to the query
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setPrice(rs.getLong("price"));
+                    product.setProductIMG(rs.getString("productIMG"));
+                    productList.add(product);
+                }
+                rs.close();
+                stmt.close();
+            } catch (Exception e) {
+                Log.e("DB_ERROR", "Error fetching products by category: " + e.getMessage());
+            }
+        } else {
+            Log.e("DB_ERROR", "Connection to database failed");
+        }
+        return productList;
+    }
+
 }
