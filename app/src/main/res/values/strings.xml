@@ -27,4 +27,8 @@
     <string name="enter_new_password">Enter new password</string>
     <string name="change_password">Change password</string>
     <string name="enter_confirm_password">Enter confirm password</string>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>

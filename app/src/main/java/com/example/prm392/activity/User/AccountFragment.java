@@ -6,19 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
+import com.example.prm392.activity.Admin.ProductList;
 import com.example.prm392.activity.User.AccountProfileActivity;
 import com.example.prm392.activity.User.LoginActivity;
 import com.example.prm392.activity.User.OrderHistoryActivity;
@@ -40,8 +44,9 @@ public class AccountFragment extends Fragment {
     private ImageView profileImage;
     private MainAccountViewAdapter optionsAdapter;
     private List<OptionItem> optionList;
+    private ImageView backBtn;
     ExecutorService executorService;
-    AccountDAO accountDAO;
+    AccountDAO accountDAO = new AccountDAO();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class AccountFragment extends Fragment {
 
         // Initialize ExecutorService
         executorService = Executors.newSingleThreadExecutor();  // Make sure to initialize it here
+        backBtn = view.findViewById(R.id.backButton);
+        backBtn.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Initialize the RecyclerView and other views
         profileImage = view.findViewById(R.id.profileImage);
@@ -109,8 +116,7 @@ public class AccountFragment extends Fragment {
                     case 1:
                         // Manage Products clicked (for admin role only)
                         if (account != null && account.getRoleID() == 1) {
-                            // intent = new Intent(getActivity(), ManageProductsActivity.class);
-                            intent.putExtra("account", account);
+                            intent = new Intent(getActivity(), ProductList.class);
                             startActivity(intent);
                         }
                         break;
@@ -150,20 +156,28 @@ public class AccountFragment extends Fragment {
     }
 
     public Account getAccount() {
-        // Use AtomicReference to hold the account object
+        if (accountDAO == null) {
+            Log.e("AccountFragment", "accountDAO is null, make sure it is initialized.");
+            return null;
+        }
+
         AtomicReference<Account> accountRef = new AtomicReference<>();
 
         Future<?> future = executorService.submit(() -> {
             getActivity().runOnUiThread(() -> {
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-                String username = sharedPref.getString("username", "");
-                // Set the account in AtomicReference
-                accountRef.set(accountDAO.getAccountbyUsername(username));
+//                SharedPreferences sharedPref = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+//                int userID = sharedPref.getInt("userID");
+//                // Ensure accountDAO is not null before calling the method
+//                if (userID != null) {
+//                    accountRef.set(accountDAO.getAccountByID(userID));
+//                } else {
+//                    Log.e("AccountFragment", "Username is null or empty");
+//                }
             });
         });
 
-        // Return the account from the AtomicReference
         return accountRef.get();
     }
+
 
 }

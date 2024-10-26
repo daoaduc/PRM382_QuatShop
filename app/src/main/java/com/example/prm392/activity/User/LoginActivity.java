@@ -43,7 +43,10 @@ public class LoginActivity extends AppCompatActivity {
         accountDAO = new AccountDAO();
         saveLoginCheckBox = findViewById(R.id.chkSaveLogin);
         getLoginInfo();
+
     }
+
+
 
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -99,14 +102,16 @@ public class LoginActivity extends AppCompatActivity {
             String hashedPassword = hashPassword(password);
             Account account = accountDAO.checkAccountExists(email, hashedPassword);
             if (account != null) {
-                // check user want to save login information
+                // save login information
                 if (saveLoginCheckBox.isChecked()) {
-                    saveLoginInfo(email, password);
+                    saveLogin(email, password);
                 }
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
+                    // save user id for later use
+                    saveUserID(account.getAccID());
+                    // intent to main activity
                     Intent intent = new Intent(this, MainActivity2.class);
-                    intent.putExtra("account", account);
                     startActivity(intent);
                 });
             }else{
@@ -117,8 +122,16 @@ public class LoginActivity extends AppCompatActivity {
         }).start();
     }
 
+    // Save user id function
+    private void saveUserID(int userID) {
+        SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("userID", userID);
+        editor.apply();
+    }
+
     // Save login information function
-    private void saveLoginInfo(String username, String password) {
+    private void saveLogin(String username, String password) {
         SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -129,9 +142,10 @@ public class LoginActivity extends AppCompatActivity {
 
     // Get login information function
     private void getLoginInfo() {
-        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-        String username = sharedPref.getString("username", "");
-        String password = sharedPref.getString("password", "");
+        // delete save login information
+        SharedPreferences saveLoginPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        String username = saveLoginPref.getString("username", "");
+        String password = saveLoginPref.getString("password", "");
 
         if (!username.isEmpty() && !password.isEmpty()) {
             emailEditText.setText(username);

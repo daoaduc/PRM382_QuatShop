@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.prm392.ConnectionClass;
 import com.example.prm392.DAO.ProductDAO;
 import com.example.prm392.R;
+import com.example.prm392.activity.Admin.ProductList;
 import com.example.prm392.model.Product;
 import com.squareup.picasso.Picasso;
 
@@ -42,29 +43,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         productName = findViewById(R.id.product_name);
         productPrice = findViewById(R.id.product_price);
         productDetails = findViewById(R.id.product_details);
-        productQuantity = findViewById(R.id.product_quantity);
         addToCartButton = findViewById(R.id.add_to_cart_button);
-        buyNowButton = findViewById(R.id.buy_now_button);
 
         executorService = Executors.newSingleThreadExecutor();
 
         Intent intent = getIntent();
-        int productID = intent.getIntExtra("productID", 1);
+        int productID = intent.getIntExtra("productID", -1);
 
         fetchProductDetails(productID);
 
         addToCartButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                
             }
         }));
-        buyNowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
     }
     private void fetchProductDetails(int productID) {
         // Execute database operation in background
