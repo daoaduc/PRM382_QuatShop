@@ -7,10 +7,10 @@ import java.sql.DriverManager;
 import java.util.Objects;
 
 public class ConnectionClass {
-    protected static String db = "quat_shop";
+    protected static String db = "quat_shop_v2";
     protected static String ip = "10.0.2.2";
     protected static String port = "3306";
-    protected static String username = "khanh";
+    protected static String username = "root";
     protected static String password = "123456";
 
     public Connection CONN() {
