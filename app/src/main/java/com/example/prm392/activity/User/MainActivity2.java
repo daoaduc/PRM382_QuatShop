@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,14 +17,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.prm392.DAO.CartDAO;
+import com.example.prm392.DAO.CartDatabase;
 import com.example.prm392.R;
+import com.example.prm392.model.Cart;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-//    private Toolbar toolbar;
+    //    private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private EditText mSearchProductText;
     private Fragment mCurrentFragement;
@@ -65,9 +71,57 @@ public class MainActivity2 extends AppCompatActivity {
                 return false;
             }
         });
-    }
 
+
+        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
+
+        new Thread(() -> {
+            List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
+            int cartSize = cartItems.size();
+
+            runOnUiThread(() -> {
+                if (cartSize > 0) {
+                    Toast.makeText(this,"Bạn đang có đơn hàng trong giỏ",Toast.LENGTH_LONG).show();
+                }
+            });
+        }).start();
+    }
+    private void addCart(int productId, String productName,int quantity, String image,double price)
+    {
+        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
+
+        new Thread(() -> {
+            List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
+            int cartSize = cartItems.size();
+
+            cartDAO.insert(new Cart(cartSize, productId, productName, price, quantity, image));
+        }).start();
+    }
     private void loadFragment(Fragment fragment, String title, Bundle args) {
+
+        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
+
+        new Thread(() -> {
+            List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
+            int cartSize = cartItems.size();
+
+            runOnUiThread(() -> {
+                if (cartSize > 0) {
+                    // Set the cart icon to 'filled' state
+
+                    runOnUiThread(() -> {
+                        System.out.println("a");
+
+                        bottomNavigationView.getMenu().getItem(2).setIcon(R.drawable.ic_cart_red);
+                    });
+                } else {
+                    // Set the cart icon to 'empty' state
+
+                    bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setIcon(R.drawable.ic_cart);
+                }
+            });
+        }).start();
+
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
             // If the fragment is already displayed, just update its data
