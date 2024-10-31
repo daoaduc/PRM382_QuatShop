@@ -71,8 +71,10 @@ public class ProductDetailActivity extends AppCompatActivity {
             int quantity = getQuantity();  // Khai báo quantity từ phương thức getQuantity()
             if (quantity > 0) {
                 int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
+                Log.d("ProductDetailActivity", "ProductID: " + productID);
                 ProductDAO pd = new ProductDAO();
                 Product product = pd.getProductById(productID);
+                Log.d("ProductDetailActivity", "Product: " + product);
                 // Kiểm tra nếu product khác null trước khi lấy các thuộc tính của sản phẩm
                 if (product != null) {
                     Cart cartItem = new Cart();
