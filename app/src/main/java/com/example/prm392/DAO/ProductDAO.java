@@ -139,7 +139,7 @@ public class ProductDAO {
         return productList;
     }
 
-    public List<Product> getProductsBySearching(String productName, Integer productID) {
+    public List<Product> getProductsBySearching(String productName, Integer categoryId) {
         List<Product> productList = new ArrayList<>();
         Connection connection = connectionClass.CONN();
 
@@ -149,7 +149,7 @@ public class ProductDAO {
             if (productName != null && !productName.isEmpty()) {
                 queryBuilder.append(" AND productName LIKE ?");
             }
-            if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
+            if (categoryId != null && categoryId != Constants.ALL_BTN_CATEGORY) {
                 queryBuilder.append(" AND categoryID = ?");
             }
 
@@ -160,8 +160,8 @@ public class ProductDAO {
                 if (productName != null && !productName.isEmpty()) {
                     stmt.setString(paramIndex++, "%" + productName + "%");
                 }
-                if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
-                    stmt.setInt(paramIndex, productID);
+                if (categoryId != null && categoryId != Constants.ALL_BTN_CATEGORY) {
+                    stmt.setInt(paramIndex, categoryId);
                 }
 
                 ResultSet rs = stmt.executeQuery();

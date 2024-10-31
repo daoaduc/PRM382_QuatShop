@@ -1,5 +1,6 @@
 package com.example.prm392.activity.User;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.example.prm392.common.Constants;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.Product;
 import com.example.prm392.model.ProductCategory;
+import com.example.prm392.common.OnFragmentNavigationListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,50 +36,66 @@ public class CategoryFragment extends Fragment {
     private int mCurrentCategory;
     private String mCurrentSearchText;
     private SubTabProductAdapter mProductAdapter;
+    private OnFragmentNavigationListener navigationListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            navigationListener = (OnFragmentNavigationListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnFragmentNavigationListener");
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category, container, false);
         executorService = Executors.newFixedThreadPool(5);
 
+        mCurrentCategory = Constants.ALL_BTN_CATEGORY;
+
         if (getArguments() != null) {
             if (getArguments().containsKey("searchText")) {
                 mCurrentSearchText = getArguments().getString("searchText", "");
-                setUpProducts();
             }
-            else if (getArguments().containsKey("categoryID")) {
+            if (getArguments().containsKey("categoryID")) {
                 mCurrentCategory = getArguments().getInt("categoryID", Constants.ALL_BTN_CATEGORY);
-                setUpProductsByCategory();
             }
         }
         else {
             mCurrentSearchText = "";
-            setUpProducts();
         }
-
-        setUpCategories();
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        setUpCategories();
+        setUpProducts();
     }
 
     private void setUpCategories(){
         mCategoryContainer = view.findViewById(R.id.button_container);
-
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
             List<ProductCategory> categoryList = new ArrayList<>();
             ProductCategory allbtn = new ProductCategory();
             allbtn.setCategoryID(Constants.ALL_BTN_CATEGORY);
-            mCurrentCategory = Constants.ALL_BTN_CATEGORY;
             allbtn.setCategoryName("All");
             categoryList.add(allbtn);
             categoryList.addAll(productDAO.getAllCategories());
 
             if (categoryList != null && !categoryList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {
-                    for (ProductCategory p: categoryList) {
+                    int indexOfSelectedCategory = 0;
+                    for (int i = 0; i < categoryList.size(); i++) {
                         Button button = (Button) LayoutInflater.from(getContext()).inflate(R.layout.btn_category, mCategoryContainer, false);
-                        button.setTag(Integer.toString(p.getCategoryID()));
-                        button.setText(p.getCategoryName());
+                        int categoryID = categoryList.get(i).getCategoryID();
+                        button.setTag(Integer.toString(categoryID));
+                        button.setText(categoryList.get(i).getCategoryName());
                         mCategoryContainer.addView(button);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -88,11 +106,14 @@ public class CategoryFragment extends Fragment {
                                 setProductData();
                             }
                         });
-                        if(mCategoryContainer.getChildCount() != 0){
-                            resetCategoryButton();
-                            Button firstButton = ((Button) mCategoryContainer.getChildAt(0));
-                            firstButton.setSelected(true);
+                        if(mCurrentCategory == categoryID){
+                            indexOfSelectedCategory = i;
                         }
+                    }
+                    if(mCategoryContainer.getChildCount() != 0){
+                        resetCategoryButton();
+                        Button selectedButton = ((Button) mCategoryContainer.getChildAt(indexOfSelectedCategory));
+                        selectedButton.setSelected(true);
                     }
                 });
             } else {
@@ -146,31 +167,6 @@ public class CategoryFragment extends Fragment {
                 setProductData();
             }
         }
-    }
-
-    private void setUpProductsByCategory() {
-        mProductAdapter = new SubTabProductAdapter(getContext());
-
-        mProducts = view.findViewById(R.id.recycler_view_products);
-        mProducts.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
-        mProducts.setAdapter(mProductAdapter);
-
-        // Fetch products for the selected category
-        fetchProductsByCategory(mCurrentCategory);
-    }
-
-    private void fetchProductsByCategory(int categoryID) {
-        executorService.execute(() -> {
-            ProductDAO productDAO = new ProductDAO();
-
-            List<Product> productList = productDAO.getProductsByCategory(categoryID);
-
-            if (productList != null && !productList.isEmpty()) {
-                getActivity().runOnUiThread(() -> mProductAdapter.setList(productList));
-            } else {
-                Log.d("PRODUCT", "No products found for category: " + categoryID);
-            }
-        });
     }
 
 }

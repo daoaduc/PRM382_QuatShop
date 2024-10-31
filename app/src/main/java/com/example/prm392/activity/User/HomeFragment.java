@@ -1,5 +1,6 @@
 package com.example.prm392.activity.User;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.example.prm392.R;
 import com.example.prm392.adapter.MainBestSellerAdapter;
 import com.example.prm392.adapter.MainCategoryAdapter;
 import com.example.prm392.adapter.MainProductAdapter;
+import com.example.prm392.common.OnFragmentNavigationListener;
 import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.Product;
 import com.example.prm392.model.ProductCategory;
@@ -35,6 +37,17 @@ public class HomeFragment extends Fragment {
     private RecyclerView mBestSellerProducts;
     private RecyclerView mProducts;
     private ExecutorService executorService;
+    private OnFragmentNavigationListener navigationListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            navigationListener = (OnFragmentNavigationListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnFragmentNavigationListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,13 +119,7 @@ public class HomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("categoryID", item.getCategoryID());
 
-                Fragment categoryFragment = new CategoryFragment();
-                categoryFragment.setArguments(bundle);
-
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.container, categoryFragment)
-                        .addToBackStack(null)
-                        .commit();
+                navigationListener.navigateToFragment(new CategoryFragment(), "Category", bundle);
             }
         });
         // Find the RecyclerView for categories and set its adapter and layout manager
