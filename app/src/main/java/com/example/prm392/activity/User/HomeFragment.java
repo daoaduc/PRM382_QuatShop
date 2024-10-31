@@ -1,5 +1,6 @@
 package com.example.prm392.activity.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -68,7 +69,10 @@ public class HomeFragment extends Fragment {
         bestSellerAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
             @Override
             public void onItemClick(Product item, int position) {
-                // Handle what happens when a bestseller product is clicked
+                Log.d("ITEM_CLICK", "Product clicked: " + item.getProductName());
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra("productID", item.getProductID());
+                startActivity(intent);
             }
         });
 
@@ -143,6 +147,9 @@ public class HomeFragment extends Fragment {
             public void onItemClick(Product item, int position) {
                 // Handle what happens when a product is clicked
                 Log.d("PRODUCT_CLICK", "Product clicked: " + item.getProductName());
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra("productID", item.getProductID());
+                startActivity(intent);
             }
         });
 
