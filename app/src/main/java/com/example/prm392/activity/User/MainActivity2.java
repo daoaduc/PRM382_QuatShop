@@ -73,9 +73,7 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
-
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-
         new Thread(() -> {
             List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
             int cartSize = cartItems.size();
@@ -89,25 +87,18 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment, String title, Bundle args) {
-
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-
         new Thread(() -> {
             List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
             int cartSize = cartItems.size();
-
             runOnUiThread(() -> {
                 if (cartSize > 0) {
                     // Set the cart icon to 'filled' state
-
                     runOnUiThread(() -> {
-                        System.out.println("a");
-
-                        bottomNavigationView.getMenu().getItem(2).setIcon(R.drawable.ic_cart_red);
+                        bottomNavigationView.getMenu().getItem(2).setActionView(R.layout.cart_action_item);
                     });
                 } else {
                     // Set the cart icon to 'empty' state
-
                     bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setIcon(R.drawable.ic_cart);
                 }
             });

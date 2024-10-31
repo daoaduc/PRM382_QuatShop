@@ -10,4 +10,5 @@
     <color name="purple">#7D2A90</color>
     <color name= "tim">#ad168b</color>
     <color name= "orange">#FF7A00</color>
+    <color name="colorAccent">#ff6d7d</color>
 </resources>

@@ -36,9 +36,15 @@ public class CartFragment extends Fragment {
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Khởi tạo danh sách cartItems
+//        cartItems = new ArrayList<>();
+//        cartDAO = CartDatabase.getInstance(getContext()).cartDAO();
+
+        // Khởi tạo danh sách cartItems
         cartItems = new ArrayList<>();
         cartDAO = CartDatabase.getInstance(getContext()).cartDAO();
         new Thread(() -> {
+            populateCartItems();
+
             for(Cart item : cartDAO.getAllCartItems())
             {
                 cartItems.add(item);
@@ -49,6 +55,7 @@ public class CartFragment extends Fragment {
             new Thread(() -> cartDAO.delete(cart)).start();
             cartItems.remove(cart);
             getActivity().runOnUiThread(() -> cartAdapter.notifyDataSetChanged());
+
 
         }, (cart, quantity) -> {
             // Xử lý thay đổi số lượng
@@ -84,5 +91,16 @@ public class CartFragment extends Fragment {
                 showItem.setText("Total price: "+sum+" $");
             }
         }).start();
+    }
+
+
+
+    private void populateCartItems() {
+//        cartDAO.insert(new Cart(0, 1, "Product 1", 5.0, 1, "image_url_or_path_1"));
+//        // Giả định là mỗi sản phẩm có tên, giá, hình ảnh (dưới dạng chuỗi đường dẫn), và ID sản phẩm.
+//        cartDAO.insert(new Cart(0, 2, "Product 2", 5.0, 1, "image_url_or_path_1"));
+//        cartDAO.insert(new Cart(0, 3, "Product 3", 10.0, 2, "image_url_or_path_2"));
+//        cartDAO.insert(new Cart(0, 4, "Product4", 15.0, 3, "image_url_or_path_3"));
+
     }
 }
