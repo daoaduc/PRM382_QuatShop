@@ -88,31 +88,6 @@ public class MainActivity2 extends AppCompatActivity {
         }).start();
     }
 
-    private int getCurrentUserId() {
-        SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
-        return sharedPref.getInt("userID", -1);  // Trả về -1 nếu không tìm thấy userId
-    }
-    private void addCart(int productId, String productName, int quantity, String image, double price) {
-        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();  // Lấy DAO
-        int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
-
-        new Thread(() -> {
-            if (userId != -1) {  // Kiểm tra nếu userId hợp lệ
-                // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng của người dùng chưa
-                Cart existingCart = cartDAO.getCartItemByProductIdAndUserId(productId, userId);
-                if (existingCart != null) {
-                    // Nếu sản phẩm đã tồn tại, cập nhật số lượng
-                    existingCart.setQuantity(existingCart.getQuantity() + quantity);
-                    cartDAO.update(existingCart);  // Cập nhật giỏ hàng
-                } else {
-                    // Nếu chưa có sản phẩm, tạo mới sản phẩm trong giỏ
-                    Cart newCart = new Cart(productId, productName, price, quantity, image, userId);
-                    cartDAO.insert(newCart);  // Thêm sản phẩm mới vào giỏ hàng
-                }
-            }
-        }).start();
-    }
-
     private void loadFragment(Fragment fragment, String title, Bundle args) {
 
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
