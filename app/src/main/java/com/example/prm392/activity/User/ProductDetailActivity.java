@@ -73,7 +73,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                 int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
                 ProductDAO pd = new ProductDAO();
                 Product product = pd.getProductById(productID);
-
                 // Kiểm tra nếu product khác null trước khi lấy các thuộc tính của sản phẩm
                 if (product != null) {
                     Cart cartItem = new Cart();
@@ -93,7 +92,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     }).start();
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProductDetailActivity.this, "Product not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductDetailActivity.this, "Cannot add product", Toast.LENGTH_SHORT).show();
                         finish();  // Close the activity if the product is not found
                     });
                 }
