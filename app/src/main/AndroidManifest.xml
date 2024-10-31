@@ -53,5 +53,8 @@
         <activity
             android:name=".activity.Admin.UploadActivity"
             android:exported="true" />
+        <activity
+            android:name=".activity.User.ProductDetailActivity"
+            android:exported="true"/>
     </application>
 </manifest>
