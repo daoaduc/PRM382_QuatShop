@@ -67,14 +67,16 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnDecrease.setOnClickListener(view -> decreaseQuantity());
         btnIncrease.setOnClickListener(view -> increaseQuantity());
 
-        addToCartButton.setOnClickListener(view -> {
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             int quantity = getQuantity();  // Khai báo quantity từ phương thức getQuantity()
             if (quantity > 0) {
+                executorService.submit(() -> {
                 int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
-                Log.d("ProductDetailActivity", "ProductID: " + productID);
+                Log.d("ProductDetailActivity", "userId: " + userId);
                 ProductDAO pd = new ProductDAO();
                 Product product = pd.getProductById(productID);
-                Log.d("ProductDetailActivity", "Product: " + product);
                 // Kiểm tra nếu product khác null trước khi lấy các thuộc tính của sản phẩm
                 if (product != null) {
                     Cart cartItem = new Cart();
@@ -98,9 +100,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                         finish();  // Close the activity if the product is not found
                     });
                 }
+                });
             } else {
                 Toast.makeText(ProductDetailActivity.this, "Quantity must be at least 1", Toast.LENGTH_SHORT).show();
-            }
+            }}
         });
     }
         private int getCurrentUserId() {
