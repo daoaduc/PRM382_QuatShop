@@ -19,7 +19,7 @@ import com.example.prm392.model.Cart;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.util.Log;
 
 public class CartFragment extends Fragment {
     private RecyclerView recyclerViewCart;
@@ -75,6 +75,7 @@ public class CartFragment extends Fragment {
             double sum = 0;
             for(Cart  cart : items)
             {
+                Log.d("CartFragment", "userID: " + cart.getUserId()); // Add this line
                 sum+= cart.getQuantity() * cart.getPrice();
             }
             TextView showItem = this.getActivity().findViewById(R.id.totalPrice);

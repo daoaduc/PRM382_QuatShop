@@ -61,7 +61,7 @@ public class ProductDAO {
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
-            String query = "SELECT productName, price, quantity, description, productIMG FROM quat_shop_v2.products WHERE productID = ?";
+            String query = "SELECT productName, price, quantity, description, productIMG FROM products WHERE productID = ?";
             try {
                 PreparedStatement stmt = connection.prepareStatement(query);
                 stmt.setInt(1, productID);

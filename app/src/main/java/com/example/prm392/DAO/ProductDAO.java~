@@ -77,9 +77,9 @@ public class ProductDAO {
                     return product;
                 }
 
-//                rs.close();
-//                stmt.close();
-//                connection.close();
+                rs.close();
+                stmt.close();
+                connection.close();
             } catch (SQLException e) {
                 Log.e("ERROR", "Error while fetching products: " + e.getMessage());
             }

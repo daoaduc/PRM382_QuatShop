@@ -87,22 +87,30 @@ public class ProductDetailActivity extends AppCompatActivity {
                     cartItem.setImage(product.getProductIMG());
                     cartItem.setUserId(userId);  // Gán userId vào Cart
 
-                    // Insert item into cart without assigning the ID to a variable
+                    // Check if the item is already in the cart
                     new Thread(() -> {
-                        cartDAO.insert(cartItem);
+                        Cart existingCartItem = cartDAO.getCartItemByProductIdAndUserId(productID, userId);
+                        if (existingCartItem != null) {
+                            // Update the quantity of the existing item
+                            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+                            cartDAO.update(existingCartItem);
+                        } else {
+                            // Insert the new item into the cart
+                            cartDAO.insert(cartItem);
+                        }
                         runOnUiThread(() ->
-                                Toast.makeText(ProductDetailActivity.this, "Added " + quantity + " items to cart", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(ProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                         );
                     }).start();
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProductDetailActivity.this, "Cannot add product", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProductDetailActivity.this, "Không thể thêm", Toast.LENGTH_SHORT).show();
                         finish();  // Close the activity if the product is not found
                     });
                 }
                 });
             } else {
-                Toast.makeText(ProductDetailActivity.this, "Quantity must be at least 1", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductDetailActivity.this, "Phải có ít nhất 1 sản phẩm", Toast.LENGTH_SHORT).show();
             }}
         });
     }
