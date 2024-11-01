@@ -48,14 +48,10 @@ public class CartFragment extends Fragment {
 
         // Khởi tạo adapter với cả hai listener
         cartAdapter = new CartAdapter(cartItems, cart -> {
-            new Thread(() -> {
-                cartDAO.delete(cart);
-                cartItems.remove(cart);
-                calculatePrice(); // Call calculatePrice() after deleting an item
-            }).start();
-            getActivity().runOnUiThread(() -> {
-                cartAdapter.notifyDataSetChanged();
-            });
+            new Thread(() -> cartDAO.delete(cart)).start();
+            cartItems.remove(cart);
+            getActivity().runOnUiThread(() -> cartAdapter.notifyDataSetChanged());
+
         }, (cart, quantity) -> {
             // Xử lý thay đổi số lượng
             int index = cartItems.indexOf(cart);
@@ -64,11 +60,11 @@ public class CartFragment extends Fragment {
                 if (index != -1) {
                     cart.setQuantity(quantity); // Cập nhật số lượng
                     cartDAO.update(cart); // Gọi phương thức cập nhật từ DAO
-                    calculatePrice(); // Call calculatePrice() after changing quantity
+                    calculatePrice();
+
                 }
             }).start();
-            getActivity().runOnUiThread(() -> cartAdapter.notifyItemChanged(index));
-        });
+            getActivity().runOnUiThread(() -> cartAdapter.notifyItemChanged(index)); });
 
         recyclerViewCart.setAdapter(cartAdapter);
         calculatePrice();

@@ -17,7 +17,7 @@ public abstract class CartDatabase extends RoomDatabase {
     public static synchronized CartDatabase getInstance(Context context){
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    CartDatabase.class, "cart_database")
+                    CartDatabase.class, "cart_database1")
                     .fallbackToDestructiveMigration()
                     .build();
         }
