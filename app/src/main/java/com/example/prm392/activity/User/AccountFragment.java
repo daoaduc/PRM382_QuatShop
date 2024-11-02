@@ -35,8 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class AccountFragment extends Fragment {
 
@@ -45,12 +44,12 @@ public class AccountFragment extends Fragment {
     private MainAccountViewAdapter optionsAdapter;
     private List<OptionItem> optionList;
     private ImageView backBtn;
-    ExecutorService executorService;
-    AccountDAO accountDAO = new AccountDAO();
+    private ExecutorService executorService;
+    private AccountDAO accountDAO = new AccountDAO();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.view_main_account, container, false);
     }
 
@@ -59,7 +58,7 @@ public class AccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize ExecutorService
-        executorService = Executors.newSingleThreadExecutor();  // Make sure to initialize it here
+        executorService = Executors.newSingleThreadExecutor();
         backBtn = view.findViewById(R.id.backButton);
         backBtn.setOnClickListener(v -> requireActivity().onBackPressed());
 
@@ -67,48 +66,52 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         optionsRecyclerView = view.findViewById(R.id.optionsList);
         optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        Account account = getAccount();
+
         // Initialize the list of options
         optionList = new ArrayList<>();
         optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground));
-
-        if (account != null) {
-            // Fetch and display the profile image using ExecutorService
-            executorService.submit(() -> {
-                String profileImageUrl = account.getProfilePicture();
-
-                // Update UI on the main thread
-                if (profileImageUrl != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // Use Picasso or Glide to load the image
-                        Picasso.get().load(profileImageUrl).into(profileImage);
-                    });
-                }
-            });
-
-            if (account.getRoleID() == 1) {
-                optionList.add(new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground));
-            }
-        }
-
         optionList.add(new OptionItem("My Order", R.drawable.cart_shopping_svgrepo_com));
         optionList.add(new OptionItem("Shipping Address", R.drawable.location_pin_alt_1_svgrepo_com));
         optionList.add(new OptionItem("Help Center", R.drawable.chat_round_line_svgrepo_com));
         optionList.add(new OptionItem("Log Out", R.drawable.log_out_02_svgrepo_com));
 
-        // Set up the RecyclerView adapter
-        optionsAdapter = new MainAccountViewAdapter(optionList);
-        optionsRecyclerView.setAdapter(optionsAdapter);
+        // Fetch the Account data and update UI when available
+        getAccount(account -> {
+            if (account != null) {
+                // Load profile image
+                String profileImageUrl = account.getProfilePicture();
+                if (profileImageUrl != null) {
+                    Picasso.get().load(profileImageUrl).into(profileImage);
+                }
 
-        // Handle item clicks
+                // Add role-specific options
+                if (account.getRoleID() == 1) {
+                    optionList.add(1, new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground));
+                }
+
+                // Set up the RecyclerView adapter with the updated option list
+                optionsAdapter = new MainAccountViewAdapter(optionList);
+                optionsRecyclerView.setAdapter(optionsAdapter);
+
+                // Handle item clicks based on the retrieved account
+                setupOptionClickListener(account);
+            } else {
+                Log.e("AccountFragment", "Failed to retrieve account data.");
+            }
+        });
+    }
+
+    private void setupOptionClickListener(Account account) {
         optionsAdapter.setOnItemClickListener(new MainAccountViewAdapter.OnItemClickListener() {
             Intent intent;
+
             @Override
             public void onItemClick(int position) {
                 switch (position) {
                     case 0:
                         // Edit Profiles clicked
                         intent = new Intent(getActivity(), AccountProfileActivity.class);
+                        intent.putExtra("accID", account.getAccID());
                         intent.putExtra("account", account);
                         startActivity(intent);
                         break;
@@ -142,10 +145,15 @@ public class AccountFragment extends Fragment {
 
                     case 5:
                         // Log Out clicked
+                        // Clear SharedPreferences
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear(); // Clear all data
+                        editor.apply(); // Commit changes
                         intent = new Intent(getActivity(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        getActivity().finish(); // End current activity if needed
+                        getActivity().finish();
                         break;
 
                     default:
@@ -155,29 +163,24 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    public Account getAccount() {
+    public void getAccount(Consumer<Account> callback) {
         if (accountDAO == null) {
             Log.e("AccountFragment", "accountDAO is null, make sure it is initialized.");
-            return null;
+            callback.accept(null);
+            return;
         }
 
-        AtomicReference<Account> accountRef = new AtomicReference<>();
+        executorService.submit(() -> {
+            SharedPreferences sharedPref = getActivity().getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
+            int userID = sharedPref.getInt("userID", -1);
 
-        Future<?> future = executorService.submit(() -> {
-            getActivity().runOnUiThread(() -> {
-//                SharedPreferences sharedPref = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-//                int userID = sharedPref.getInt("userID");
-//                // Ensure accountDAO is not null before calling the method
-//                if (userID != null) {
-//                    accountRef.set(accountDAO.getAccountByID(userID));
-//                } else {
-//                    Log.e("AccountFragment", "Username is null or empty");
-//                }
-            });
+            if (userID != -1) {
+                Account account = accountDAO.getAccountByID(userID);
+                getActivity().runOnUiThread(() -> callback.accept(account));
+            } else {
+                Log.e("AccountFragment", "UserID is invalid");
+                getActivity().runOnUiThread(() -> callback.accept(null));
+            }
         });
-
-        return accountRef.get();
     }
-
-
 }

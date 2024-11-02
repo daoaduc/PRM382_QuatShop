@@ -171,4 +171,34 @@ public class AccountDAO {
         }
         return account;
     }
+
+    public boolean uploadProfileIMG(String img, int accID){
+        Connection connection = connectionClass.CONN();
+        String query = "update `account` set profile_picture = ? where accID = ?;";
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            st.setString(1, img);
+            st.setInt(2, accID);
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            Log.e("DB_ERROR", "Error updating profile image: " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean updateAccount(String fullName, String phoneNumber,int gender, int accID) {
+        Connection connection = connectionClass.CONN();
+        String query = "update `account` set fullname = ?, phone_number = ?, gender = ? where accID = ?;";
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            st.setString(1, fullName);
+            st.setString(2, phoneNumber);
+            st.setInt(3, gender);
+            st.setInt(4, accID);
+            st.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
