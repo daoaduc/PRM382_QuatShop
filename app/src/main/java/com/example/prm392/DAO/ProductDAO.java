@@ -5,8 +5,8 @@ import android.util.Log;
 import com.example.prm392.ConnectionClass;
 import com.example.prm392.common.Constants;
 import com.example.prm392.model.Product;
-import com.example.prm392.model.ProductStatus;
 import com.example.prm392.model.ProductCategory;
+import com.example.prm392.model.ProductStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -66,6 +66,39 @@ public class ProductDAO {
 
         return productList;
     }
+
+    public Product getProductById(int productID) {
+        Connection connection = connectionClass.CONN();
+
+        if (connection != null) {
+            String query = "SELECT productName, price, quantity, description, productIMG FROM products WHERE productID = ?";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                stmt.setInt(1, productID);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    Product product = new Product();
+                    product.setProductName(rs.getString("productName"));
+                    product.setQuantity(rs.getInt("quantity"));
+                    product.setPrice(rs.getLong("price"));
+                    product.setDescription(rs.getString("description"));
+                    product.setProductIMG(rs.getString("productIMG"));
+                    return product;
+                }
+
+                rs.close();
+                stmt.close();
+                connection.close();
+            } catch (SQLException e) {
+                Log.e("ERROR", "Error while fetching products: " + e.getMessage());
+            }
+        } else {
+            Log.e("ERROR", "Connection to database failed");
+        }
+        return null;
+    }
+
 
 
     public void insertProduct(Product product) {
@@ -179,38 +212,6 @@ public class ProductDAO {
 
 
 
-
-    public Product getProductById(int productID) {
-        Connection connection = connectionClass.CONN();
-
-        if (connection != null) {
-            String query = "SELECT productName, price, quantity, description, productIMG FROM products WHERE productID = ?";
-            try {
-                PreparedStatement stmt = connection.prepareStatement(query);
-                stmt.setInt(1, productID);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    Product product = new Product();
-                    product.setProductName(rs.getString("productName"));
-                    product.setQuantity(rs.getInt("quantity"));
-                    product.setPrice(rs.getLong("price"));
-                    product.setDescription(rs.getString("description"));
-                    product.setProductIMG(rs.getString("productIMG"));
-                    return product;
-                }
-
-                rs.close();
-                stmt.close();
-                connection.close();
-            } catch (SQLException e) {
-                Log.e("ERROR", "Error while fetching products: " + e.getMessage());
-            }
-        } else {
-            Log.e("ERROR", "Connection to database failed");
-        }
-        return null;
-    }
 
     public List<ProductCategory> getAllCategories() {
         List<ProductCategory> categoriesList = new ArrayList<>();

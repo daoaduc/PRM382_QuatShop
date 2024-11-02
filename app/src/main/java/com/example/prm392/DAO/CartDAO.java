@@ -27,6 +27,9 @@ public interface CartDAO {
     @Query("DELETE FROM cart")
     void deleteAllCartItems();
 
+    @Query("DELETE FROM cart WHERE userId = :userId")
+    void deleteAllCartItemsByUserId(int userId);
+
     @Query("SELECT * FROM cart WHERE productId = :productId AND userId = :userId LIMIT 1")
     Cart getCartItemByProductIdAndUserId(int productId, int userId);
 

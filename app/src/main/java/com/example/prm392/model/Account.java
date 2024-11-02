@@ -47,6 +47,10 @@ public class Account implements Serializable {
     }
     public Account() {}
 
+    public Account(int accID) {
+        this.accID = accID;
+    }
+
     // Getters and setters
     public int getAccID() {
         return accID;
