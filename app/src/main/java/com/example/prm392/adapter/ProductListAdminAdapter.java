@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProductListAdminAdapter extends RecyclerView.Adapter<MyViewHolder> {
+public class ProductListAdminAdapter extends RecyclerView.Adapter<ProductListAdminAdapter.MyViewHolder> {
     private Context context;
     private List<Product> dataList;
 
@@ -82,9 +82,8 @@ public class ProductListAdminAdapter extends RecyclerView.Adapter<MyViewHolder> 
         dataList = searchList;
         notifyDataSetChanged();
     }
-}
 
-class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
     ImageView recImage;
     TextView recTitle, recQuantity,recStatus;
     CardView recCard;
@@ -97,4 +96,5 @@ class MyViewHolder extends RecyclerView.ViewHolder {
         recTitle = itemView.findViewById(R.id.recTitle);
         recStatus = itemView.findViewById(R.id.recStatus);
     }
+}
 }

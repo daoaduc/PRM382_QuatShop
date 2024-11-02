@@ -45,9 +45,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
-    def room_version = "2.5.2" // Phiên bản tương thích với compileSdk 33
+    def room_version = "2.5.2" // Phiên bản tương thích với compileSdk 35
     implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version" // Dành cho Java
+    annotationProcessor "androidx.room:room-compiler:$room_version"  // Dành cho Java
 
 
     // Firebase Storage

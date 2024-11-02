@@ -1,6 +1,7 @@
 package com.example.prm392.activity.User;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.prm392.DAO.CartDAO;
@@ -20,14 +22,18 @@ import com.example.prm392.R;
 import com.example.prm392.adapter.CartAdapter;
 import com.example.prm392.model.Cart;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import android.util.Log;
 
 public class CartFragment extends Fragment {
     private RecyclerView recyclerViewCart;
     private CartAdapter cartAdapter;
     private CartDAO cartDAO;
+    private Button checkoutButton;
     List<Cart> cartItems;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,7 +42,7 @@ public class CartFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cart, container, false);
         recyclerViewCart = view.findViewById(R.id.cartRecycleView);
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        checkoutButton = view.findViewById(R.id.button_CheckOut);
         // Khởi tạo danh sách cartItems
         cartItems = new ArrayList<>();
         cartDAO = CartDatabase.getInstance(getContext()).cartDAO();
@@ -72,25 +78,32 @@ public class CartFragment extends Fragment {
             getActivity().runOnUiThread(() -> cartAdapter.notifyItemChanged(index));
         });
 
+        checkoutButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CheckOutActivity.class);
+            startActivity(intent);
+        });
         recyclerViewCart.setAdapter(cartAdapter);
         calculatePrice();
         return view;
     }
-    private void calculatePrice()
-    {
+    private void calculatePrice() {
         new Thread(() -> {
             int currentUserId = getUserId();
             List<Cart> items = cartDAO.getAllCartItemsByUserId(currentUserId);
             double sum = 0;
-            for(Cart  cart : items)
-            {
+            for (Cart cart : items) {
                 Log.d("CartFragment", "userID: " + cart.getUserId());
-                sum+= cart.getQuantity() * cart.getPrice();
+                sum += cart.getQuantity() * cart.getPrice();
             }
+
+            // Format the sum to currency with thousands separators using Vietnamese locale
+            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            String formattedPrice = formatter.format(sum) + " VNĐ";
+
+            // Update the TextView on the main thread
             TextView showItem = this.getActivity().findViewById(R.id.totalPrice);
-            if(showItem != null)
-            {
-                showItem.setText("Total price: "+sum+" $");
+            if (showItem != null) {
+                showItem.post(() -> showItem.setText("Total price: " + formattedPrice));
             }
         }).start();
     }

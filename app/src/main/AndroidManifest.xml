@@ -51,12 +51,12 @@
         <activity
             android:name=".activity.Admin.ProductList"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
 
-            </intent-filter>
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.Admin.DetailActivity"
@@ -93,12 +93,12 @@
         <activity
             android:name=".activity.User.LoginActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+                <category android:name="android.intent.category.LAUNCHER" />
 
-<!--            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.User.ProductDetailActivity"

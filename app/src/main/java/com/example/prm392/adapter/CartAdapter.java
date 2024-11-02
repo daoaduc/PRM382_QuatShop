@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide;
 import com.example.prm392.R;
 import com.example.prm392.model.Cart;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
@@ -59,7 +61,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
         // Bind the product name, price, and quantity
         holder.txtProductName.setText(currentItem.getProductName());
-        holder.txtProductPrice.setText(String.format("$%s", currentItem.getPrice()));
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        String formattedPrice = formatter.format(currentItem.getPrice()) + " VNĐ";
+        holder.txtProductPrice.setText(formattedPrice);
         holder.txtQuantity.setText(String.valueOf(currentItem.getQuantity()));
 
         // Increase quantity button

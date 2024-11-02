@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.prm392.R;
 import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.model.Account;
+import com.example.prm392.model.AccountRole;
+import com.example.prm392.model.AccountStatus;
 import com.example.prm392.utils.SendMail;
 
 import java.nio.charset.StandardCharsets;
@@ -77,8 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
                     newAccount.setFullname(fullname);
                     newAccount.setEmail(email);
                     newAccount.setPassword(hashedPassword);
-                    newAccount.setRoleID(2); // customer
-                    newAccount.setStatus(2); // Unverified
+                    newAccount.setRoleID(new AccountRole(2)); // customer
+                    newAccount.setStatus(new AccountStatus(2)); // Unverified
                     accountDAO.saveUserToDatabase(newAccount);
 
                     Intent intent = new Intent(this, OTPVerificationActivity.class);
