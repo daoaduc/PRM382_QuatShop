@@ -85,7 +85,7 @@ public class AccountFragment extends Fragment {
                 }
 
                 // Add role-specific options
-                if (account.getRoleID() == 1) {
+                if (account.getRoleID().getRoleID()==1) {
                     optionList.add(1, new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground));
                 }
 
@@ -119,7 +119,7 @@ public class AccountFragment extends Fragment {
 
                     case 1:
                         // Manage Products clicked (for admin role only)
-                        if (account != null && account.getRoleID() == 1) {
+                        if (account != null && account.getRoleID().getRoleID() == 1) {
                             intent = new Intent(getActivity(), ProductList.class);
                             startActivity(intent);
                         }else{

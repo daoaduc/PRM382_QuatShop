@@ -123,7 +123,7 @@ public class AccountProfileActivity extends AppCompatActivity {
         etEmail.setText(account.getEmail());
         etFullName.setText(account.getFullname());
         etPhoneNumber.setText(account.getPhoneNumber());
-        if (account.getGender() == 0) {
+        if (account.isGender()) {
             spinnerGender.setSelection(0); // Male
         } else {
             spinnerGender.setSelection(1); // Female
@@ -133,7 +133,6 @@ public class AccountProfileActivity extends AppCompatActivity {
     private void toggleEditMode() {
         if (isEditMode) {
             // Save Mode: Lock the fields and save the changes
-
             etFullName.setEnabled(false);
             etPhoneNumber.setEnabled(false);
             spinnerGender.setEnabled(false);
@@ -141,25 +140,27 @@ public class AccountProfileActivity extends AppCompatActivity {
             btnEditProfile.setText("Edit Profile");
             String fullName = etFullName.getText().toString();
             String phoneNumber = etPhoneNumber.getText().toString();
-            // Get the gender from the spinner (0 for Male, 1 for Female)
-            int gender = spinnerGender.getSelectedItemPosition();
+
+            // Get the gender from the spinner (true for Male, false for Female)
+            boolean gender = spinnerGender.getSelectedItemPosition() == 0;
+
             executorService.submit(() -> {
                 accountDAO = new AccountDAO();
                 boolean updated = accountDAO.updateAccount(fullName, phoneNumber, gender, account.getAccID());
 
                 runOnUiThread(() -> {
-                    if(!updated) {
+                    if (!updated) {
                         Toast.makeText(AccountProfileActivity.this, "Failed to update profile!", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(AccountProfileActivity.this, "Profile Updated!", Toast.LENGTH_SHORT).show();
                     }
-
                 });
             });
+
+            // Update account data locally
             account.setFullname(fullName);
             account.setPhoneNumber(phoneNumber);
             account.setGender(gender);
-
 
         } else {
             // Edit Mode: Unlock the fields

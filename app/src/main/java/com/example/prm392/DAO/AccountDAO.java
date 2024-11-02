@@ -186,7 +186,7 @@ public class AccountDAO {
                 st.setString(1, username);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getBoolean(3),rs.getString(4),rs.getString(5),rs.getString(6),new AccountRole(rs.getInt(7)),new AccountStatus(rs.getInt(8)),rs.getString(9),rs.getDate(10),rs.getDate(11));
                 }
                 rs.close();
                 st.close();
@@ -208,7 +208,7 @@ public class AccountDAO {
                 st.setInt(1, accID);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getBoolean(3),rs.getString(4),rs.getString(5),rs.getString(6),new AccountRole(rs.getInt(7)),new AccountStatus(rs.getInt(8)),rs.getString(9),rs.getDate(10),rs.getDate(11));
                 }
                 rs.close();
                 st.close();
@@ -234,14 +234,14 @@ public class AccountDAO {
             return false;
         }
     }
-    public boolean updateAccount(String fullName, String phoneNumber,int gender, int accID) {
+    public boolean updateAccount(String fullName, String phoneNumber,boolean gender, int accID) {
         Connection connection = connectionClass.CONN();
         String query = "update `account` set fullname = ?, phone_number = ?, gender = ? where accID = ?;";
         try {
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, fullName);
             st.setString(2, phoneNumber);
-            st.setInt(3, gender);
+            st.setBoolean(3, gender);
             st.setInt(4, accID);
             st.executeUpdate();
             return true;

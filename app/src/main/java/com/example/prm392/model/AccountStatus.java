@@ -1,6 +1,8 @@
 package com.example.prm392.model;
 
-public class AccountStatus {
+import java.io.Serializable;
+
+public class AccountStatus implements Serializable {
     private int statusID;
     private int statusName;
 

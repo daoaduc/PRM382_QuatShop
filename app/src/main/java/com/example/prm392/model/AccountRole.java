@@ -1,6 +1,8 @@
 package com.example.prm392.model;
 
-public class AccountRole {
+import java.io.Serializable;
+
+public class AccountRole implements Serializable {
 
     private int roleID;
     private String role;

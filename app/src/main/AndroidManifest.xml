@@ -26,7 +26,7 @@
             android:exported="true" />
 
 
-        <!-- API GG MAP -->
+        <activity
             android:name=".activity.User.ResetPasswordActivity"
             android:exported="false" />
         <activity
@@ -55,7 +55,6 @@
 <!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".activity.Admin.ProductList"
             android:name=".activity.Admin.DetailActivity"
             android:exported="true" />
         <activity

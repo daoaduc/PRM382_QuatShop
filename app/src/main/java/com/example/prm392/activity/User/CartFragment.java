@@ -79,8 +79,8 @@ public class CartFragment extends Fragment {
         });
 
         checkoutButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), CheckOutActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getContext(), CheckOutActivity.class);
+            //startActivity(intent);
         });
         recyclerViewCart.setAdapter(cartAdapter);
         calculatePrice();

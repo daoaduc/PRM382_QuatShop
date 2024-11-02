@@ -37,14 +37,14 @@ public class OrderDAO {
                     Order order = new Order();
                     order.setOrderID(rs.getInt("orderID"));
                     order.setOrderCode(rs.getString("orderCode"));
-                    order.setAccID(accountDao.getAccountByID(rs.getInt("accID")));
-                    order.setTotalMoney(rs.getDouble("totalMoney"));
-                    order.setPaymentMethod(rs.getString("paymentMethod"));
+                    order.setAccID(new Account(rs.getInt("accID")));
+                    order.setTotalMoney(rs.getLong("totalMoney"));
+                    order.setPaymentMethod(rs.getBoolean("paymentMethod"));
                     order.setOrderDate(rs.getDate("orderDate"));
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
-                    order.setPickUpDate(rs.getDate("pickupDate"));
+                    order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(this.getOrderStatusById(rs.getInt("status")));
+                    order.setStatus(new OrderStatus(rs.getInt("status")));
                     orderList.add(order);
                     count++;
                 }
@@ -71,14 +71,14 @@ public class OrderDAO {
                     Order order = new Order();
                     order.setOrderID(rs.getInt("orderID"));
                     order.setOrderCode(rs.getString("orderCode"));
-                    order.setAccID(accountDao.getAccountByID(rs.getInt("accID")));
-                    order.setTotalMoney(rs.getDouble("totalMoney"));
-                    order.setPaymentMethod(rs.getString("paymentMethod"));
+                    order.setAccID(new Account(rs.getInt("accID")));
+                    order.setTotalMoney(rs.getLong("totalMoney"));
+                    order.setPaymentMethod(rs.getBoolean("paymentMethod"));
                     order.setOrderDate(rs.getDate("orderDate"));
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
-                    order.setPickUpDate(rs.getDate("pickupDate"));
+                    order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(this.getOrderStatusById(rs.getInt("status")));
+                    order.setStatus(new OrderStatus(rs.getInt("status")));
                     orderList.add(order);
                     count++;
                 }
