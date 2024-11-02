@@ -36,7 +36,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productName, productPrice, productDetails;
     private EditText productQuantity;
     private Button addToCartButton;
-    private ImageButton btnDecrease, btnIncrease;
+    private ImageButton btnDecrease, btnIncrease, btnBack;
     private ExecutorService executorService;
     CartDAO cartDAO;
     @SuppressLint("SetTextI18n")
@@ -53,7 +53,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnDecrease = findViewById(R.id.btnDecrease);
         btnIncrease = findViewById(R.id.btnIncrease);
         executorService = Executors.newSingleThreadExecutor();
-
+        btnBack = findViewById(R.id.btn_back_product);
 
         CartDatabase db = CartDatabase.getInstance(this);  // Assuming you have a singleton instance of AppDatabase
         cartDAO = db.cartDAO();
@@ -64,6 +64,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         fetchProductDetails(productID);
         btnDecrease.setOnClickListener(view -> decreaseQuantity());
         btnIncrease.setOnClickListener(view -> increaseQuantity());
+        btnBack.setOnClickListener(view -> onBackPressed());
 
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override

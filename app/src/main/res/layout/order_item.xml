@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="#FFFFFF">
+    android:background="@android:color/white"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,37 +15,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Order Code and Username -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Order ID -->
+        <TextView
+            android:id="@+id/orderId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="Order ID: 12345"
+            android:textColor="#ad168b"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:id="@+id/orderCode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Order Code: 12345"
-                android:textColor="#ad168b"
-                android:textStyle="bold"
-                android:textSize="16sp" />
+        <!-- Order Code -->
+        <TextView
+            android:id="@+id/orderCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order Code: ABC123"
+            android:textColor="#ad168b"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username: johndoe"
-                android:textColor="#444444"
-                android:textSize="14sp" />
-        </LinearLayout>
+        <!-- Username -->
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username: johndoe"
+            android:textColor="#444444"
+            android:textSize="14sp" />
 
         <!-- Total Money and Payment Method -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/totalMoney"
@@ -70,7 +79,7 @@
             android:text="Order Date: 01-10-2023"
             android:textColor="#444444"
             android:textSize="14sp"
-            android:layout_marginTop="8dp" />
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:id="@+id/confirmedDate"
@@ -79,7 +88,7 @@
             android:text="Confirmed Date: 02-10-2023"
             android:textColor="#444444"
             android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:id="@+id/pickupDate"
@@ -88,7 +97,7 @@
             android:text="Pickup Date: 03-10-2023"
             android:textColor="#444444"
             android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="4dp" />
 
         <TextView
             android:id="@+id/deliveryDate"
@@ -97,7 +106,7 @@
             android:text="Delivery Date: 05-10-2023"
             android:textColor="#444444"
             android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="8dp" />
 
         <!-- Status -->
         <TextView
@@ -107,8 +116,6 @@
             android:text="Status: Delivered"
             android:textColor="#ad168b"
             android:textStyle="bold"
-            android:layout_marginTop="8dp"
             android:textSize="16sp" />
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>

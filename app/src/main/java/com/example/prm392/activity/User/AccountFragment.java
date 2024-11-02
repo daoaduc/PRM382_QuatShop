@@ -107,6 +107,7 @@ public class AccountFragment extends Fragment {
 
             @Override
             public void onItemClick(int position) {
+                Log.d("AccountFragment", "Option clicked: " + position);
                 switch (position) {
                     case 0:
                         // Edit Profiles clicked
@@ -121,11 +122,16 @@ public class AccountFragment extends Fragment {
                         if (account != null && account.getRoleID() == 1) {
                             intent = new Intent(getActivity(), ProductList.class);
                             startActivity(intent);
+                        }else{
+                            intent = new Intent(getActivity(), OrderHistoryActivity.class);
+                            intent.putExtra("account", account);
+                            startActivity(intent);
                         }
                         break;
 
                     case 2:
                         // My Order clicked
+                        Log.d("AccountFragment", "My Order clicked");
                         intent = new Intent(getActivity(), OrderHistoryActivity.class);
                         intent.putExtra("account", account);
                         startActivity(intent);

@@ -33,14 +33,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         Order order = orderList.get(position);
         holder.orderId.setText("Order ID: " + order.getOrderID());
         holder.orderCode.setText("Order Code: " + order.getOrderCode());
-        holder.username.setText("Username: " + order.getAccID());
+        holder.username.setText("Username: " + order.getAccID().getFullname());
         holder.totalMoney.setText("Total: $" + order.getTotalMoney());
         holder.paymentMethod.setText("Payment Method: " + order.getPaymentMethod());
         holder.orderDate.setText("Order Date: " + order.getOrderDate());
         holder.confirmedDate.setText("Confirmed Date: " + order.getConfirmedDate());
         holder.pickupDate.setText("Pickup Date: " + order.getPickUpDate());
         holder.deliveryDate.setText("Delivery Date: " + order.getDeliveryDate());
-        holder.status.setText("Status: " + order.getStatus());
+        holder.status.setText("Status: " + order.getStatus().getStatus());
     }
 
     @Override
@@ -54,6 +54,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
+            orderId=itemView.findViewById(R.id.orderId);
             orderCode = itemView.findViewById(R.id.orderCode);
             username = itemView.findViewById(R.id.username);
             totalMoney = itemView.findViewById(R.id.totalMoney);
