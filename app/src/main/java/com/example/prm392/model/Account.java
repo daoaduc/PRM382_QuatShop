@@ -11,20 +11,26 @@ public class Account implements Serializable {
     private String email;
     private String password;
     private String phoneNumber;
-    private int roleID;
-    private int status;
+    private AccountRole role;
+    private AccountStatus status;
     private String profilePicture;
     private Date createAt;
     private Date updateAt;
 
-    public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, int roleID, int status, String profilePicture, Date createAt, Date updateAt) {
+
+    public Account(int accID, String fullname) {
+        this.accID = accID;
+        this.fullname = fullname;
+    }
+
+    public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, AccountRole role, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
         this.fullname = fullname;
         this.gender = gender;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.roleID = roleID;
+        this.role = role;
         this.status = status;
         this.profilePicture = profilePicture;
         this.createAt = createAt;
@@ -81,19 +87,19 @@ public class Account implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getRoleID() {
-        return roleID;
+    public AccountRole getRole() {
+        return role;
     }
 
-    public void setRoleID(int roleID) {
-        this.roleID = roleID;
+    public void setRoleID(AccountRole role) {
+        this.role = role;
     }
 
-    public int getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 
@@ -130,7 +136,7 @@ public class Account implements Serializable {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", roleID=" + roleID +
+                ", role=" + role +
                 ", status=" + status +
                 ", profilePicture='" + profilePicture + '\'' +
                 ", createAt=" + createAt +

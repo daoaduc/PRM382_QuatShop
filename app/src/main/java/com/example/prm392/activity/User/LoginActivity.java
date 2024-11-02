@@ -29,7 +29,6 @@ import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
-    private Button loginButton;
     AccountDAO accountDAO;
     CheckBox saveLoginCheckBox;
 
@@ -37,13 +36,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
-        loginButton = findViewById(R.id.btnLogin);
         emailEditText = findViewById(R.id.edtEmail);
         passwordEditText = findViewById(R.id.edtPassword);
         accountDAO = new AccountDAO();
         saveLoginCheckBox = findViewById(R.id.chkSaveLogin);
         getLoginInfo();
-
     }
 
 
@@ -87,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //check if email or password is filled
         if(email.isEmpty()||password.isEmpty()){
-            Toast.makeText(this, "Please fill enter email or password!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show();
             return;
         }
 

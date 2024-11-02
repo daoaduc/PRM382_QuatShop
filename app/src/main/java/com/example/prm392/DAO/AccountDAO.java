@@ -6,6 +6,8 @@ import android.widget.Toast;
 import com.example.prm392.ConnectionClass;
 import com.example.prm392.activity.User.LoginActivity;
 import com.example.prm392.model.Account;
+import com.example.prm392.model.AccountRole;
+import com.example.prm392.model.AccountStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +55,7 @@ public class AccountDAO {
                 stm.setString(2,password);
                 ResultSet rs = stm.executeQuery();
                 if(rs.next()){
-                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getInt(7),rs.getInt(8),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getString(5),rs.getString(6),new AccountRole(rs.getInt(7)),new AccountStatus(rs.getInt(8)),rs.getString(9),rs.getDate(10),rs.getDate(11));
                 }
                 rs.close();
                 stm.close();
@@ -99,8 +101,8 @@ public class AccountDAO {
                 preparedStatement.setString(1, account.getFullname());
                 preparedStatement.setString(2, account.getEmail());
                 preparedStatement.setString(3, account.getPassword());
-                preparedStatement.setInt(4, account.getRoleID());
-                preparedStatement.setInt(5, account.getStatus());
+                preparedStatement.setInt(4, account.getRole().getRoleID());
+                preparedStatement.setInt(5, account.getStatus().getStatusID());
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
@@ -126,5 +128,30 @@ public class AccountDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String getUserName(int userId) {
+        return "";
+    }
+
+    public Account getAccountById(int userId) {
+        Connection con = connectionClass.CONN();
+        if (con != null) {
+            String query = "SELECT * FROM `account` WHERE `accid` = ?";
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(query);
+                preparedStatement.setInt(1, userId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    return new Account(resultSet.getInt(1), resultSet.getString(2));
+                }
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.prm392.activity.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -17,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.prm392.R;
+import com.example.prm392.activity.Chat.ChatActivity;
+import com.example.prm392.activity.Chat.MessageActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -133,4 +136,9 @@ public class MainActivity2 extends AppCompatActivity {
             return false;
         }
     };
+
+    public void openChatActivity(View view) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        startActivity(intent);
+    }
 }
