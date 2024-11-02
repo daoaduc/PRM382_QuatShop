@@ -76,9 +76,8 @@ public class MainActivity2 extends AppCompatActivity {
         });
 
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-        int userId = getUserId(); // Get the userId
         new Thread(() -> {
-            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
+            List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
             int cartSize = cartItems.size();
 
             runOnUiThread(() -> {
@@ -93,7 +92,7 @@ public class MainActivity2 extends AppCompatActivity {
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
         int userId = getUserId(); // Get the userId
         new Thread(() -> {
-            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
+            List<Cart> cartItems = cartDAO.getAllCartItems();  // Assuming a synchronous method to get items
             int cartSize = cartItems.size();
             runOnUiThread(() -> {
                 if (cartSize > 0) {
