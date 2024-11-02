@@ -26,34 +26,23 @@
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/roundedImageViewRounded"/>
 
+
         <TextView
             android:id="@+id/recTitle"
-            android:layout_width="178dp"
+            android:layout_width="245dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/recImage"
-            android:text="Title"
+            android:text="Quạt 3 cánh Panasonic"
             android:textColor="@color/tim_dam"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/recStatus"
-            android:layout_width="74dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/recTitle"
-            android:text="status"
-            android:textAlignment="center"
-            android:textColor="@color/tim"
             android:textSize="16sp" />
 
         <TextView
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:id="@+id/recQuantity"
-            android:text="Quantity: 1"
+            android:id="@+id/recPrice"
+            android:text="₫1.000.000"
             android:textColor="@color/tim"
             android:textSize="14sp"
             android:layout_toEndOf="@id/recImage"
@@ -62,7 +51,17 @@
             android:maxLines="1"
             android:layout_marginBottom="12dp"/>
 
-
+        <TextView
+            android:id="@+id/recQuantity"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recTitle"
+            android:layout_marginStart="110dp"
+            android:layout_toRightOf="@id/recPrice"
+            android:text="x1"
+            android:textAlignment="center"
+            android:textColor="@color/tim"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

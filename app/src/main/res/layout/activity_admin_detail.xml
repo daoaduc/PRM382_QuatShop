@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.Admin.DetailActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/detailTitle"
+        android:text="Panasonic standing 6-blade VY639990 80W"
+        android:layout_marginTop="14dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/tim"
+        />
+
+
+    <ImageView
+        android:id="@+id/detailImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:padding="8dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/uploadimg" />
+
+    <TextView
+        android:id="@+id/detailDesc"
+        android:layout_width="match_parent"
+        android:layout_height="89dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:text="Description"
+        android:textColor="@color/tim"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:text="1.000.000Vnd"
+        android:layout_gravity="center"
+        android:id="@+id/detailPrice"
+        android:textSize="18sp"
+        android:textColor="@color/tim"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:text="Tình trạng"
+        android:layout_gravity="center"
+        android:id="@+id/detailStatus"
+        android:textSize="18sp"
+        android:textColor="@color/tim"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:text="Số lượng còn lại: 1"
+        android:layout_gravity="center"
+        android:id="@+id/detailQuantity"
+        android:textSize="18sp"
+        android:textColor="@color/tim"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="21dp"
+            android:layout_marginBottom="37dp"
+            app:menu_colorNormal="@color/tim"
+            app:menu_colorPressed="@color/tim"
+            app:menu_fab_size="normal"
+            app:menu_icon="@drawable/baseline_format_list_bulleted_24"
+            app:menu_openDirection="up"
+            app:menu_showShadow="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_edit_24"
+                app:fab_colorNormal="@color/tim_nhat"
+                app:fab_showShadow="true"
+                app:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_delete_24"
+                app:fab_colorNormal="@color/tim_dam"
+                app:fab_showShadow="true"
+                app:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/returnButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_keyboard_return_24"
+                app:fab_colorNormal="@color/tim_dam_hon"
+                app:fab_showShadow="true"
+                app:fab_size="mini" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    </RelativeLayout>
+
+</LinearLayout>

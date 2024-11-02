@@ -5,6 +5,11 @@ public class OrderStatus {
     private String status;
 
     public OrderStatus() {
+
+    }
+
+    public OrderStatus(int statusID) {
+        this.statusID = statusID;
     }
 
     public OrderStatus(int statusID, String status) {
@@ -26,5 +31,13 @@ public class OrderStatus {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderStatus{" +
+                "statusID=" + statusID +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

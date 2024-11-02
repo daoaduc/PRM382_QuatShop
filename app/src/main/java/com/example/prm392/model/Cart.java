@@ -13,17 +13,26 @@ public class Cart {
     private double price;
     private int quantity;
     private String image;
+    private int userId;
 
     public Cart() {
     }
 
-    public Cart(int cartId, int productId, String productName, double price, int quantity, String image) {
-        CartId = cartId;
+    public Cart(int productId, String productName, double price, int quantity, String image, int userId) {
         ProductId = productId;
         ProductName = productName;
         this.price = price;
         this.quantity = quantity;
         this.image = image;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getCartId() {

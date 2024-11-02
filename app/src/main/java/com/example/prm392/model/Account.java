@@ -1,5 +1,4 @@
 package com.example.prm392.model;
-import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -7,17 +6,18 @@ import java.util.Date;
 public class Account implements Serializable {
     private int accID;
     private String fullname;
-    private int gender;
+    private boolean gender;
     private String email;
     private String password;
     private String phoneNumber;
-    private int roleID;
-    private int status;
+    private AccountRole roleID;
+    private AccountStatus status;
     private String profilePicture;
     private Date createAt;
     private Date updateAt;
 
-    public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, int roleID, int status, String profilePicture, Date createAt, Date updateAt) {
+    // Constructors
+    public Account(int accID, String fullname, boolean gender, String email, String phoneNumber, AccountRole roleID, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
         this.fullname = fullname;
         this.gender = gender;
@@ -31,8 +31,27 @@ public class Account implements Serializable {
         this.updateAt = updateAt;
     }
 
+    // Constructors
+    public Account(int accID,String fullname, boolean gender, String email, String password, String phoneNumber, AccountRole roleID, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
+        this.accID = accID;
+        this.fullname = fullname;
+        this.gender = gender;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.roleID = roleID;
+        this.status = status;
+        this.profilePicture = profilePicture;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+    }
     public Account() {}
 
+    public Account(int accID) {
+        this.accID = accID;
+    }
+
+    // Getters and setters
     public int getAccID() {
         return accID;
     }
@@ -49,11 +68,12 @@ public class Account implements Serializable {
         this.fullname = fullname;
     }
 
-    public int getGender() {
+
+    public boolean isGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(boolean gender) {
         this.gender = gender;
     }
 
@@ -81,21 +101,22 @@ public class Account implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getRoleID() {
+    public AccountRole getRoleID() {
         return roleID;
     }
 
-    public void setRoleID(int roleID) {
+    public void setRoleID(AccountRole roleID) {
         this.roleID = roleID;
     }
 
-    public int getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
+
 
     public String getProfilePicture() {
         return profilePicture;

@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -17,11 +16,7 @@ import com.example.prm392.common.OnItemClickListener;
 import com.example.prm392.model.ProductCategory;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class MainCategoryAdapter extends RecyclerView.Adapter<MainCategoryAdapter.Vh> {
 

@@ -1,17 +1,17 @@
 package com.example.prm392.model;
 
-public class ProductStatus {
+public class AccountStatus {
     private int statusID;
-    private String statusName;
+    private int statusName;
 
-    public ProductStatus() {
+    public AccountStatus() {
     }
 
-    public ProductStatus(int statusID) {
+    public AccountStatus(int statusID) {
         this.statusID = statusID;
     }
 
-    public ProductStatus(int statusID, String statusName) {
+    public AccountStatus(int statusID, int statusName) {
         this.statusID = statusID;
         this.statusName = statusName;
     }
@@ -24,14 +24,16 @@ public class ProductStatus {
         this.statusID = statusID;
     }
 
-    public String getStatusName() {
+    public int getStatusName() {
         return statusName;
     }
 
-    public void setStatusName(String statusName) {
+    public void setStatusName(int statusName) {
         this.statusName = statusName;
     }
+
+    @Override
     public String toString() {
-        return statusName; // Hiển thị tên trong Spinner
+        return statusName + "";
     }
 }
