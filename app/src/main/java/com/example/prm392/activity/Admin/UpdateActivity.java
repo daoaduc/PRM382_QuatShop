@@ -170,6 +170,11 @@ public class UpdateActivity extends AppCompatActivity {
         int quantity = Integer.parseInt(updateQuantity.getText().toString().trim());
         ProductStatus selectedStatus = (ProductStatus) updateStatus.getSelectedItem();
 
+        if (quantity > 999) {
+            Toast.makeText(this, "Số lượng tối đa là 999", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (productName.isEmpty() || productDesc.isEmpty() || price <= 0 || quantity <= 0) {
             Toast.makeText(this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;

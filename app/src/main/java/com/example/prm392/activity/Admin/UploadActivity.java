@@ -159,6 +159,11 @@ public class UploadActivity extends AppCompatActivity {
                 quantity = Integer.parseInt(quantityString);
             }
 
+            if (quantity > 999) {
+                Toast.makeText(this, "Số lượng tối đa là 999", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // Lay thong tin danh mục
             ProductCategory selectedCategory = (ProductCategory) uploadCategory.getSelectedItem();
 
             // Kiểm tra các trường thông tin đầu vào
