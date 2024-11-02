@@ -262,7 +262,7 @@ public class ProductDAO {
         return productList;
     }
 
-    public List<Product> getProductsBySearching(String productName, Integer productID) {
+    public List<Product> getProductsBySearching(String productName, Integer categoryId) {
         List<Product> productList = new ArrayList<>();
         Connection connection = connectionClass.CONN();
 
@@ -272,7 +272,7 @@ public class ProductDAO {
             if (productName != null && !productName.isEmpty()) {
                 queryBuilder.append(" AND productName LIKE ?");
             }
-            if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
+            if (categoryId != null && categoryId != Constants.ALL_BTN_CATEGORY) {
                 queryBuilder.append(" AND categoryID = ?");
             }
 
@@ -283,8 +283,8 @@ public class ProductDAO {
                 if (productName != null && !productName.isEmpty()) {
                     stmt.setString(paramIndex++, "%" + productName + "%");
                 }
-                if (productID != null && productID != Constants.ALL_BTN_CATEGORY) {
-                    stmt.setInt(paramIndex++, productID);
+                if (categoryId != null && categoryId != Constants.ALL_BTN_CATEGORY) {
+                    stmt.setInt(paramIndex, categoryId);
                 }
 
                 ResultSet rs = stmt.executeQuery();
@@ -305,4 +305,35 @@ public class ProductDAO {
         }
         return productList;
     }
+
+    public List<Product> getProductsByCategory(int categoryID) {
+        List<Product> productList = new ArrayList<>();
+        Connection connection = connectionClass.CONN();
+
+        if (connection != null) {
+            String query = "SELECT productID, productName, price, productIMG FROM products WHERE categoryID = ?";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                stmt.setInt(1, categoryID); // Bind categoryID to the query
+
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Product product = new Product();
+                    product.setProductID(rs.getInt("productID"));
+                    product.setProductName(rs.getString("productName"));
+                    product.setPrice(rs.getLong("price"));
+                    product.setProductIMG(rs.getString("productIMG"));
+                    productList.add(product);
+                }
+                rs.close();
+                stmt.close();
+            } catch (Exception e) {
+                Log.e("DB_ERROR", "Error fetching products by category: " + e.getMessage());
+            }
+        } else {
+            Log.e("DB_ERROR", "Connection to database failed");
+        }
+        return productList;
+    }
+
 }

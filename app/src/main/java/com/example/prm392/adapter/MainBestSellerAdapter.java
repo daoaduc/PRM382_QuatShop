@@ -64,6 +64,7 @@ public class MainBestSellerAdapter extends RecyclerView.Adapter<MainBestSellerAd
                 .load(product.getProductIMG())  // Load image from URL or Firebase
                 .placeholder(R.drawable.uploadimg)  // Placeholder image
                 .into(holder.recImage);
+        holder.itemView.setTag(position);
     }
 
 
