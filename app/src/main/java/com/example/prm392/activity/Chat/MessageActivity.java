@@ -35,8 +35,8 @@ import java.util.concurrent.Executors;
 public class MessageActivity extends AppCompatActivity {
     ExecutorService executorService;
     Socket socket;
-    String SERVER_IP = "192.168.36.100";
-    int SERVER_PORT = 8080;
+    final String SERVER_IP = "192.168.36.100";
+    final int SERVER_PORT = 8080;
 
     RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
@@ -114,10 +114,10 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(Message message) {
         executorService.execute(() -> {
             try {
-                // Send message
-//                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-//                oos.writeObject(message);
-//                oos.flush();
+                //Send message
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(message);
+                oos.flush();
                 runOnUiThread(() -> {
                     messageList.add(message);
                     loadNewMessage();
@@ -135,7 +135,6 @@ public class MessageActivity extends AppCompatActivity {
                 // Connect to server
                 socket = new Socket(SERVER_IP, SERVER_PORT);
                 receiveMessage();
-
             } catch (IOException e) {
                 runOnUiThread(() -> Toast.makeText(MessageActivity.this, "Server not found", Toast.LENGTH_SHORT).show());
                 e.printStackTrace();
