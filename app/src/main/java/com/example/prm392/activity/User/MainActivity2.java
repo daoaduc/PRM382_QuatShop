@@ -2,6 +2,7 @@ package com.example.prm392.activity.User;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import com.example.prm392.DAO.CartDAO;
 import com.example.prm392.DAO.CartDatabase;
 import com.example.prm392.R;
 import com.example.prm392.model.Cart;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -90,28 +92,9 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment, String title, Bundle args) {
-        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-        int userId = getUserId(); // Get the userId
-        new Thread(() -> {
-            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
-            int cartSize = cartItems.size();
-            runOnUiThread(() -> {
-                if (cartSize > 0) {
-                    // Inflate the cart_action_item layout
-                    View cartActionView = LayoutInflater.from(this).inflate(R.layout.cart_action_item, null);
-                    // Get the TextView from the inflated layout
-                    TextView cartBadgeTextView = cartActionView.findViewById(R.id.cart_badge_text_view);
-                    // Set the text of the TextView to the quantity of items in the cart
-                    cartBadgeTextView.setText(String.valueOf(cartSize));
-                    // Set the cartActionView as the action view for the cart menu item
-                    bottomNavigationView.getMenu().getItem(2).setActionView(cartActionView);
-                } else {
-                    // Set the cart icon to 'empty' state
-                    bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setIcon(R.drawable.ic_cart);
-                }
-            });
-        }).start();
-
+        if (title.equals("Cart")) {
+            updateCartBadge();
+        }
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
             // If the fragment is already displayed, just update its data
@@ -129,9 +112,38 @@ public class MainActivity2 extends AppCompatActivity {
         transaction.replace(R.id.container, fragment, title);
         transaction.addToBackStack(null);
         transaction.commit();
-
         updateBottomNavigationView(title);
     }
+    private void updateCartBadge() {
+        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
+        int userId = getUserId(); // Get the userId
+        new Thread(() -> {
+            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
+            int cartSize = cartItems.size();
+            Log.d("CartSize", "Cart size: " + cartSize); // Log the cart size
+            runOnUiThread(() -> {
+                MenuItem cartMenuItem = bottomNavigationView.getMenu().findItem(R.id.navigation_cart);
+
+                // Remove any existing BadgeDrawable before adding a new one
+                BadgeDrawable badgeDrawable = bottomNavigationView.getBadge(R.id.navigation_cart);
+                if (badgeDrawable != null) {
+                    bottomNavigationView.removeBadge(R.id.navigation_cart);
+                }
+
+                if (cartSize > 0) {
+                    // Create and configure BadgeDrawable
+                    badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.navigation_cart);
+                    badgeDrawable.setVisible(true);
+                    badgeDrawable.setNumber(cartSize); // Display cart size as the badge number
+                    badgeDrawable.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent)); // Customize badge color if needed
+                } else {
+                    // Hide the badge when the cart is empty
+                    bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setIcon(R.drawable.ic_cart);
+                }
+            });
+        }).start();
+    }
+
 
     private int getUserId() {
         SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);

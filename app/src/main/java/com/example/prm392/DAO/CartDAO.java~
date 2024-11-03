@@ -33,4 +33,5 @@ public interface CartDAO {
     @Query("SELECT * FROM cart WHERE userId = :userId")
     List<Cart> getAllCartItemsByUserId(int userId);
 
+    void setListener(CartDAOListener listener);
 }
