@@ -1,6 +1,8 @@
 package com.example.prm392.activity.Admin;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +17,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     FloatingActionButton deleteButton, editButton, returnButton;
     int currentStatusID;
     String imageUrl = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +42,9 @@ public class DetailActivity extends AppCompatActivity {
         editButton = findViewById(R.id.editButton);
         returnButton = findViewById(R.id.returnButton);
         detailQuantity = findViewById(R.id.detailQuantity);
+
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             long price = bundle.getLong("Price");
             NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
             String formattedPrice = formatter.format(price) + " VND";
@@ -56,14 +59,49 @@ public class DetailActivity extends AppCompatActivity {
             Log.d("DetailActivity", "currentStatusID: " + currentStatusID);
 
             imageUrl = bundle.getString("Image");
-            Glide.with(this).load(bundle.getString("Image")).into(detailImage);
+            Glide.with(this).load(imageUrl).into(detailImage);
         }
-
-
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Hiển thị hộp thoại xác nhận
+                showDeleteConfirmationDialog(bundle);
+            }
+        });
+
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailActivity.this, ProductList.class);
+                startActivity(intent);
+            }
+        });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailActivity.this, UpdateActivity.class)
+                        .putExtra("ProductID", bundle.getInt("ProductID"))
+                        .putExtra("Title", bundle.getString("Title"))
+                        .putExtra("Description", bundle.getString("Description"))
+                        .putExtra("Price", bundle.getLong("Price"))
+                        .putExtra("StatusID", bundle.getInt("StatusID"))
+                        .putExtra("Quantity", bundle.getInt("Quantity"))
+                        .putExtra("Image", imageUrl);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void showDeleteConfirmationDialog(Bundle bundle) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Xác nhận xóa");
+        builder.setMessage("Bạn có thực sự muốn xóa sản phẩm?");
+
+        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 int productId = bundle.getInt("ProductID");
                 ProductDAO productDAO = new ProductDAO();
                 Log.d("DetailActivity", "Product ID: " + productId);
@@ -78,7 +116,7 @@ public class DetailActivity extends AppCompatActivity {
                         StorageReference imageRef = storage.getReferenceFromUrl(imageUrl);
 
                         imageRef.delete().addOnSuccessListener(aVoid -> {
-                            Log.d("DetailActivity", "File has been remove from Firebase Storage");
+                            Log.d("DetailActivity", "File has been removed from Firebase Storage");
                         }).addOnFailureListener(e -> {
                             Log.e("DetailActivity", "Lỗi khi xóa file ảnh: " + e.getMessage());
                         });
@@ -93,29 +131,16 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-       returnButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               Intent intent = new Intent(DetailActivity.this, ProductList.class);
-               startActivity(intent);
-           }
-        });
-
-
-        editButton.setOnClickListener(new View.OnClickListener() {
+        builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DetailActivity.this, UpdateActivity.class)
-                        .putExtra("ProductID", bundle.getInt("ProductID"))
-                        .putExtra("Title", bundle.getString("Title"))
-                        .putExtra("Description", bundle.getString("Description"))
-                        .putExtra("Price", bundle.getLong("Price"))
-                        .putExtra("StatusID", bundle.getInt("StatusID"))
-                        .putExtra("Quantity",bundle.getInt("Quantity"))
-                        .putExtra("Image", imageUrl);
-                startActivity(intent);
+            public void onClick(DialogInterface dialog, int which) {
+                // Đóng hộp thoại nếu chọn "Không"
+                dialog.dismiss();
             }
         });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
@@ -123,7 +148,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onResume();
         // Cập nhật lại giao diện khi quay lại Activity
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             long price = bundle.getLong("Price");
             NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
             String formattedPrice = formatter.format(price) + " VND";
@@ -138,8 +163,7 @@ public class DetailActivity extends AppCompatActivity {
             currentStatusID = bundle.getInt("StatusID");
 
             imageUrl = bundle.getString("Image");
-            Glide.with(this).load(bundle.getString("Image")).into(detailImage);
+            Glide.with(this).load(imageUrl).into(detailImage);
         }
     }
-
 }

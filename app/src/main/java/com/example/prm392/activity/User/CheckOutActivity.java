@@ -144,18 +144,57 @@ public class CheckOutActivity extends AppCompatActivity {
                 ZaloPaySDK.getInstance().payOrder(CheckOutActivity.this, token, "demozpdk://app", new PayOrderListener() {
                     @Override
                     public void onPaymentSucceeded(String s, String s1, String s2) {
-                        navigateToPaymentNotification("Thanh toán thành công");
+                        String orderCode = generateOrderCode();
+                        int userId = getUserId();
+                        String address = txtAddress.getText().toString().trim();
+                        String phoneNumber = txtPhone.getText().toString().trim();
+                        String totalMoney = totalString;
 
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        executorService.execute(() -> {
+                            Order order = new Order();
+                            order.setOrderCode(orderCode);
+                            order.setAccID(new Account(userId));
+                            order.setAddress(address);
+                            order.setTotalMoney(Long.parseLong(totalMoney));
+                            order.setPaymentMethod(true);
+                            order.setOrderDate(new Date(System.currentTimeMillis()));
+                            order.setConfirmedDate(new Date(System.currentTimeMillis()));
+                            order.setStatus(new OrderStatus(2));
+                            order.setPhone_number(phoneNumber);
+
+                            OrderDAO orderDAO = new OrderDAO();
+                            int orderId = orderDAO.insertOrderCard(order); // Lấy orderID tự động sinh
+
+                            if (orderId != 0) { // Nếu chèn thành công
+                                for (Cart cart : cartItems) {
+                                    int productID = cart.getProductId();
+                                    int quantity = cart.getQuantity();
+                                    double totalPrice = quantity * cart.getPrice();
+                                    long totalPriceLong = (long) totalPrice;
+                                    orderDAO.insertOrderDetail(orderId, productID, quantity, totalPriceLong);
+                                }
+                                cartDAO.deleteAllCartItemsByUserId(userId);
+                                runOnUiThread(() -> {
+                                    navigateToPaymentNotification("Thanh toán thành công","ĐƠN HÀNG CỦA BẠN ĐÃ ĐƯỢC THANH TOÁN THÀNH CÔNG");
+                                });
+                            } else {
+                                Log.e("ERROR", "Order insertion failed, no orderID generated");
+                            }
+
+                            executorService.shutdown();});
                     }
 
                     @Override
                     public void onPaymentCanceled(String s, String s1) {
-                        navigateToPaymentNotification("Hủy thanh toán");
+                        Intent intent = new Intent(CheckOutActivity.this, MainActivity2.class);
+                        startActivity(intent);
+                        finish();
                     }
 
                     @Override
                     public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                        navigateToPaymentNotification("Lỗi thanh toán");
+                        navigateToPaymentNotification("Lỗi thanh toán","GẶP LỖI KHI THỰC HIỆN THANH TOÁN ĐƠN HÀNG");
                     }
                 });
             }
@@ -173,30 +212,37 @@ public class CheckOutActivity extends AppCompatActivity {
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
-            // Tạo đối tượng Order với các thông tin cần thiết
             Order order = new Order();
             order.setOrderCode(orderCode);
-            order.setAccID(new Account(userId));  // Giả sử hàm getUserId trả về accID
+            order.setAccID(new Account(userId));
             order.setAddress(address);
             order.setTotalMoney(Long.parseLong(totalMoney));
-            order.setPaymentMethod(false); // Giả sử false là thanh toán tiền mặt
+            order.setPaymentMethod(false);
             order.setOrderDate(new Date(System.currentTimeMillis()));
-            order.setConfirmedDate(null);  // Có thể để null nếu chưa xác nhận
-            order.setStatus(new OrderStatus(1)); // Trạng thái mặc định
+            order.setConfirmedDate(null);
+            order.setStatus(new OrderStatus(1));
             order.setPhone_number(phoneNumber);
 
-            // Gọi phương thức insertOrder để chèn dữ liệu vào database
             OrderDAO orderDAO = new OrderDAO();
-            orderDAO.insertOrder(order);
+            int orderId = orderDAO.insertOrder(order); // Lấy orderID tự động sinh
 
-            cartDAO.deleteAllCartItemsByUserId(userId);
-
-            runOnUiThread(() -> {
-                navigateToPaymentNotification("Thanh toán bằng tiền mặt");
-            });
+            if (orderId != 0) { // Nếu chèn thành công
+                for (Cart cart : cartItems) {
+                    int productID = cart.getProductId();
+                    int quantity = cart.getQuantity();
+                    double totalPrice = quantity * cart.getPrice();
+                    long totalPriceLong = (long) totalPrice;
+                    orderDAO.insertOrderDetail(orderId, productID, quantity, totalPriceLong);
+                }
+                cartDAO.deleteAllCartItemsByUserId(userId);
+                runOnUiThread(() -> {
+                    navigateToPaymentNotification("Đang chờ thanh toán", "Cùng Fan Shop bảo vệ quyền lợi của bạn - KHÔNG CHUYỂN TIỀN TRƯỚC cho Shipper khi đơn hàng chưa được giao tới với bất kì lý do gì");
+                });
+            } else {
+                Log.e("ERROR", "Order insertion failed, no orderID generated");
+            }
         });
     }
-
 
     private String generateOrderCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -208,9 +254,10 @@ public class CheckOutActivity extends AppCompatActivity {
         return orderCode.toString();
     }
 
-    private void navigateToPaymentNotification(String result) {
+    private void navigateToPaymentNotification(String textViewNotify, String textViewMessage) {
         Intent intent = new Intent(CheckOutActivity.this, PaymentNotification.class);
-        intent.putExtra("result", result);
+        intent.putExtra("textViewNotify", textViewNotify);
+        intent.putExtra("textViewMessage", textViewMessage);
         startActivity(intent);
     }
 

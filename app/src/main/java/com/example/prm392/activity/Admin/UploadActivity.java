@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -110,7 +111,7 @@ public class UploadActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               finish();
+                finish();
             }
         });
     }
@@ -132,7 +133,6 @@ public class UploadActivity extends AppCompatActivity {
             uploadCategory.setAdapter(adapter);
         });
     }
-
 
 
     private void openDownloads() {
@@ -187,7 +187,7 @@ public class UploadActivity extends AppCompatActivity {
                 return;
             }
             final long finalPrice = price;
-            final int  finalQuantity = quantity;
+            final int finalQuantity = quantity;
             // Tạo ExecutorService để tải sản phẩm lên
             ExecutorService executorService = Executors.newSingleThreadExecutor();
 
