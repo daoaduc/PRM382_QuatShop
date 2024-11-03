@@ -63,7 +63,7 @@ public class MainActivity2 extends AppCompatActivity implements OnFragmentNaviga
         });
         updateCartBadge();
     }
-
+    
     private final BroadcastReceiver cartUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -90,9 +90,6 @@ public class CartFragment extends Fragment {
                 Log.d("CartFragment", "userID: " + cart.getUserId());
                 sum += cart.getQuantity() * cart.getPrice();
             }
-            if (items.isEmpty()) {
-                sendCartUpdateBroadcast(); // Send broadcast if cart is empty
-            }
 
             // Chuyển cập nhật UI sang luồng chính
             double finalSum = sum; // Tạo biến tạm để sử dụng trong runOnUiThread

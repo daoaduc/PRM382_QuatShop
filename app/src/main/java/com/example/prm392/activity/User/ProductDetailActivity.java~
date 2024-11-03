@@ -98,10 +98,9 @@ public class ProductDetailActivity extends AppCompatActivity {
                             // Insert the new item into the cart
                             cartDAO.insert(cartItem);
                         }
-                        runOnUiThread(() -> {
-                            Toast.makeText(ProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                            sendCartUpdateBroadcast();
-                        });
+                        runOnUiThread(() ->
+                                Toast.makeText(ProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show(); sendCartUpdateBroadcast();
+                        );
                     }).start();
                 } else {
                     runOnUiThread(() -> {
