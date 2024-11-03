@@ -39,7 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
 
-        holder.tvUserChat.setText(message.getContent());
+        holder.tvUserChat.setText(message.getMessage());
 
         LinearLayout.LayoutParams paramUserName = (LinearLayout.LayoutParams) holder.tvUserName.getLayoutParams();
         LinearLayout.LayoutParams paramsUserChat = (LinearLayout.LayoutParams) holder.tvUserChat.getLayoutParams();

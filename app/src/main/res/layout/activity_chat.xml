@@ -45,5 +45,14 @@
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_create_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/add_button_svgrepo_com"
+        android:visibility="invisible"
+        />
 </LinearLayout>

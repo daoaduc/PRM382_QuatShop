@@ -12,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.model.Chat;
+import com.example.prm392.model.ChatRoom;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
-    List<Chat> chatList = new ArrayList<>();
+    List<ChatRoom> chatRoomList;
 
-    public ChatAdapter(List<Chat> chatList){
-        this.chatList = chatList;
+    public ChatAdapter(List<ChatRoom> chatRoomList){
+        this.chatRoomList = chatRoomList;
     }
 
     @NonNull
@@ -32,26 +33,24 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ChatViewHolder holder, int position) {
-        Chat chat = chatList.get(position);
-        holder.tvUserName.setText(chat.getUserName());
-        holder.tvLastMessage.setText(chat.getLastMessage());
+        ChatRoom chatRoom = chatRoomList.get(position);
+        holder.chatRoomId.setText(String.valueOf(chatRoom.getRoomID()));
+        holder.tvChatName.setText(chatRoom.getRoomName());
     }
 
     @Override
     public int getItemCount() {
-        return chatList.size();
+        return chatRoomList.size();
     }
 
     public static class ChatViewHolder extends RecyclerView.ViewHolder{
-        ImageView imgUserAvatar;
-        TextView tvUserName;
-        TextView tvLastMessage;
+        TextView chatRoomId;
+        TextView tvChatName;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgUserAvatar = itemView.findViewById(R.id.imgUserAvatar);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
-            tvLastMessage = itemView.findViewById(R.id.tvLastMessage);
+            chatRoomId = itemView.findViewById(R.id.chatRoomId);
+            tvChatName = itemView.findViewById(R.id.tvChatName);
         }
     }
 

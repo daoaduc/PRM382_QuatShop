@@ -27,20 +27,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/tvUserName"
+                android:id="@+id/chatRoomId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Name"
-                android:textSize="20sp"
+                android:visibility="invisible"
                 />
-
             <TextView
-                android:id="@+id/tvLastMessage"
+                android:id="@+id/tvChatName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:hint="Last Message"
+                android:text="Conversation"
                 android:textSize="20sp"
                 />
         </LinearLayout>
