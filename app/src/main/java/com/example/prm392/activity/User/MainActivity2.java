@@ -1,62 +1,35 @@
 package com.example.prm392.activity.User;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.prm392.DAO.CartDAO;
-import com.example.prm392.DAO.CartDatabase;
 import com.example.prm392.R;
-import com.example.prm392.model.Cart;
-import com.google.android.material.badge.BadgeDrawable;
+import com.example.prm392.common.OnFragmentNavigationListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.List;
-
-public class MainActivity2 extends AppCompatActivity {
-    private DrawerLayout drawerLayout;
+public class MainActivity2 extends AppCompatActivity implements OnFragmentNavigationListener {
     private NavigationView navigationView;
-    //    private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private EditText mSearchProductText;
-    private Fragment mCurrentFragement;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_2);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
-
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-
+        // Load the Home fragment as the default fragment when activity starts
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment(), "Home", null);
         }
@@ -65,89 +38,46 @@ public class MainActivity2 extends AppCompatActivity {
         mSearchProductText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                // Check if Enter key is pressed
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     String searchText = (String) mSearchProductText.getText().toString().trim();
-                    if(searchText != null){
-                        Bundle args = new Bundle();
-                        args.putString("searchText", searchText);
-                        loadFragment(new CategoryFragment(), "Category", args);
+                    // If there's search text, load the Category fragment
+                    if (searchText != null) {
+                        loadFragment(new CategoryFragment(), "Category", null);
                     }
                 }
                 return false;
             }
         });
-
-        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-        int userId = getUserId(); // Get the userId
-        new Thread(() -> {
-            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
-            int cartSize = cartItems.size();
-
-            runOnUiThread(() -> {
-                if (cartSize > 0) {
-                    Toast.makeText(this,"Bạn đang có đơn hàng trong giỏ",Toast.LENGTH_LONG).show();
-                }
-            });
-        }).start();
     }
 
-    private void loadFragment(Fragment fragment, String title, Bundle args) {
-        if (title.equals("Cart")) {
-            updateCartBadge();
+    public void loadFragment(Fragment fragment, String title, Bundle args) {
+        if (args == null) {
+            args = new Bundle();
         }
+        // Add search text to the arguments
+        if (mSearchProductText != null) {
+            String searchText = mSearchProductText.getText().toString().trim();
+            args.putString("searchText", searchText);
+        }
+
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+
+        // If the fragment is already displayed, just update its data
         if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
-            // If the fragment is already displayed, just update its data
-            if (currentFragment instanceof CategoryFragment && args != null) {
+            if (currentFragment instanceof CategoryFragment) {
                 ((CategoryFragment) currentFragment).updateData(args);
             }
             return;
         }
 
-        if (args != null) {
-            fragment.setArguments(args);
-        }
-        mCurrentFragement = fragment;
+        // Set arguments to the fragment and replace the current one
+        fragment.setArguments(args);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment, title);
         transaction.addToBackStack(null);
         transaction.commit();
         updateBottomNavigationView(title);
-    }
-    private void updateCartBadge() {
-        CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();
-        int userId = getUserId(); // Get the userId
-        new Thread(() -> {
-            List<Cart> cartItems = cartDAO.getAllCartItemsByUserId(userId);  // Get cart items by userId
-            int cartSize = cartItems.size();
-            Log.d("CartSize", "Cart size: " + cartSize); // Log the cart size
-            runOnUiThread(() -> {
-                MenuItem cartMenuItem = bottomNavigationView.getMenu().findItem(R.id.navigation_cart);
-
-                // Remove any existing BadgeDrawable before adding a new one
-                BadgeDrawable badgeDrawable = bottomNavigationView.getBadge(R.id.navigation_cart);
-                if (badgeDrawable != null) {
-                    bottomNavigationView.removeBadge(R.id.navigation_cart);
-                }
-
-                if (cartSize > 0) {
-                    // Create and configure BadgeDrawable
-                    badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.navigation_cart);
-                    badgeDrawable.setVisible(true);
-                    badgeDrawable.setNumber(cartSize); // Display cart size as the badge number
-                    badgeDrawable.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent)); // Customize badge color if needed
-                } else {
-                    // Hide the badge when the cart is empty
-                    bottomNavigationView.getMenu().findItem(R.id.navigation_cart).setIcon(R.drawable.ic_cart);
-                }
-            });
-        }).start();
-    }
-
-
-    private int getUserId() {
-        SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
-        return sharedPref.getInt("userID", -1);  // Return -1 if userId is not found
     }
 
     private void updateBottomNavigationView(String title) {
@@ -172,26 +102,29 @@ public class MainActivity2 extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            String searchText = (String) mSearchProductText.getText().toString().trim();
-            Bundle args = new Bundle();
-            if(searchText != null){
-                args.putString("searchText", searchText);
-            }
             int itemId = item.getItemId();
             if (itemId == R.id.navigation_home) {
-                loadFragment(new HomeFragment(), "Home", args);
+                loadFragment(new HomeFragment(), "Home", null);
                 return true;
             } else if (itemId == R.id.navigation_category) {
-                loadFragment(new CategoryFragment(), "Category", args);
+                loadFragment(new CategoryFragment(), "Category", null);
                 return true;
             } else if (itemId == R.id.navigation_cart) {
-                loadFragment(new CartFragment(), "Cart", args);
+                loadFragment(new CartFragment(), "Cart", null);
                 return true;
             } else if (itemId == R.id.navigation_account) {
-                loadFragment(new AccountFragment(), "Account", args);
+                loadFragment(new AccountFragment(), "Account", null);
                 return true;
             }
             return false;
         }
     };
+
+    // Another fragment requests navigation
+    @Override
+    public void navigateToFragment(Fragment fragment, String title, Bundle args) {
+        loadFragment(fragment, title, args);
+    }
+
+
 }
