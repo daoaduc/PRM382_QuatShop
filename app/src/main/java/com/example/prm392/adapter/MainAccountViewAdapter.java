@@ -12,16 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.prm392.R;
 import com.example.prm392.model.OptionItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountViewAdapter.ViewHolder>{
+public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountViewAdapter.ViewHolder> {
     private List<OptionItem> optionList;
-    private static OnItemClickListener listener;
+    private OnItemClickListener listener;
 
-    public MainAccountViewAdapter(List<OptionItem> optionList){
-        this.optionList = optionList;
+    public MainAccountViewAdapter(List<OptionItem> optionList) {
+        this.optionList = optionList != null ? optionList : new ArrayList<>();
     }
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView optionIcon;
         public TextView optionText;
 
@@ -29,7 +31,7 @@ public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountView
             super(itemView);
             optionIcon = itemView.findViewById(R.id.optionIcon);
             optionText = itemView.findViewById(R.id.optionText);
-            // Handle click event
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -43,6 +45,7 @@ public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountView
             });
         }
     }
+
     @NonNull
     @Override
     public MainAccountViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,10 +55,7 @@ public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountView
 
     @Override
     public void onBindViewHolder(@NonNull MainAccountViewAdapter.ViewHolder holder, int position) {
-        // Get the current option item
         OptionItem currentItem = optionList.get(position);
-
-        // Set the icon and name
         holder.optionIcon.setImageResource(currentItem.getOptionIcon());
         holder.optionText.setText(currentItem.getOptionName());
     }
@@ -64,6 +64,7 @@ public class MainAccountViewAdapter extends RecyclerView.Adapter<MainAccountView
     public int getItemCount() {
         return optionList.size();
     }
+
     // Click Listener interface
     public interface OnItemClickListener {
         void onItemClick(int position);

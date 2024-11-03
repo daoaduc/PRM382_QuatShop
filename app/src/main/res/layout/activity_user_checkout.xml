@@ -81,7 +81,7 @@
         android:padding="16dp">
 
         <EditText
-            android:id="@+id/et_voucher"
+            android:id="@+id/et_promocode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -91,7 +91,7 @@
             android:padding="12dp" />
 
         <Button
-            android:id="@+id/btn_apply_voucher"
+            android:id="@+id/btn_apply_promocode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

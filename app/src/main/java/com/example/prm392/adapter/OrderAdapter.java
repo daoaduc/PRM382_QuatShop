@@ -31,15 +31,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
-        holder.orderId.setText("Order ID: " + order.getOrderID());
         holder.orderCode.setText("Order Code: " + order.getOrderCode());
-        holder.username.setText("Username: " + order.getAccID().getFullname());
         holder.totalMoney.setText("Total: $" + order.getTotalMoney());
-        holder.paymentMethod.setText("Payment Method: " + order.isPaymentMethod());
-        holder.orderDate.setText("Order Date: " + order.getOrderDate());
-        holder.confirmedDate.setText("Confirmed Date: " + order.getConfirmedDate());
-        holder.pickupDate.setText("Pickup Date: " + order.getPickedUpDate());
-        holder.deliveryDate.setText("Delivery Date: " + order.getDeliveryDate());
         holder.status.setText("Status: " + order.getStatus().getStatus());
     }
 
@@ -54,15 +47,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            orderId=itemView.findViewById(R.id.orderId);
             orderCode = itemView.findViewById(R.id.orderCode);
-            username = itemView.findViewById(R.id.username);
             totalMoney = itemView.findViewById(R.id.totalMoney);
-            paymentMethod = itemView.findViewById(R.id.paymentMethod);
-            orderDate = itemView.findViewById(R.id.orderDates);
-            confirmedDate = itemView.findViewById(R.id.confirmedDate);
-            pickupDate = itemView.findViewById(R.id.pickupDate);
-            deliveryDate = itemView.findViewById(R.id.deliveryDate);
             status = itemView.findViewById(R.id.status);
         }
     }

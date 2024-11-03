@@ -26,7 +26,7 @@ public class OrderDAO {
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
-            String query = "INSERT INTO `order` (orderCode, accID, address, totalMoney, paymentMethod, orderDate, confirmedDate, status, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO `order` (orderCode, accID, address, totalMoney, paymentMethod, orderDate, confirmedDate, status, phone_number, promoID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try {
                 PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, order.getOrderCode());
@@ -39,6 +39,7 @@ public class OrderDAO {
                 stmt.setDate(7, (Date) order.getConfirmedDate());
                 stmt.setInt(8, order.getStatus().getStatusID());
                 stmt.setString(9, order.getPhone_number());
+                stmt.setInt(10, order.getPromoID().getPromoID());
 
                 stmt.executeUpdate();
 
@@ -64,7 +65,7 @@ public class OrderDAO {
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
-            String query = "INSERT INTO `order` (orderCode, accID, address, totalMoney, paymentMethod, orderDate, confirmedDate, status, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO `order` (orderCode, accID, address, totalMoney, paymentMethod, orderDate, confirmedDate, status, phone_number,promoID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try {
                 PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, order.getOrderCode());
@@ -77,6 +78,7 @@ public class OrderDAO {
                 stmt.setDate(7,orderDate);
                 stmt.setInt(8, order.getStatus().getStatusID());
                 stmt.setString(9, order.getPhone_number());
+                stmt.setInt(10, order.getPromoID().getPromoID());
 
                 stmt.executeUpdate();
 
@@ -179,7 +181,8 @@ public class OrderDAO {
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
                     order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(new OrderStatus(rs.getInt("status")));
+                    String status = this.getStatusById(rs.getInt("status"));
+                    order.setStatus(new OrderStatus(rs.getInt("status"), status));
                     orderList.add(order);
                     count++;
                 }
@@ -213,7 +216,8 @@ public class OrderDAO {
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
                     order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(new OrderStatus(rs.getInt("status")));
+                    String status = this.getStatusById(rs.getInt("status"));
+                    order.setStatus(new OrderStatus(rs.getInt("status"), status));
                     orderList.add(order);
                     count++;
                 }
@@ -225,19 +229,16 @@ public class OrderDAO {
         return orderList;
     }
 
-    public OrderStatus getOrderStatusById(int statusID){
+    public String getStatusById(int statusID){
         Connection connection = connectionClass.CONN();
         if(connection!=null) {
-            String query = "SELECT * FROM order_status WHERE statusID = ?;";
+            String query = "SELECT status FROM order_status WHERE statusID = ?;";
             try{
                 PreparedStatement st = connection.prepareStatement(query);
                 st.setInt(1, statusID);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    OrderStatus os = new OrderStatus();
-                    os.setStatus(rs.getString("status"));
-                    os.setStatusID(rs.getInt(statusID));
-                    return os;
+                    return rs.getString(1);
                 }
             }catch (SQLException e) {
                 throw new RuntimeException(e);

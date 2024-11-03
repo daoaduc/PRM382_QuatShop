@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +23,14 @@ import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.DAO.CartDAO;
 import com.example.prm392.DAO.CartDatabase;
 import com.example.prm392.DAO.OrderDAO;
+import com.example.prm392.DAO.PromoDAO;
 import com.example.prm392.R;
 import com.example.prm392.adapter.CheckoutListAdapter;
 import com.example.prm392.model.Account;
 import com.example.prm392.model.Cart;
 import com.example.prm392.model.Order;
 import com.example.prm392.model.OrderStatus;
+import com.example.prm392.model.Promo;
 
 import org.json.JSONObject;
 
@@ -49,11 +52,13 @@ public class CheckOutActivity extends AppCompatActivity {
     private CheckoutListAdapter adapter;
     private List<Cart> cartItems; // Danh sách chứa sản phẩm trong giỏ hàng
     private TextView txtTongTien, txtName, txtAddress, txtPhone;
-    private Button btnPlaceOrder;
+    private EditText etPromoCode;
+    private Button btnPlaceOrder, btnApplyPromocode;
     private RadioGroup paymentMethodGroup;
     private CartDAO cartDAO;
-
+    private double discountAmount = 0;
     private String totalString;
+    private int promoId = -1;
 
 
     @Override
@@ -109,6 +114,15 @@ public class CheckOutActivity extends AppCompatActivity {
         txtPhone = findViewById(R.id.et_phone);
 
 
+        // Khởi tạo Promocode
+
+        etPromoCode = findViewById(R.id.et_promocode);
+        btnApplyPromocode = findViewById(R.id.btn_apply_promocode);
+
+        btnApplyPromocode.setOnClickListener(v -> {
+            String promoCode = etPromoCode.getText().toString().trim();
+            applyPromoCode(promoCode);
+        });
         // Khởi tạo giao diện thanh toán
 
         paymentMethodGroup = findViewById(R.id.paymentMethodGroup);
@@ -171,6 +185,11 @@ public class CheckOutActivity extends AppCompatActivity {
                             order.setConfirmedDate(new Date(System.currentTimeMillis()));
                             order.setStatus(new OrderStatus(2));
                             order.setPhone_number(phoneNumber);
+                            if (promoId != -1) { // Check if a promo is applied
+                                order.setPromoID(new Promo(promoId));
+                                PromoDAO promoDAO = new PromoDAO();
+                                promoDAO.incrementUsageCount(promoId);
+                            }
 
                             OrderDAO orderDAO = new OrderDAO();
                             int orderId = orderDAO.insertOrderCard(order); // Lấy orderID tự động sinh
@@ -231,6 +250,11 @@ public class CheckOutActivity extends AppCompatActivity {
             order.setConfirmedDate(null);
             order.setStatus(new OrderStatus(1));
             order.setPhone_number(phoneNumber);
+            if (promoId != -1) { // Check if a promo is applied
+                order.setPromoID(new Promo(promoId));
+                PromoDAO promoDAO = new PromoDAO();
+                promoDAO.incrementUsageCount(promoId);
+            }
 
             OrderDAO orderDAO = new OrderDAO();
             int orderId = orderDAO.insertOrder(order); // Lấy orderID tự động sinh
@@ -270,6 +294,45 @@ public class CheckOutActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void applyPromoCode(String promoCode) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            PromoDAO promoDAO = new PromoDAO();
+            Promo promo = promoDAO.getPromoByPromoCode(promoCode);
+            if (promo != null && promoCode.equalsIgnoreCase(promo.getPromoCode())) {
+                discountAmount = promo.getPromoValue();
+                promoId = promo.getPromoID();
+                runOnUiThread(() -> {
+                    if(promo.isPromoType()) {
+                        Toast.makeText(this, "Mã giảm giá hợp lệ! Giảm " + discountAmount + "%", Toast.LENGTH_SHORT).show();
+                        discountAmount = discountAmount / 100;
+                        calculatePrice();
+
+                    }
+                    else {
+                        if(discountAmount < Double.parseDouble(totalString)){
+                        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+                        String discountAmountString = String.format("%.0f", discountAmount); // Cập nhật totalString với tổng tiền
+                        Toast.makeText(this, "Mã giảm giá hợp lệ! Giảm " + discountAmountString + " VND", Toast.LENGTH_SHORT).show();
+                        calculatePrice();
+                        }
+                        else {
+                            Toast.makeText(this, "Không thể áp dụng mã giảm giá này", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                discountAmount = 0;
+                promoId = -1;
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Mã giảm giá không hợp lệ hoặc đã hết giá trị sử dụng!", Toast.LENGTH_SHORT).show();
+                    calculatePrice();
+                });
+            }
+            executorService.shutdown();
+        });
+    }
+
     private void calculatePrice() {
         new Thread(() -> {
             int currentUserId = getUserId();
@@ -279,15 +342,28 @@ public class CheckOutActivity extends AppCompatActivity {
                 sum += cart.getQuantity() * cart.getPrice();
             }
 
-            // Format tổng tiền
-            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-            totalString = String.format("%.0f", sum); // Cập nhật totalString với tổng tiền
-            String formattedPrice = formatter.format(sum) + " VNĐ";
+            // Apply discount amount correctly
+            double finalAmount;
+            if (discountAmount < 1) {
+                finalAmount = sum * (1 - discountAmount);
+            } else {
+                finalAmount = sum - discountAmount;
+                // Ensure finalAmount is not negative
+                if (finalAmount < 0) {
+                    finalAmount = 0;
+                }
+            }
 
-            // Cập nhật TextView trên main thread
+            // Format total after discount
+            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            totalString = String.format("%.0f", finalAmount); // Update totalString with finalAmount
+            String formattedPrice = formatter.format(finalAmount) + " VNĐ";
+
+            // Update TextView on the main thread
             runOnUiThread(() -> txtTongTien.setText("Tổng tiền: " + formattedPrice));
         }).start();
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {

@@ -59,8 +59,7 @@ public class AccountFragment extends Fragment {
 
         // Initialize ExecutorService
         executorService = Executors.newSingleThreadExecutor();
-        backBtn = view.findViewById(R.id.backButton);
-        backBtn.setOnClickListener(v -> requireActivity().onBackPressed());
+
 
         // Initialize the RecyclerView and other views
         profileImage = view.findViewById(R.id.profileImage);
@@ -69,11 +68,11 @@ public class AccountFragment extends Fragment {
 
         // Initialize the list of options
         optionList = new ArrayList<>();
-        optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground));
-        optionList.add(new OptionItem("My Order", R.drawable.cart_shopping_svgrepo_com));
-        optionList.add(new OptionItem("Shipping Address", R.drawable.location_pin_alt_1_svgrepo_com));
-        optionList.add(new OptionItem("Help Center", R.drawable.chat_round_line_svgrepo_com));
-        optionList.add(new OptionItem("Log Out", R.drawable.log_out_02_svgrepo_com));
+        optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground, "edit_profile"));
+        optionList.add(new OptionItem("My Order", R.drawable.cart_shopping_svgrepo_com, "order_history"));
+        optionList.add(new OptionItem("Shipping Address", R.drawable.location_pin_alt_1_svgrepo_com, "shipping_address"));
+        optionList.add(new OptionItem("Help Center", R.drawable.chat_round_line_svgrepo_com, "help_center"));
+        optionList.add(new OptionItem("Log Out", R.drawable.log_out_02_svgrepo_com, "log_out"));
 
         // Fetch the Account data and update UI when available
         getAccount(account -> {
@@ -86,7 +85,7 @@ public class AccountFragment extends Fragment {
 
                 // Add role-specific options
                 if (account.getRoleID().getRoleID()==1) {
-                    optionList.add(1, new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground));
+                    optionList.add(1, new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground, "manage_product"));
                 }
 
                 // Set up the RecyclerView adapter with the updated option list
@@ -108,54 +107,43 @@ public class AccountFragment extends Fragment {
             @Override
             public void onItemClick(int position) {
                 Log.d("AccountFragment", "Option clicked: " + position);
-                switch (position) {
-                    case 0:
-                        // Edit Profiles clicked
+                OptionItem selectedItem = optionList.get(position);
+                if (selectedItem.getAction() == null) {
+                    Log.e("AccountFragment", "OptionItem action is null for position: " + position);
+                    return;
+                }
+                switch (selectedItem.getAction()) {
+                    case "edit_profile":
                         intent = new Intent(getActivity(), AccountProfileActivity.class);
                         intent.putExtra("accID", account.getAccID());
                         intent.putExtra("account", account);
                         startActivity(intent);
                         break;
 
-                    case 1:
-                        // Manage Products clicked (for admin role only)
-                        if (account != null && account.getRoleID().getRoleID() == 1) {
-                            intent = new Intent(getActivity(), ProductList.class);
-                            startActivity(intent);
-                        }else{
-                            intent = new Intent(getActivity(), OrderHistoryActivity.class);
-                            intent.putExtra("account", account);
-                            startActivity(intent);
-                        }
+                    case "manage_product":
+                        intent = new Intent(getActivity(), ProductList.class);
+                        startActivity(intent);
                         break;
 
-                    case 2:
-                        // My Order clicked
-                        Log.d("AccountFragment", "My Order clicked");
+                    case "order_history":
                         intent = new Intent(getActivity(), OrderHistoryActivity.class);
                         intent.putExtra("account", account);
                         startActivity(intent);
                         break;
 
-                    case 3:
-                        // Shipping Address clicked
-                        // intent = new Intent(getActivity(), ShippingAddressActivity.class);
-                        // startActivity(intent);
+                    case "shipping_address":
+                        // Handle Shipping Address
                         break;
 
-                    case 4:
-                        // Help Center clicked
-                        // intent = new Intent(getActivity(), HelpCenterActivity.class);
-                        // startActivity(intent);
+                    case "help_center":
+                        // Handle Help Center
                         break;
 
-                    case 5:
-                        // Log Out clicked
-                        // Clear SharedPreferences
+                    case "log_out":
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.clear(); // Clear all data
-                        editor.apply(); // Commit changes
+                        editor.clear();
+                        editor.apply();
                         intent = new Intent(getActivity(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
