@@ -120,9 +120,6 @@
         <activity
             android:name=".activity.User.RegisterActivity"
             android:exported="true"/>
-        <activity
-            android:name=".activity.User.RegisterActivity"
-            android:exported="true"/>
     </application>
 
 </manifest>

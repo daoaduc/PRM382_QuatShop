@@ -61,8 +61,6 @@ public class AccountFragment extends Fragment {
 
         // Initialize ExecutorService
         executorService = Executors.newSingleThreadExecutor();
-        backBtn = view.findViewById(R.id.backButton);
-        backBtn.setOnClickListener(v -> requireActivity().onBackPressed());
 
         // Initialize the RecyclerView and other views
         profileImage = view.findViewById(R.id.profileImage);
@@ -76,7 +74,6 @@ public class AccountFragment extends Fragment {
         optionList = new ArrayList<>();
         optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground, "edit_profile"));
         optionList.add(new OptionItem("My Order", R.drawable.cart_shopping_svgrepo_com, "order_history"));
-        optionList.add(new OptionItem("Shipping Address", R.drawable.location_pin_alt_1_svgrepo_com, "shipping_address"));
         optionList.add(new OptionItem("Help Center", R.drawable.chat_round_line_svgrepo_com, "help_center"));
         optionList.add(new OptionItem("Log Out", R.drawable.log_out_02_svgrepo_com, "log_out"));
 

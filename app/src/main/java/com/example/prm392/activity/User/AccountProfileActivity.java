@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,6 +24,10 @@ import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.model.Account;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -232,6 +237,63 @@ public class AccountProfileActivity extends AppCompatActivity {
         // Show the dialog
         dialog.show();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+
+            // Convert image to base64 string and save to database
+            saveImageToDatabase(imageUri);
+        }
+    }
+
+    private void saveImageToDatabase(Uri imageUri) {
+        // Convert image to base64 string
+        String base64Image = convertImageToBase64(imageUri);
+        if (base64Image == null) {
+            Toast.makeText(this, "Failed to convert image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Save image data to database in a separate thread
+        executorService.submit(() -> {
+            accountDAO = new AccountDAO();
+            boolean success = accountDAO.uploadProfileIMG(base64Image, account.getAccID()); // Use your upload method
+
+            runOnUiThread(() -> {
+                if (success) {
+                    Toast.makeText(AccountProfileActivity.this, "Image saved successfully!", Toast.LENGTH_SHORT).show();
+                    imgProfilePicture.setImageURI(imageUri); // Optionally update the ImageView
+                } else {
+                    Toast.makeText(AccountProfileActivity.this, "Failed to save image!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    private String convertImageToBase64(Uri imageUri) {
+        try (InputStream inputStream = getContentResolver().openInputStream(imageUri);
+             ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream()) {
+
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
+            }
+
+            byte[] imageBytes = byteBuffer.toByteArray();
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

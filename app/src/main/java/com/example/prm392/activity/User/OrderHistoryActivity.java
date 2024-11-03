@@ -59,16 +59,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
     public void fetchOrderData(Account account) {
         executorService.submit(() -> {
-            if (account.getRoleID().getRoleID() == 2) {
-                // Fetch orders for a specific account
-                orderList = orderDAO.getOrderByAccount(account.getAccID());
-                Log.d("Orders", "Number of orders: " + orderList.size());
-            } else if (account.getRoleID().getRoleID() == 1) {
-                // Fetch all orders for admin
-                orderList = orderDAO.getAllOrders();
-                Log.d("Orders", "Number of orders: " + orderList.size());
-            }
-
+            // Fetch orders for a specific account
+            orderList = orderDAO.getOrderByAccount(account.getAccID());
+            Log.d("Orders", "Number of orders: " + orderList.size());
             // Update the UI on the main thread
             runOnUiThread(() -> {
                 TextView tvNoOrders = findViewById(R.id.tv_no_orders); // Re-initialize TextView
