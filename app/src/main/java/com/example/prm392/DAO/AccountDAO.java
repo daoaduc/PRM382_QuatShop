@@ -175,4 +175,78 @@ public class AccountDAO {
         }
         return account;
     }
+
+    public Account getAccountbyUsername(String username){
+        Connection connection = connectionClass.CONN();
+        Account account = null;
+        if(connection!=null){
+            String query = "SELECT * FROM `account` WHERE email = ?";
+            try{
+                PreparedStatement st = connection.prepareStatement(query);
+                st.setString(1, username);
+                ResultSet rs = st.executeQuery();
+                if(rs.next()){
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getBoolean(3),rs.getString(4),rs.getString(5),rs.getString(6),new AccountRole(rs.getInt(7)),new AccountStatus(rs.getInt(8)),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                }
+                rs.close();
+                st.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return account;
+    }
+
+    public Account getAccountByID(int accID){
+        Connection connection = connectionClass.CONN();
+        Account account = null;
+        if(connection!=null){
+            String query = "SELECT * FROM `account` WHERE accID = ?";
+            try{
+                PreparedStatement st = connection.prepareStatement(query);
+                st.setInt(1, accID);
+                ResultSet rs = st.executeQuery();
+                if(rs.next()){
+                    account = new Account(rs.getInt(1),rs.getString(2),rs.getBoolean(3),rs.getString(4),rs.getString(5),rs.getString(6),new AccountRole(rs.getInt(7)),new AccountStatus(rs.getInt(8)),rs.getString(9),rs.getDate(10),rs.getDate(11));
+                }
+                rs.close();
+                st.close();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return account;
+    }
+
+    public boolean uploadProfileIMG(String img, int accID){
+        Connection connection = connectionClass.CONN();
+        String query = "update `account` set profile_picture = ? where accID = ?;";
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            st.setString(1, img);
+            st.setInt(2, accID);
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            Log.e("DB_ERROR", "Error updating profile image: " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean updateAccount(String fullName, String phoneNumber,boolean gender, int accID) {
+        Connection connection = connectionClass.CONN();
+        String query = "update `account` set fullname = ?, phone_number = ?, gender = ? where accID = ?;";
+        try {
+            PreparedStatement st = connection.prepareStatement(query);
+            st.setString(1, fullName);
+            st.setString(2, phoneNumber);
+            st.setBoolean(3, gender);
+            st.setInt(4, accID);
+            st.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

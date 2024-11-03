@@ -23,6 +23,11 @@
             android:name=".activity.User.PaymentNotification"
             android:exported="false" />
         <activity
+            android:name=".activity.User.MainActivity"
+            android:exported="true" />
+
+
+        <activity
             android:name=".activity.User.ResetPasswordActivity"
             android:exported="false" />
         <activity
@@ -32,22 +37,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDndJTMUKZWjUB2PEzc-ZQ6bIqfmNQut2A" />
 
-        <activity
-            android:name=".activity.User.MainActivity2"
-            android:exported="true" /> <!-- <activity -->
-        <!-- android:name=".activity.User.LoginActivity" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <activity
-            android:name=".activity.User.MainActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activity.User.RegisterActivity"
-            android:exported="true" />
+        <activity android:name=".activity.User.MainActivity2" />
+
+
         <activity
             android:name=".activity.Admin.ProductList"
             android:exported="true">
@@ -70,6 +62,14 @@
         <activity
             android:name=".activity.Admin.UploadActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".activity.User.AccountProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".activity.User.OrderHistoryActivity"
+            android:exported="true"/>
+
         <activity
             android:name=".activity.User.CheckOutActivity"
             android:exported="true"

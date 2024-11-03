@@ -1,0 +1,89 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Back Button in Top Left Corner -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_media_previous"
+        android:contentDescription="Back Button"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="start"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Profile Image Display -->
+    <ImageView
+        android:id="@+id/img_profile_picture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/uploadimg"
+        android:contentDescription="Profile Picture"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/darker_gray" />
+
+    <!-- Button to Upload Image -->
+    <Button
+        android:id="@+id/btn_upload_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Image"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp" />
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:enabled="false"
+        android:layout_marginTop="16dp" />
+
+    <!-- Full Name -->
+    <EditText
+        android:id="@+id/et_full_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:enabled="false" />
+
+    <!-- Phone Number -->
+    <EditText
+        android:id="@+id/et_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:enabled="false" />
+
+    <!-- Gender -->
+    <Spinner
+        android:id="@+id/spinner_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false" />
+
+    <!-- Button to Edit Profile -->
+    <Button
+        android:id="@+id/btn_edit_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:layout_marginTop="16dp" />
+
+    <!-- Button to Change Password -->
+    <Button
+        android:id="@+id/btn_change_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Password"
+        android:layout_marginTop="8dp" />
+
+
+</LinearLayout>
