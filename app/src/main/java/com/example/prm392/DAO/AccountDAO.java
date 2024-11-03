@@ -180,7 +180,7 @@ public class AccountDAO {
     public void addGoogleAccount(String email, String displayName, String password) {
         Connection con = connectionClass.CONN();
         if (con != null) {
-            String query = "INSERT INTO `account` (`email`, `fullname`, `password`, `roleID`, `status`) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO `account` (`email`, `fullname`, `password`, `roleID`, `status`) VALUES (?, ?, ?, ?, ?)";
             try {
                 PreparedStatement preparedStatement = con.prepareStatement(query);
                 preparedStatement.setString(1, email);
