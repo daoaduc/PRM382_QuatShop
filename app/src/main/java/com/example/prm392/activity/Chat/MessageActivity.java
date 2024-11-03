@@ -113,6 +113,10 @@ public class MessageActivity extends AppCompatActivity {
     // Send message
     private void sendMessage(Message message) {
         executorService.execute(() -> {
+            if (socket == null || socket.isClosed()) {
+                runOnUiThread(() -> Toast.makeText(MessageActivity.this, "Socket is not connected", Toast.LENGTH_SHORT).show());
+                return;
+            }
             try {
                 //Send message
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
