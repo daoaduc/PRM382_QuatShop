@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
+import com.example.prm392.activity.Admin.DashboardActivity;
 import com.example.prm392.activity.Admin.ProductList;
 import com.example.prm392.activity.User.AccountProfileActivity;
 import com.example.prm392.activity.User.LoginActivity;
@@ -87,7 +88,7 @@ public class AccountFragment extends Fragment {
 
                 // Add role-specific options
                 if (account.getRoleID().getRoleID()==1) {
-                    optionList.add(1, new OptionItem("Manage Products", R.mipmap.ic_edit_arrow_48_foreground, "manage_product"));
+                    optionList.add(1, new OptionItem("Manage Dashboard", R.mipmap.ic_edit_arrow_48_foreground, "manage_dashboard"));
                 }
 
                 // Set up the RecyclerView adapter with the updated option list
@@ -122,8 +123,8 @@ public class AccountFragment extends Fragment {
                         startActivity(intent);
                         break;
 
-                    case "manage_product":
-                        intent = new Intent(getActivity(), ProductList.class);
+                    case "manage_dashboard":
+                        intent = new Intent(getActivity(), DashboardActivity.class);
                         startActivity(intent);
                         break;
 

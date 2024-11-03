@@ -1,57 +1,50 @@
 package com.example.prm392.activity.Admin;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import com.example.prm392.DAO.ProductDAO;
+
+import com.example.prm392.DAO.OrderDAO;
 import com.example.prm392.R;
-import com.example.prm392.activity.User.MainActivity2;
+import com.example.prm392.adapter.OrderListAdminAdapter;
 import com.example.prm392.adapter.ProductListAdminAdapter;
-import com.example.prm392.model.Product;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.prm392.model.Order;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ProductList extends AppCompatActivity {
-    FloatingActionButton fab;
+public class OrderList extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private ProductListAdminAdapter adapter;
-    private List<Product> dataList; // Danh sách chứa tất cả sản phẩm
+    private OrderListAdminAdapter adapter;
+    private List<Order> dataList; // Danh sách chứa tất cả sản phẩm
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_listitem);
-
+        setContentView(R.layout.activity_admin_orderlist);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(ProductList.this, DashboardActivity.class);
+            Intent intent = new Intent(OrderList.this, DashboardActivity.class);
             startActivity(intent);
             finish();
         });
-
-        fab = findViewById(R.id.fab);
 
         // Khởi tạo RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Khởi tạo SearchView
         SearchView searchView = findViewById(R.id.search);
 
-        // Tải danh sách sản phẩm
-        loadProducts();
+        loadOrders();
 
         // Thiết lập listener cho SearchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -68,31 +61,18 @@ public class ProductList extends AppCompatActivity {
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProductList.this, UploadActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
-    protected void onResume() {
-        super.onResume();
-        // Tải lại dữ liệu sản phẩm khi quay lại màn hình
-        loadProducts();
-    }
-
-    private void loadProducts() {
+    private void loadOrders() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
-            ProductDAO productDAO = new ProductDAO();
-            List<Product> productList = productDAO.getAllAdminProducts();
+            OrderDAO orderDAO = new OrderDAO();
+            List<Order> orderList = orderDAO.getAllOrders();
 
             runOnUiThread(() -> {
-                if (productList != null && !productList.isEmpty()) {
-                    dataList = productList;
-                    adapter = new ProductListAdminAdapter(this, dataList);
+                if (orderList != null && !orderList.isEmpty()) {
+                    dataList = orderList;
+                    adapter = new OrderListAdminAdapter(this, dataList);
                     recyclerView.setAdapter(adapter);
                 } else {
                     Log.d("PRODUCT", "No products found or connection failed.");
@@ -101,12 +81,11 @@ public class ProductList extends AppCompatActivity {
         });
     }
 
-
     public void searchList(String text) {
-        ArrayList<Product> searchList = new ArrayList<>();
-        for (Product product : dataList) {
-            if (product.getProductName().toLowerCase().contains(text.toLowerCase())) {
-                searchList.add(product);
+        ArrayList<Order> searchList = new ArrayList<>();
+        for (Order order : dataList) {
+            if (order.getOrderCode().toLowerCase().contains(text.toLowerCase())) {
+                searchList.add(order);
             }
         }
         adapter.searchDataList(searchList);
