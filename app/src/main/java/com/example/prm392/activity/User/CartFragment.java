@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.util.Log;
+import android.widget.Toast;
 
 public class CartFragment extends Fragment {
     private RecyclerView recyclerViewCart;
@@ -79,8 +80,14 @@ public class CartFragment extends Fragment {
         });
 
         checkoutButton.setOnClickListener(v -> {
-            //Intent intent = new Intent(getContext(), CheckOutActivity.class);
-            //startActivity(intent);
+            if (cartItems.isEmpty()) {
+                // Hiển thị Toast nếu giỏ hàng rỗng
+                Toast.makeText(getContext(), "Giỏ hàng rỗng! Vui lòng thêm sản phẩm.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Nếu giỏ hàng không rỗng, chuyển đến CheckoutActivity
+                Intent intent = new Intent(getContext(), CheckOutActivity.class);
+                startActivity(intent);
+            }
         });
         recyclerViewCart.setAdapter(cartAdapter);
         calculatePrice();

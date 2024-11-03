@@ -1,7 +1,7 @@
 package com.example.prm392.activity.User;
 
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -82,10 +82,7 @@ public class HomeFragment extends Fragment {
         bestSellerAdapter.setOnItemClickListener(new OnItemClickListener<Product>() {
             @Override
             public void onItemClick(Product item, int position) {
-                Log.d("ITEM_CLICK", "Product clicked: " + item.getProductName());
-                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
-                intent.putExtra("productID", item.getProductID());
-                startActivity(intent);
+                // Handle what happens when a bestseller product is clicked
             }
         });
 
@@ -113,10 +110,8 @@ public class HomeFragment extends Fragment {
 
     private void setupCategory() {
         MainCategoryAdapter categoryAdapter = new MainCategoryAdapter(getContext());
-
         // Fetch the category data
         setCategoryData(categoryAdapter);
-
         categoryAdapter.setOnItemClickListener(new OnItemClickListener<ProductCategory>() {
             @Override
             public void onItemClick(ProductCategory item, int position) {
@@ -128,7 +123,6 @@ public class HomeFragment extends Fragment {
                 navigationListener.navigateToFragment(new CategoryFragment(), "Category", bundle);
             }
         });
-
         // Find the RecyclerView for categories and set its adapter and layout manager
         mCategories = view.findViewById(R.id.categories);
         mCategories.setLayoutManager(new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false));
@@ -180,7 +174,7 @@ public class HomeFragment extends Fragment {
     private void setProductData(MainProductAdapter adapter) {
         executorService.execute(() -> {
             ProductDAO productDAO = new ProductDAO();
-            List<Product> productList = productDAO.getAllProducts2(); // Implemented in ProductDAO
+            List<Product> productList = productDAO.getAllProducts2();
 
             if (productList != null && !productList.isEmpty()) {
                 getActivity().runOnUiThread(() -> {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+    <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,14 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".activity.User.CheckOutActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="60px"
+        app:navigationIcon="@drawable/baseline_arrow_back_24"
+        app:title="Cart"
+        app:titleTextColor="@android:color/black"/>
 
     <LinearLayout
+
         android:id="@+id/layout_shipping_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:orientation="vertical"
         android:padding="16dp"
+        android:layout_below="@id/toolbar"
         android:background="@color/white"
         android:elevation="4dp">
 
@@ -60,13 +70,42 @@
         android:scrollbars="vertical" />
 
     <!-- RadioGroup để chọn phương thức thanh toán -->
+
+    <LinearLayout
+        android:id="@+id/layout_voucher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/paymentMethodGroup"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/et_promocode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_background"
+            android:hint="Promo Code"
+            android:inputType="text"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/btn_apply_promocode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/tim"
+            android:text="APPLY"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
     <RadioGroup
         android:id="@+id/paymentMethodGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_checkout"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
         android:padding="10dp">
 
         <RadioButton

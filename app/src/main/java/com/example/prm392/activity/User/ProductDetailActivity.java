@@ -70,51 +70,51 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            int quantity = getQuantity();  // Khai báo quantity từ phương thức getQuantity()
-            if (quantity > 0) {
-                executorService.submit(() -> {
-                int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
-                Log.d("ProductDetailActivity", "userId: " + userId);
-                ProductDAO pd = new ProductDAO();
-                Product product = pd.getProductById(productID);
-                // Kiểm tra nếu product khác null trước khi lấy các thuộc tính của sản phẩm
-                if (product != null) {
-                    Cart cartItem = new Cart();
-                    cartItem.setProductId(productID);
-                    cartItem.setProductName(product.getProductName());
-                    cartItem.setPrice(product.getPrice());
-                    cartItem.setQuantity(quantity);
-                    cartItem.setImage(product.getProductIMG());
-                    cartItem.setUserId(userId);  // Gán userId vào Cart
+                int quantity = getQuantity();  // Khai báo quantity từ phương thức getQuantity()
+                if (quantity > 0) {
+                    executorService.submit(() -> {
+                        int userId = getCurrentUserId();  // Lấy userId từ SharedPreferences
+                        Log.d("ProductDetailActivity", "userId: " + userId);
+                        ProductDAO pd = new ProductDAO();
+                        Product product = pd.getProductById(productID);
+                        // Kiểm tra nếu product khác null trước khi lấy các thuộc tính của sản phẩm
+                        if (product != null) {
+                            Cart cartItem = new Cart();
+                            cartItem.setProductId(productID);
+                            cartItem.setProductName(product.getProductName());
+                            cartItem.setPrice(product.getPrice());
+                            cartItem.setQuantity(quantity);
+                            cartItem.setImage(product.getProductIMG());
+                            cartItem.setUserId(userId);  // Gán userId vào Cart
 
-                    // Check if the item is already in the cart
-                    new Thread(() -> {
-                        Cart existingCartItem = cartDAO.getCartItemByProductIdAndUserId(productID, userId);
-                        if (existingCartItem != null) {
-                            // Update the quantity of the existing item
-                            existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
-                            cartDAO.update(existingCartItem);
+                            // Check if the item is already in the cart
+                            new Thread(() -> {
+                                Cart existingCartItem = cartDAO.getCartItemByProductIdAndUserId(productID, userId);
+                                if (existingCartItem != null) {
+                                    // Update the quantity of the existing item
+                                    existingCartItem.setQuantity(existingCartItem.getQuantity() + quantity);
+                                    cartDAO.update(existingCartItem);
+                                } else {
+                                    // Insert the new item into the cart
+                                    cartDAO.insert(cartItem);
+                                }
+                                runOnUiThread(() ->
+                                        Toast.makeText(ProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                                );
+                            }).start();
                         } else {
-                            // Insert the new item into the cart
-                            cartDAO.insert(cartItem);
+                            runOnUiThread(() -> {
+                                Toast.makeText(ProductDetailActivity.this, "Không thể thêm", Toast.LENGTH_SHORT).show();
+                                finish();  // Close the activity if the product is not found
+                            });
                         }
-                        runOnUiThread(() ->
-                                Toast.makeText(ProductDetailActivity.this, "Đã thêm " + quantity + " sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show()
-                        );
-                    }).start();
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ProductDetailActivity.this, "Không thể thêm", Toast.LENGTH_SHORT).show();
-                        finish();  // Close the activity if the product is not found
                     });
-                }
-                });
-            } else {
-                Toast.makeText(ProductDetailActivity.this, "Phải có ít nhất 1 sản phẩm", Toast.LENGTH_SHORT).show();
-            }}
+                } else {
+                    Toast.makeText(ProductDetailActivity.this, "Phải có ít nhất 1 sản phẩm", Toast.LENGTH_SHORT).show();
+                }}
         });
     }
-        private int getCurrentUserId() {
+    private int getCurrentUserId() {
         SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
         return sharedPref.getInt("userID", -1);  // Trả về -1 nếu không tìm thấy userId
     }

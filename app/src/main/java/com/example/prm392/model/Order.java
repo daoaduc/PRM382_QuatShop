@@ -15,11 +15,12 @@ public class Order {
     private Date pickedUpDate;
     private Date deliveryDate;
     private OrderStatus status;
+    private Promo promoID;
 
     public Order() {
     }
 
-    public Order(int orderID, String orderCode, Account accID, String address, String phone_number, long totalMoney, boolean paymentMethod, Date orderDate, Date confirmedDate, Date pickedUpDate, Date deliveryDate, OrderStatus status) {
+    public Order(int orderID, String orderCode, Account accID, String address, String phone_number, long totalMoney, boolean paymentMethod, Date orderDate, Date confirmedDate, Date pickedUpDate, Date deliveryDate, OrderStatus status, Promo promoID) {
         this.orderID = orderID;
         this.orderCode = orderCode;
         this.accID = accID;
@@ -32,6 +33,7 @@ public class Order {
         this.pickedUpDate = pickedUpDate;
         this.deliveryDate = deliveryDate;
         this.status = status;
+        this.promoID = promoID;
     }
 
     public int getOrderID() {
@@ -130,6 +132,14 @@ public class Order {
         this.status = status;
     }
 
+    public Promo getPromoID() {
+        return promoID;
+    }
+
+    public void setPromoID(Promo promoID) {
+        this.promoID = promoID;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -145,6 +155,7 @@ public class Order {
                 ", pickedUpDate=" + pickedUpDate +
                 ", deliveryDate=" + deliveryDate +
                 ", status=" + status +
+                ", promoID=" + promoID +
                 '}';
     }
 
