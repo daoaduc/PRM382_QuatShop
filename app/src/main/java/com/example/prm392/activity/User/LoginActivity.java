@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInButton = findViewById(R.id.gg_sign_in_button);
 
         getLoginInfo();
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
 
@@ -93,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("GoogleSignIn", "Display Name: " + account.getDisplayName());
                 Log.d("GoogleSignIn", "Email: " + account.getEmail());
 
-                // New thread to check if user exists
                 new Thread(() -> {
                     AccountDAO accountDAO = new AccountDAO();
                     if(accountDAO.emailExists(account.getEmail())){
@@ -110,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).start();
             }
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
+            Log.w("GoogleSignIn", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
@@ -124,8 +122,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         return sb.toString();
     }
-
-
 
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();

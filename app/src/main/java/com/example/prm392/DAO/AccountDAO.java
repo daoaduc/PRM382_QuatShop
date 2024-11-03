@@ -165,26 +165,6 @@ public class AccountDAO {
         return "";
     }
 
-    public Account getAccountById(int userId) {
-        Connection con = connectionClass.CONN();
-        if (con != null) {
-            String query = "SELECT * FROM `account` WHERE `accid` = ?";
-            try {
-                PreparedStatement preparedStatement = con.prepareStatement(query);
-                preparedStatement.setInt(1, userId);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    return new Account(resultSet.getInt(1), resultSet.getString(2));
-                }
-                resultSet.close();
-                preparedStatement.close();
-                con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     public void addGoogleAccount(String email, String displayName, String password) {
         Connection con = connectionClass.CONN();

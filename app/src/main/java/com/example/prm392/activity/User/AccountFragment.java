@@ -65,6 +65,8 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         optionsRecyclerView = view.findViewById(R.id.optionsList);
         optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        AccountDAO accountDAO1 = new AccountDAO();
+        int userId = getUserId();
 
         // Initialize the list of options
         optionList = new ArrayList<>();
@@ -176,5 +178,10 @@ public class AccountFragment extends Fragment {
                 getActivity().runOnUiThread(() -> callback.accept(null));
             }
         });
+    }
+
+    private int getUserId() {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("UserIDPrefs", getContext().MODE_PRIVATE);
+        return sharedPref.getInt("userID", -1);  // Trả về -1 nếu không tìm thấy userId
     }
 }

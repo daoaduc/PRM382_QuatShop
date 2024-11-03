@@ -16,6 +16,11 @@ public class Account implements Serializable {
     private Date createAt;
     private Date updateAt;
 
+    public Account(int accID, String fullname) {
+        this.accID = accID;
+        this.fullname = fullname;
+    }
+
     // Constructors
     public Account(int accID, String fullname, boolean gender, String email, String phoneNumber, AccountRole roleID, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
@@ -33,19 +38,6 @@ public class Account implements Serializable {
 
     // Constructors
     public Account(int accID,String fullname, boolean gender, String email, String password, String phoneNumber, AccountRole roleID, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
-
-    public Account(int accID, String fullname) {
-        this.accID = accID;
-        this.fullname = fullname;
-    }
-
-    public Account(int accID, String fullname, AccountRole roleID){
-        this.accID = accID;
-        this.fullname = fullname;
-        this.roleID = roleID;
-    }
-
-    public Account(int accID, String fullname, int gender, String email, String password, String phoneNumber, AccountRole role, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;
         this.fullname = fullname;
         this.gender = gender;
