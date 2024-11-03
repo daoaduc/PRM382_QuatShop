@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    tools:context=".activity.Chat.ChatActivity"
+    tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:id="@+id/chatBox"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:text="name"
+            />
+
+        <TextView
+            android:id="@+id/tvUserChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:background="@drawable/bg_other_user_chat"
+            app:layout_constraintTop_toBottomOf="@id/tvUserName"
+            android:text="chat test asadd adasd asdas"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
