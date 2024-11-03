@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                     newAccount.setStatus(new AccountStatus(2)); // Unverified
                     accountDAO.saveUserToDatabase(newAccount);
 
-                    Intent intent = new Intent(this, OTPVerificationActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, OTPVerificationActivity.class);
                     intent.putExtra("generatedOTP", generatedOTP);
                     intent.putExtra("email", email);
                     startActivity(intent);
@@ -116,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void goToSignIn(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

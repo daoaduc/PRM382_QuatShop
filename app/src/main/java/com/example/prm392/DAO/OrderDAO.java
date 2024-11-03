@@ -11,28 +11,22 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
     ConnectionClass connectionClass;
-    AccountDAO accountDao = new AccountDAO();
 
     public OrderDAO() {
         connectionClass = new ConnectionClass();
     }
     public int insertOrder(Order order) {
         int generatedOrderID = 0;
-    public List<Order> getAllOrders() {
-        Log.d("OrderDAO", "getAllOrders() called");
-        List<Order> orderList = new ArrayList<>();
         Connection connection = connectionClass.CONN();
 
         if (connection != null) {
             String query = "INSERT INTO `order` (orderCode, accID, address, totalMoney, paymentMethod, orderDate, confirmedDate, status, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            String query = "select * from `order`;";
             try {
                 PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                 stmt.setString(1, order.getOrderCode());
@@ -94,27 +88,8 @@ public class OrderDAO {
                 rs.close();
                 stmt.close();
                 connection.close();
-                PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery();
-                int count = 0;
-                while (rs.next()) {
-                    Order order = new Order();
-                    order.setOrderID(rs.getInt("orderID"));
-                    order.setOrderCode(rs.getString("orderCode"));
-                    order.setAccID(new Account(rs.getInt("accID")));
-                    order.setTotalMoney(rs.getLong("totalMoney"));
-                    order.setPaymentMethod(rs.getBoolean("paymentMethod"));
-                    order.setOrderDate(rs.getDate("orderDate"));
-                    order.setConfirmedDate(rs.getDate("confirmedDate"));
-                    order.setPickedUpDate(rs.getDate("pickupDate"));
-                    order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(new OrderStatus(rs.getInt("status")));
-                    orderList.add(order);
-                    count++;
-                }
-                Log.e("OrderDAO", "Number of orders: " + count);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ERROR", "Error while inserting order: " + e.getMessage());
             }
         } else {
             Log.e("ERROR", "Connection to database failed");
@@ -149,7 +124,6 @@ public class OrderDAO {
         } else {
             Log.e("ERROR", "Connection to database failed");
         }
-        return orderList;
     }
 
     public int getLastOrderID() {
@@ -183,9 +157,39 @@ public class OrderDAO {
 
         return lastOrderID;
     }
+    public List<Order> getAllOrders() {
+        Log.d("OrderDAO", "getAllOrders() called");
+        List<Order> orderList = new ArrayList<>();
+        Connection connection = connectionClass.CONN();
 
-
-}
+        if (connection != null) {
+            String query = "select * from `order`;";
+            try {
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery();
+                int count = 0;
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderID(rs.getInt("orderID"));
+                    order.setOrderCode(rs.getString("orderCode"));
+                    order.setAccID(new Account(rs.getInt("accID")));
+                    order.setTotalMoney(rs.getLong("totalMoney"));
+                    order.setPaymentMethod(rs.getBoolean("paymentMethod"));
+                    order.setOrderDate(rs.getDate("orderDate"));
+                    order.setConfirmedDate(rs.getDate("confirmedDate"));
+                    order.setPickedUpDate(rs.getDate("pickupDate"));
+                    order.setDeliveryDate(rs.getDate("deliveryDate"));
+                    order.setStatus(new OrderStatus(rs.getInt("status")));
+                    orderList.add(order);
+                    count++;
+                }
+                Log.e("OrderDAO", "Number of orders: " + count);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orderList;
+    }
 
     public List<Order> getOrderByAccount(int accountID){
         Log.d("OrderDAO", "getOrderByAccount() called");
@@ -244,5 +248,5 @@ public class OrderDAO {
         return null;
     }
 
-}
 
+}
