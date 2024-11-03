@@ -2,36 +2,45 @@ package com.example.prm392.activity.User;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.credentials.GetCredentialRequest;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.prm392.ConnectionClass;
 import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.model.Account;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.security.SecureRandom;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
+
     AccountDAO accountDAO;
     CheckBox saveLoginCheckBox;
 
+    private SignInButton googleSignInButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +49,80 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.edtPassword);
         accountDAO = new AccountDAO();
         saveLoginCheckBox = findViewById(R.id.chkSaveLogin);
+        googleSignInButton = findViewById(R.id.gg_sign_in_button);
+
         getLoginInfo();
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, 1);
+            }
+        });
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            if (account != null) {
+                Log.d("GoogleSignIn", "Signed in successfully");
+                Log.d("GoogleSignIn", "Display Name: " + account.getDisplayName());
+                Log.d("GoogleSignIn", "Email: " + account.getEmail());
+
+                // New thread to check if user exists
+                new Thread(() -> {
+                    AccountDAO accountDAO = new AccountDAO();
+                    if(accountDAO.emailExists(account.getEmail())){
+                        saveUserID(accountDAO.getIdByEmail(account.getEmail()));
+                    }else{
+                        accountDAO.addGoogleAccount(account.getEmail(), account.getDisplayName(), hashPassword(randomPassword()));
+                        saveUserID(accountDAO.getIdByEmail(account.getEmail()));
+                    }
+                    runOnUiThread(() -> {
+                        Intent intent = new Intent(this, MainActivity2.class);
+                        startActivity(intent);
+                        finish();
+                    });
+                }).start();
+            }
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+        }
+    }
+
+    private String randomPassword() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
+    }
 
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -110,6 +189,8 @@ public class LoginActivity extends AppCompatActivity {
                     // intent to main activity
                     Intent intent = new Intent(this, MainActivity2.class);
                     startActivity(intent);
+                    // finish current activity
+                    finish();
                 });
             }else{
                 runOnUiThread(() -> {
@@ -160,5 +241,20 @@ public class LoginActivity extends AppCompatActivity {
             editor.clear();
             editor.apply();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    public void signInWithGoogle(View view) {
+
+    }
+
+    public String generateNonce() {
+        // Generate a random byte array
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] nonce = new byte[16]; // 16 bytes = 128 bits
+        secureRandom.nextBytes(nonce);
+
+        // Encode the byte array to a Base64 string
+        return Base64.encodeToString(nonce, Base64.NO_WRAP);
     }
 }

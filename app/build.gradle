@@ -79,4 +79,7 @@ dependencies {
 
     // okhttp
     implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5'
+
+    // google auth
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
 }

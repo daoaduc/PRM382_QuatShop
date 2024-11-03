@@ -20,6 +20,28 @@ public class AccountDAO {
     public AccountDAO() {
         connectionClass = new ConnectionClass();
     }
+    // Get id by email
+    public int getIdByEmail(String email) {
+        int id = -1;
+        Connection con = connectionClass.CONN();
+        if (con != null) {
+            String query = "SELECT `accid` FROM `account` WHERE `email` = ?";
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    id = resultSet.getInt(1);
+                }
+                resultSet.close();
+                preparedStatement.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
+    }
 
     // Change password
     public boolean changePassword(String newPassword, String email) {
@@ -153,5 +175,26 @@ public class AccountDAO {
             }
         }
         return null;
+    }
+
+    public void addGoogleAccount(String email, String displayName, String password) {
+        Connection con = connectionClass.CONN();
+        if (con != null) {
+            String query = "INSERT INTO `account` (`email`, `fullname`, `password`, `roleID`, `status`) VALUES (?, ?, ?, ?)";
+            try {
+                PreparedStatement preparedStatement = con.prepareStatement(query);
+                preparedStatement.setString(1, email);
+                preparedStatement.setString(2, displayName);
+                preparedStatement.setString(3, password);
+                preparedStatement.setInt(4, 2);
+                preparedStatement.setInt(5, 1);
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

@@ -61,8 +61,8 @@ public class MessageActivity extends AppCompatActivity {
         // Initialize recycler view
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // Load all user messages
-        loadMessage();
+
+        // Initialize message adapter
         messageAdapter = new MessageAdapter(messageList, this);
         recyclerView.setAdapter(messageAdapter);
 
@@ -84,7 +84,7 @@ public class MessageActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> {
             String message = etMessage.getText().toString();
             if (!message.isEmpty()) {
-                sendMessage(new Message(user, receiver, message, new Date(), false));
+                sendMessage(new Message(user, new Account(), message, new Date(), false));
                 etMessage.setText("");
             }
         });
@@ -147,8 +147,4 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(messageList.size() - 1);
     }
 
-    // Load all user messages
-    private void loadMessage(){
-        // to do
-    }
 }
