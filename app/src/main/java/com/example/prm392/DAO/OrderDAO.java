@@ -44,7 +44,8 @@ public class OrderDAO {
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
                     order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(new OrderStatus(rs.getInt("status")));
+                    String status = this.getStatusById(rs.getInt("status"));
+                    order.setStatus(new OrderStatus(rs.getInt("status"), status));
                     orderList.add(order);
                     count++;
                 }
@@ -78,7 +79,8 @@ public class OrderDAO {
                     order.setConfirmedDate(rs.getDate("confirmedDate"));
                     order.setPickedUpDate(rs.getDate("pickupDate"));
                     order.setDeliveryDate(rs.getDate("deliveryDate"));
-                    order.setStatus(new OrderStatus(rs.getInt("status")));
+                    String status = this.getStatusById(rs.getInt("status"));
+                    order.setStatus(new OrderStatus(rs.getInt("status"), status));
                     orderList.add(order);
                     count++;
                 }
@@ -90,19 +92,16 @@ public class OrderDAO {
         return orderList;
     }
 
-    public OrderStatus getOrderStatusById(int statusID){
+    public String getStatusById(int statusID){
         Connection connection = connectionClass.CONN();
         if(connection!=null) {
-            String query = "SELECT * FROM order_status WHERE statusID = ?;";
+            String query = "SELECT status FROM order_status WHERE statusID = ?;";
             try{
                 PreparedStatement st = connection.prepareStatement(query);
                 st.setInt(1, statusID);
                 ResultSet rs = st.executeQuery();
                 if(rs.next()){
-                    OrderStatus os = new OrderStatus();
-                    os.setStatus(rs.getString("status"));
-                    os.setStatusID(rs.getInt(statusID));
-                    return os;
+                    return rs.getString(1);
                 }
             }catch (SQLException e) {
                 throw new RuntimeException(e);
