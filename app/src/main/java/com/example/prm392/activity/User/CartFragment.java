@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +85,8 @@ public class CartFragment extends Fragment {
                 Toast.makeText(getContext(), "Giỏ hàng rỗng! Vui lòng thêm sản phẩm.", Toast.LENGTH_SHORT).show();
             } else {
                 // Nếu giỏ hàng không rỗng, chuyển đến CheckoutActivity
-                Intent intent = new Intent(getContext(), CheckOutActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getContext(), CheckOutActivity.class);
+//                startActivity(intent);
             }
         });
         recyclerViewCart.setAdapter(cartAdapter);
