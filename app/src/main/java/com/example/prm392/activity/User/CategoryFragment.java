@@ -1,6 +1,7 @@
 package com.example.prm392.activity.User;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -129,6 +130,9 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onItemClick(Product item, int position) {
                 Log.d("PRODUCT_CLICK", "Product clicked: " + item.getProductName());
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra("productID", item.getProductID());
+                startActivity(intent);
             }
         });
 

@@ -197,7 +197,7 @@ public class AccountProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", null); // Set null for now to handle it later
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-        // Create the dialog
+
         AlertDialog dialog = builder.create();
 
         // Override the onShow method to handle button clicks after dialog is shown
@@ -208,10 +208,8 @@ public class AccountProfileActivity extends AppCompatActivity {
                 String newPassword = etNewPassword.getText().toString().trim();
                 String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-                // Reset the error message visibility
-                //tvErrorMessage.setVisibility(View.GONE);
                 String enteredCurrentPasswordHash = hashPassword(enteredCurrentPassword);
-                // Validate the current password and new password
+
                 if (!enteredCurrentPasswordHash.equals(currentPassword)) {
                     Toast.makeText(AccountProfileActivity.this, "Current password is incorrect.", Toast.LENGTH_SHORT).show();
                 } else if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
@@ -219,13 +217,12 @@ public class AccountProfileActivity extends AppCompatActivity {
                 } else if (!newPassword.equals(confirmPassword)) {
                     Toast.makeText(AccountProfileActivity.this, "New password and confirm password do not match.", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Proceed with password change
                     executorService.submit(() -> {
                         accountDAO = new AccountDAO();
                         accountDAO.changePassword(hashPassword(newPassword), email);
                         runOnUiThread(() -> {
                             Toast.makeText(AccountProfileActivity.this, "Password changed!", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss(); // Dismiss the dialog after successful change
+                            dialog.dismiss();
                         });
                     });
                 }

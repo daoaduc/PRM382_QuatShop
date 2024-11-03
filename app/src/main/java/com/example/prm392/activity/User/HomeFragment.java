@@ -164,6 +164,9 @@ public class HomeFragment extends Fragment {
             public void onItemClick(Product item, int position) {
                 // Handle what happens when a product is clicked
                 Log.d("PRODUCT_CLICK", "Product clicked: " + item.getProductName());
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                intent.putExtra("productID", item.getProductID());
+                startActivity(intent);
             }
         });
 

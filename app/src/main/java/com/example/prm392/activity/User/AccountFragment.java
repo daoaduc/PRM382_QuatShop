@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,6 +47,7 @@ public class AccountFragment extends Fragment {
     private ImageView backBtn;
     private ExecutorService executorService;
     private AccountDAO accountDAO = new AccountDAO();
+    private TextView tvusername;
 
     @Nullable
     @Override
@@ -66,7 +68,7 @@ public class AccountFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         optionsRecyclerView = view.findViewById(R.id.optionsList);
         optionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        tvusername = view.findViewById(R.id.username);
         // Initialize the list of options
         optionList = new ArrayList<>();
         optionList.add(new OptionItem("Edit Profiles", R.mipmap.ic_edit_arrow_48_foreground, "edit_profile"));
@@ -80,6 +82,8 @@ public class AccountFragment extends Fragment {
             if (account != null) {
                 // Load profile image
                 String profileImageUrl = account.getProfilePicture();
+                String username = account.getFullname();
+                tvusername.setText(username);
                 if (profileImageUrl != null) {
                     Picasso.get().load(profileImageUrl).into(profileImage);
                 }
