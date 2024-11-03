@@ -1,12 +1,10 @@
 package com.example.prm392.activity.User;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
     AccountDAO accountDAO;
-    CheckBox saveLoginCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.edtEmail);
         passwordEditText = findViewById(R.id.edtPassword);
         accountDAO = new AccountDAO();
-        saveLoginCheckBox = findViewById(R.id.chkSaveLogin);
-        getLoginInfo();
-
     }
-
-
 
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
@@ -102,16 +94,10 @@ public class LoginActivity extends AppCompatActivity {
             String hashedPassword = hashPassword(password);
             Account account = accountDAO.checkAccountExists(email, hashedPassword);
             if (account != null) {
-                // save login information
-                if (saveLoginCheckBox.isChecked()) {
-                    saveLogin(email, password);
-                }
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
-                    // save user id for later use
-                    saveUserID(account.getAccID());
-                    // intent to main activity
                     Intent intent = new Intent(this, MainActivity2.class);
+                    intent.putExtra("account", account);
                     startActivity(intent);
                 });
             }else{
@@ -120,48 +106,5 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
-
-    // Save user id function
-    private void saveUserID(int userID) {
-        SharedPreferences sharedPref = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("userID", userID);
-        editor.apply();
-    }
-
-    // Save login information function
-    private void saveLogin(String username, String password) {
-        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString("username", username);
-        editor.putString("password", password);
-        editor.apply();
-    }
-
-    // Get login information function
-    private void getLoginInfo() {
-        // delete save login information
-        SharedPreferences saveLoginPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-        String username = saveLoginPref.getString("username", "");
-        String password = saveLoginPref.getString("password", "");
-
-        if (!username.isEmpty() && !password.isEmpty()) {
-            emailEditText.setText(username);
-            passwordEditText.setText(password);
-            saveLoginCheckBox.setChecked(true);
-            loginUser(null);
-        }
-    }
-
-    // Clear login information function
-    private void clearLoginInfo() {
-        SharedPreferences sharedPref = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        if(editor != null){
-            editor.clear();
-            editor.apply();
-        }
     }
 }
