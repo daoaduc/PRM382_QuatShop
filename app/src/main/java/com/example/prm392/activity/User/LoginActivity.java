@@ -92,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("GoogleSignIn", "Display Name: " + account.getDisplayName());
                 Log.d("GoogleSignIn", "Email: " + account.getEmail());
 
-                // New thread to check if user exists
                 new Thread(() -> {
                     AccountDAO accountDAO = new AccountDAO();
                     if(accountDAO.emailExists(account.getEmail())){
