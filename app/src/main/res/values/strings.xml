@@ -6,7 +6,6 @@
     <string name="main_mine">Mine</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_to_fan_shop">Welcome to fan shop</string>
     <string name="login">Login</string>
@@ -28,4 +27,8 @@
     <string name="enter_new_password">Enter new password</string>
     <string name="change_password">Change password</string>
     <string name="enter_confirm_password">Enter confirm password</string>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>

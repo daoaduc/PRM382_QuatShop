@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).start();
             }
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
+            Log.w("GoogleSignIn", "signInResult:failed code=" + e.getStatusCode());
         }
     }
 

@@ -24,9 +24,12 @@ public class Product {
         this.productIMG = productIMG;
     }
 
-    public Product(String productName, long price, String productIMG) {
+    public Product(String productName, String description, long price, int quantity, ProductCategory categoryID, String productIMG) {
         this.productName = productName;
         this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.categoryID = categoryID;
         this.productIMG = productIMG;
     }
 
@@ -42,6 +45,16 @@ public class Product {
         this.status = status;
         this.productIMG = productIMG;
         this.creat_at = creat_at;
+    }
+
+    public Product(int productID, String productName, long price, int quantity, String description, ProductStatus status, String productIMG) {
+        this.productID = productID;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.status = status;
+        this.productIMG = productIMG;
     }
 
     public int getProductID() {

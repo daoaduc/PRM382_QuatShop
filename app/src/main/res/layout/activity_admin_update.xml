@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.Admin.UpdateActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:background="@drawable/tim_border">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Data"
+                android:textSize="34sp"
+                android:textAlignment="center"
+                android:textColor="@color/tim"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/updateImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/uploadimg" />
+
+            <EditText
+                android:id="@+id/updateProductName"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/tim_border"
+                android:gravity="start|center_vertical"
+                android:hint="Enter product name"
+                android:padding="16dp"
+                android:textColor="@color/tim" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/updateDesc"
+                android:background="@drawable/tim_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter description"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/tim"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/updatePrice"
+                android:background="@drawable/tim_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter price"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/tim"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/updateQuantity"
+                android:background="@drawable/tim_border"
+                android:layout_marginTop="20dp"
+                android:padding="16dp"
+                android:hint="Enter quantity"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/tim"/>
+
+            <Spinner
+                android:id="@+id/updateStatus"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/tim_border"
+                android:gravity="start|center_vertical"
+                android:padding="16dp"
+                android:spinnerMode="dropdown"
+                android:dropDownWidth="match_parent"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="Update"
+                    android:id="@+id/updateButton"
+                    android:textSize="18sp"
+                    app:cornerRadius="20dp"
+                    android:background="@color/tim"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:id="@+id/cancelButton"
+                    android:textSize="18sp"
+                    android:layout_marginStart="10dp"
+                    app:cornerRadius="20dp"
+                    android:background="@color/tim_nhat"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</ScrollView>

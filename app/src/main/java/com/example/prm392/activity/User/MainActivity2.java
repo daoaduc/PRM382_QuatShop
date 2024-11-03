@@ -8,43 +8,27 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.prm392.R;
+import com.example.prm392.common.OnFragmentNavigationListener;
 import com.example.prm392.activity.Chat.ChatActivity;
 import com.example.prm392.activity.Chat.MessageActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity2 extends AppCompatActivity {
-    private DrawerLayout drawerLayout;
+public class MainActivity2 extends AppCompatActivity implements OnFragmentNavigationListener {
     private NavigationView navigationView;
-//    private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private EditText mSearchProductText;
-    private Fragment mCurrentFragement;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_2);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
@@ -60,9 +44,7 @@ public class MainActivity2 extends AppCompatActivity {
                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
                     String searchText = (String) mSearchProductText.getText().toString().trim();
                     if(searchText != null){
-                        Bundle args = new Bundle();
-                        args.putString("searchText", searchText);
-                        loadFragment(new CategoryFragment(), "Category", args);
+                        loadFragment(new CategoryFragment(), "Category", null);
                     }
                 }
                 return false;
@@ -70,20 +52,28 @@ public class MainActivity2 extends AppCompatActivity {
         });
     }
 
-    private void loadFragment(Fragment fragment, String title, Bundle args) {
+    public void loadFragment(Fragment fragment, String title, Bundle args) {
+        if (args == null) {
+            args = new Bundle();
+        }
+        if( mSearchProductText != null ){
+            String searchText = mSearchProductText.getText().toString().trim();
+            args.putString("searchText", searchText);
+        }
+
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+
+        // If the fragment is already displayed, just update its data
         if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
-            // If the fragment is already displayed, just update its data
-            if (currentFragment instanceof CategoryFragment && args != null) {
+            if (currentFragment instanceof CategoryFragment) {
                 ((CategoryFragment) currentFragment).updateData(args);
             }
             return;
         }
 
-        if (args != null) {
-            fragment.setArguments(args);
-        }
-        mCurrentFragement = fragment;
+
+        fragment.setArguments(args);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment, title);
         transaction.addToBackStack(null);
@@ -114,28 +104,28 @@ public class MainActivity2 extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            String searchText = (String) mSearchProductText.getText().toString().trim();
-            Bundle args = new Bundle();
-            if(searchText != null){
-                args.putString("searchText", searchText);
-            }
             int itemId = item.getItemId();
             if (itemId == R.id.navigation_home) {
-                loadFragment(new HomeFragment(), "Home", args);
+                loadFragment(new HomeFragment(), "Home", null);
                 return true;
             } else if (itemId == R.id.navigation_category) {
-                loadFragment(new CategoryFragment(), "Category", args);
+                loadFragment(new CategoryFragment(), "Category", null);
                 return true;
             } else if (itemId == R.id.navigation_cart) {
-                loadFragment(new CartFragment(), "Cart", args);
+                loadFragment(new CartFragment(), "Cart", null);
                 return true;
             } else if (itemId == R.id.navigation_account) {
-                loadFragment(new AccountFragment(), "Account", args);
+                loadFragment(new AccountFragment(), "Account", null);
                 return true;
             }
             return false;
         }
     };
+
+    @Override
+    public void navigateToFragment(Fragment fragment, String title, Bundle args) {
+        loadFragment(fragment, title, args);
+    }
 
     public void openChatActivity(View view) {
         Intent intent = new Intent(this, MessageActivity.class);

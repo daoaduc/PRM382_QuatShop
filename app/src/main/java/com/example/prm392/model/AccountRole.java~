@@ -1,0 +1,54 @@
+package com.example.prm392.model;
+<<<<<<< HEAD
+
+import java.io.Serializable;
+
+public class AccountRole implements Serializable {
+
+    private int roleID;
+    private String role;
+
+    public AccountRole() {
+    }
+
+    public AccountRole(int roleID) {
+        this.roleID = roleID;
+    }
+
+=======
+public class AccountRole {
+    private int roleID;
+    private String role;
+    public AccountRole() {
+    }
+    public AccountRole(int roleID) {
+        this.roleID = roleID;
+    }
+>>>>>>> origin/ChinhVD
+    public AccountRole(int roleID, String role) {
+        this.roleID = roleID;
+        this.role = role;
+    }
+<<<<<<< HEAD
+
+    public int getRoleID() {
+        return roleID;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+=======
+    public int getRoleID() {
+        return roleID;
+    }
+    public String getRole() {
+        return role;
+    }
+>>>>>>> origin/ChinhVD
+    @Override
+    public String toString() {
+        return role;
+    }
+}

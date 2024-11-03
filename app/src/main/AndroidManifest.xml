@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,6 +29,14 @@
             android:name=".activity.Chat.ChatActivity"
             android:exported="true" />
         <activity
+            android:name=".activity.User.PaymentNotification"
+            android:exported="false" />
+        <activity
+            android:name=".activity.User.MainActivity"
+            android:exported="true" />
+
+
+        <activity
             android:name=".activity.User.ResetPasswordActivity"
             android:exported="false" />
         <activity
@@ -38,20 +47,23 @@
             android:value="AIzaSyDndJTMUKZWjUB2PEzc-ZQ6bIqfmNQut2A" />
 
         <activity android:name=".activity.User.MainActivity2" />
-        <activity
-            android:name=".activity.User.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
+        <activity
+            android:name=".activity.Admin.ProductList"
+            android:exported="true">
+<!--                <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+
+<!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".activity.User.MainActivity"
+            android:name=".activity.Admin.DetailActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.User.RegisterActivity"
+            android:name=".activity.Admin.UpdateActivity"
             android:exported="true" />
         <activity
             android:name=".activity.User.OTPVerificationActivity"
@@ -59,6 +71,50 @@
         <activity
             android:name=".activity.Admin.UploadActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".activity.User.AccountProfileActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".activity.User.OrderHistoryActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".activity.User.CheckOutActivity"
+            android:exported="true"
+            android:label="Merchant Demo"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <!--                <action android:name="android.intent.action.MAIN" />-->
+
+                <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.User.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.User.RegisterActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".activity.User.ProductDetailActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

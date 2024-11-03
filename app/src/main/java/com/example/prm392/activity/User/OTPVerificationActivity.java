@@ -37,6 +37,8 @@ public class OTPVerificationActivity extends AppCompatActivity {
                 accountDAO.updateAccountStatus(userEmail);
                 runOnUiThread(() -> {
                     Toast.makeText(OTPVerificationActivity.this, "Account verified!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(OTPVerificationActivity.this,LoginActivity.class);
+                    startActivity(intent);
                     finish();
                 });
             }).start();
@@ -46,7 +48,7 @@ public class OTPVerificationActivity extends AppCompatActivity {
     }
 
     public void goToSignIn(View view) {
-        Intent intent = new Intent(OTPVerificationActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(OTPVerificationActivity.this,LoginActivity.class);
         startActivity(intent);
     }
 }

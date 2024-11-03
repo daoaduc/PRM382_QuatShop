@@ -4,6 +4,13 @@ public class ProductStatus {
     private int statusID;
     private String statusName;
 
+    public ProductStatus() {
+    }
+
+    public ProductStatus(int statusID) {
+        this.statusID = statusID;
+    }
+
     public ProductStatus(int statusID, String statusName) {
         this.statusID = statusID;
         this.statusName = statusName;
@@ -23,5 +30,8 @@ public class ProductStatus {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+    public String toString() {
+        return statusName; // Hiển thị tên trong Spinner
     }
 }
