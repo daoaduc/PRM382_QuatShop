@@ -21,6 +21,10 @@ public class Account implements Serializable {
         this.fullname = fullname;
     }
 
+    public Account(String fullname) {
+        this.fullname = fullname;
+    }
+
     // Constructors
     public Account(int accID, String fullname, boolean gender, String email, String phoneNumber, AccountRole roleID, AccountStatus status, String profilePicture, Date createAt, Date updateAt) {
         this.accID = accID;

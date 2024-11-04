@@ -68,9 +68,6 @@ public class AccountProfileActivity extends AppCompatActivity {
         if (account != null) {
             loadAccountData(account);
         }
-
-        spinnerGender.setEnabled(false);
-
         String password = account.getPassword();
         String email = account.getEmail();
         // Set click listeners

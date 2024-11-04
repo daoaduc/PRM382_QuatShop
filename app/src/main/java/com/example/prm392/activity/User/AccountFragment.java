@@ -24,6 +24,7 @@ import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.activity.Admin.DashboardActivity;
 import com.example.prm392.activity.Admin.ProductList;
+import com.example.prm392.activity.Chat.ChatActivity;
 import com.example.prm392.activity.User.AccountProfileActivity;
 import com.example.prm392.activity.User.LoginActivity;
 import com.example.prm392.activity.User.OrderHistoryActivity;
@@ -140,6 +141,7 @@ public class AccountFragment extends Fragment {
 
                     case "help_center":
                         // Handle Help Center
+                        openChatActivity();
                         break;
 
                     case "log_out":
@@ -180,7 +182,10 @@ public class AccountFragment extends Fragment {
             }
         });
     }
-
+    public void openChatActivity() {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        startActivity(intent);
+    }
     private int getUserId() {
         SharedPreferences sharedPref = getActivity().getSharedPreferences("UserIDPrefs", getContext().MODE_PRIVATE);
         return sharedPref.getInt("userID", -1);  // Trả về -1 nếu không tìm thấy userId
