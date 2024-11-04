@@ -61,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // Build a GoogleSignInClient with the options specified by gso.
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        if(mGoogleSignInClient != null) {
+            mGoogleSignInClient.signOut();
+        }
 
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("GoogleSignIn", "Signed in successfully");
                 Log.d("GoogleSignIn", "Display Name: " + account.getDisplayName());
                 Log.d("GoogleSignIn", "Email: " + account.getEmail());
-
                 new Thread(() -> {
                     AccountDAO accountDAO = new AccountDAO();
                     if(accountDAO.emailExists(account.getEmail())){

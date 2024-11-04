@@ -1,5 +1,6 @@
 package com.example.prm392.activity.Chat;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -18,15 +19,19 @@ import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.adapter.MessageAdapter;
 import com.example.prm392.model.Account;
+import com.example.prm392.model.ChatRoom;
 import com.example.prm392.model.Message;
+import com.example.prm392.model.SocketManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -44,19 +49,27 @@ public class MessageActivity extends AppCompatActivity {
 
     int userId;
     Account user;
-    Account receiver;
+    Account user2;
     EditText etMessage;
     Button btnSend;
 
+    ChatRoom chatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        // Get user id
+        // Get user
         SharedPreferences sharedPreferences = getSharedPreferences("UserIDPrefs", MODE_PRIVATE);
         userId = sharedPreferences.getInt("userID", -1);
+        new Thread(() -> {
+            AccountDAO accountDAO = new AccountDAO();
+            user = accountDAO.getAccountById(userId);
+        }).start();
+
+        // Get user2
+        //todo: get user2 from intent
 
         // Initialize recycler view
         recyclerView = findViewById(R.id.recyclerView);
@@ -69,14 +82,12 @@ public class MessageActivity extends AppCompatActivity {
         // Create thread pool for socket activities
         executorService = Executors.newFixedThreadPool(4);
 
-        // Connect to server
-        connectToSocketServer();
+        //init chat room
+        Intent intent = getIntent();
+        chatRoom = (ChatRoom) intent.getSerializableExtra("chatRoom");
+        socket = SocketManager.getSocket();
 
-        new Thread(() -> {
-            AccountDAO accountDAO = new AccountDAO();
-            user = accountDAO.getAccountById(userId);
-            receiver = accountDAO.getAccountById(1);
-        }).start();
+        receiveMessage();
 
         // Send message
         etMessage = findViewById(R.id.etMessage);
@@ -84,63 +95,45 @@ public class MessageActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> {
             String message = etMessage.getText().toString();
             if (!message.isEmpty()) {
-                sendMessage(new Message(user, new Account(), message, new Date(), false));
+                sendMessage(chatRoom.getRoomID() + "//@//" + message);
                 etMessage.setText("");
+            }
+        });
+    }
+    // Send message
+    private void sendMessage(String message){
+        executorService.execute(() -> {
+            try {
+                PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+                output.println(message);
+                output.flush();
+                messageList.add(new Message(chatRoom.getRoomID(), user, message.split("//@//")[1]));
+                runOnUiThread(this::loadNewMessage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
     // Receive message
-    private void receiveMessage() {
+    private void receiveMessage(){
         executorService.execute(() -> {
             try {
-                // Receive message
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-                Message message;
-                while ((message = (Message) ois.readObject()) != null) {
-                    Message finalMessage = message;
-                    runOnUiThread(() -> {
-                        messageList.add(finalMessage);
-                        loadNewMessage();
-                    });
+                BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                while (true) {
+                    String message = input.readLine();
+                    String[] messageParts = message.split("//@//");
+                    if(messageParts[0].equals(String.valueOf(chatRoom.getRoomID()))){
+                        messageList.add(new Message(chatRoom.getRoomID(), null, message.split("//@//")[1]));
+                        runOnUiThread(this::loadNewMessage);
+                    }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    // Send message
-    private void sendMessage(Message message) {
-        executorService.execute(() -> {
-            try {
-                //Send message
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                oos.writeObject(message);
-                oos.flush();
-                runOnUiThread(() -> {
-                    messageList.add(message);
-                    loadNewMessage();
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    // Connect to socket server
-    private void connectToSocketServer(){
-        executorService.execute(() -> {
-            try {
-                // Connect to server
-                socket = new Socket(SERVER_IP, SERVER_PORT);
-                receiveMessage();
             } catch (IOException e) {
-                runOnUiThread(() -> Toast.makeText(MessageActivity.this, "Server not found", Toast.LENGTH_SHORT).show());
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
     }
+
     // Load new message
     private void loadNewMessage(){
         messageAdapter.notifyItemInserted(messageList.size() - 1);

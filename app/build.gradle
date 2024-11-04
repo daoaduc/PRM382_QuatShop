@@ -56,10 +56,10 @@ dependencies {
     implementation 'androidx.activity:activity:1.9.3'
 
     //Zalopay
-    implementation fileTree(dir: 'F:\\download\\ZaloPayArr', include: ['*.aar', '*.jar'], exclude: [])
-    implementation("com.squareup.okhttp3:okhttp:4.6.0")
-    implementation("commons-codec:commons-codec:1.14")
-    implementation 'androidx.activity:activity:1.9.3'
+//    implementation fileTree(dir: 'F:\\download\\ZaloPayArr', include: ['*.aar', '*.jar'], exclude: [])
+//    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+//    implementation("commons-codec:commons-codec:1.14")
+//    implementation 'androidx.activity:activity:1.9.3'
 //    implementation 'androidx.activity:activity:1.9.2'
 
     // Testing dependencies
