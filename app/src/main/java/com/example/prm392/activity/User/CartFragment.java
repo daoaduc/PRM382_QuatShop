@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -138,8 +139,12 @@ public class CartFragment extends Fragment {
 
     private void sendCartUpdateBroadcast() {
         Intent intent = new Intent("com.example.prm392.CART_UPDATE");
-        if (getActivity() != null) {
-            getActivity().sendBroadcast(intent);
+        if (isAdded() && getActivity() != null) {
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+            localBroadcastManager.sendBroadcast(intent);
+            Log.d("BroadcastStatus", "Broadcast CART_UPDATE đã được gửi.");
+        } else {
+            Log.e("BroadcastStatus", "Gửi broadcast thất bại: Fragment chưa được gắn vào Activity.");
         }
     }
 }

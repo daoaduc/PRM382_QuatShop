@@ -1,5 +1,6 @@
 package com.example.prm392.activity.User;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.prm392.DAO.CartDAO;
 import com.example.prm392.DAO.CartDatabase;
@@ -33,7 +35,7 @@ public class MainActivity2 extends AppCompatActivity implements OnFragmentNaviga
     private NavigationView navigationView;
     private BottomNavigationView bottomNavigationView;
     private EditText mSearchProductText;
-
+    private LocalBroadcastManager localBroadcastManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +43,8 @@ public class MainActivity2 extends AppCompatActivity implements OnFragmentNaviga
         navigationView = findViewById(R.id.navigation_view);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            registerReceiver(cartUpdateReceiver, new IntentFilter("com.example.prm392.CART_UPDATE"), Context.RECEIVER_NOT_EXPORTED);
-        }
-
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        updateCartBadge();
         // Load the Home fragment as the default fragment when activity starts
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment(), "Home", null);
@@ -65,21 +65,28 @@ public class MainActivity2 extends AppCompatActivity implements OnFragmentNaviga
                 return false;
             }
         });
-        updateCartBadge();
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("com.example.prm392.CART_UPDATE");
+        localBroadcastManager.registerReceiver(cartUpdateReceiver, intentFilter);
+        Log.d("MainActivity2", "BroadcastReceiver registered in onResume()");
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        localBroadcastManager.unregisterReceiver(cartUpdateReceiver);
     }
 
     private final BroadcastReceiver cartUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("BroadcastReceiver", "Broadcast received: CART_UPDATE");
             updateCartBadge();
         }
     };
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(cartUpdateReceiver);
-    }
 
     private void updateCartBadge() {
         CartDAO cartDAO = CartDatabase.getInstance(this).cartDAO();

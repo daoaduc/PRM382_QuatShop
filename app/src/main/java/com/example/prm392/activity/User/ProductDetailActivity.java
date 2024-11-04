@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.prm392.ConnectionClass;
 import com.example.prm392.DAO.CartDAO;
@@ -132,8 +133,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void sendCartUpdateBroadcast() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
         Intent intent = new Intent("com.example.prm392.CART_UPDATE");
-        sendBroadcast(intent);
+        localBroadcastManager.sendBroadcast(intent);
+        Log.d("ProductDetailActivity", "Broadcast CART_UPDATE sent from ProductDetailActivity.");
     }
 
     private void fetchProductDetails(int productID) {
