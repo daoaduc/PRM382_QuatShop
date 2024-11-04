@@ -127,8 +127,4 @@ public class MainActivity2 extends AppCompatActivity implements OnFragmentNaviga
         loadFragment(fragment, title, args);
     }
 
-    public void openChatActivity(View view) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-    }
 }

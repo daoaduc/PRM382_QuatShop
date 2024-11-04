@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -45,13 +46,14 @@ public class MessageActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
-    private List<Message> messageList = new ArrayList<>();
+    private static List<Message> messageList = new ArrayList<>();
 
     int userId;
     Account user;
     Account user2;
     EditText etMessage;
     Button btnSend;
+    TextView tvBack;
 
     ChatRoom chatRoom;
 
@@ -98,6 +100,12 @@ public class MessageActivity extends AppCompatActivity {
                 sendMessage(chatRoom.getRoomID() + "//@//" + message);
                 etMessage.setText("");
             }
+        });
+
+        // Back
+        tvBack = findViewById(R.id.tvBack);
+        tvBack.setOnClickListener(v -> {
+            finish();
         });
     }
     // Send message
