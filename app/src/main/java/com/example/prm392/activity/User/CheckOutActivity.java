@@ -140,8 +140,8 @@ public class CheckOutActivity extends AppCompatActivity {
             String address = txtAddress.getText().toString().trim();
 
             // Kiểm tra số điện thoại và địa chỉ
-            if (phoneInput.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            if (!phoneInput.matches("^(0|\\+84)([3|5|7|8|9])+([0-9]{8})$")) {
+                Toast.makeText(this, "Vui lòng nhập số điện thoại Việt Nam hợp lệ", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (address.isEmpty()) {

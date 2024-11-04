@@ -14,12 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.prm392.ConnectionClass;
 import com.example.prm392.DAO.CartDAO;
 import com.example.prm392.DAO.CartDatabase;
 import com.example.prm392.DAO.ProductDAO;
 import com.example.prm392.R;
+import com.example.prm392.activity.Admin.DashboardActivity;
+import com.example.prm392.activity.Admin.OrderList;
 import com.example.prm392.activity.Admin.ProductList;
 import com.example.prm392.model.Cart;
 import com.example.prm392.model.Product;
@@ -56,6 +59,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnIncrease = findViewById(R.id.btnIncrease);
         executorService = Executors.newSingleThreadExecutor();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(ProductDetailActivity.this, MainActivity2.class);
+            startActivity(intent);
+            finish();
+        });
 
         CartDatabase db = CartDatabase.getInstance(this);  // Assuming you have a singleton instance of AppDatabase
         cartDAO = db.cartDAO();

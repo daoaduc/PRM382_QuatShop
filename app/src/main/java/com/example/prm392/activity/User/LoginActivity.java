@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         saveUserID(accountDAO.getIdByEmail(account.getEmail()));
                     }
                     runOnUiThread(() -> {
+                        Toast.makeText(this, "Login successfully", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(this, MainActivity2.class);
                         startActivity(intent);
                         finish();
