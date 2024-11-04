@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.prm392.DAO.AccountDAO;
 import com.example.prm392.R;
 import com.example.prm392.model.Account;
 import com.example.prm392.model.ChatRoom;
@@ -37,7 +38,7 @@ public class ChatServerActivity extends AppCompatActivity {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private HashMap<Integer, Socket> clientSockets = new HashMap<>();
-    List<ChatRoom> chatRooms = new ArrayList<>();
+    static List<ChatRoom> chatRooms = new ArrayList<>();
 
     private TextView tvIP, tvPort, tvMessages, tvServerStatus, tvOnlineUsers;
     private EditText etMessage;
@@ -45,6 +46,8 @@ public class ChatServerActivity extends AppCompatActivity {
     private String serverIP;
     private static final int SERVER_PORT = 8080;
     private ExecutorService executorService;
+
+    private int userRoleId;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -121,6 +124,17 @@ public class ChatServerActivity extends AppCompatActivity {
                     if(message.startsWith("ID")){
                         String[] parts = message.split(":");
                         int userId = Integer.parseInt(parts[1]);
+                        new Thread(() ->{
+                            AccountDAO accountDAO = new AccountDAO();
+                            // check user is admin
+                            userRoleId = accountDAO.getAccountByID(userId).getRoleID().getRoleID();
+                            if(userRoleId == 1){
+                                sendToClient("CHAT_ROOOMS:"+ chatRooms.toString(), clientSocket);
+                                runOnUiThread(() -> {
+                                    tvMessages.append("Chat rooms: " + chatRooms.toString() + "\n");
+                                });
+                            }
+                        }).start();
                         clientSockets.put(userId, clientSocket);
                         runOnUiThread(() -> tvMessages.append("Client " + clientSocket.getInetAddress().getHostAddress() + " has connected.\nUser ID: " + userId + "\n"));
                     }else if(message.startsWith("CREATE_CHAT")){
