@@ -27,6 +27,11 @@ public class ChatRoom implements Serializable {
         this.roomName = roomName;
         this.members = members;
     }
+
+    public ChatRoom(int roomID) {
+        this.roomID = roomID;
+    }
+
     // getters and setters
     public int getRoomID() {
         return roomID;

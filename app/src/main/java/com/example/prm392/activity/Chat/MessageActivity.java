@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -45,13 +46,14 @@ public class MessageActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
-    private List<Message> messageList = new ArrayList<>();
+    private static List<Message> messageList = new ArrayList<>();
+    private List<Message> messagesInCurrentRoom = new ArrayList<>();
 
     int userId;
     Account user;
-    Account user2;
     EditText etMessage;
     Button btnSend;
+    TextView tvBack;
 
     ChatRoom chatRoom;
 
@@ -68,24 +70,27 @@ public class MessageActivity extends AppCompatActivity {
             user = accountDAO.getAccountById(userId);
         }).start();
 
-        // Get user2
-        //todo: get user2 from intent
-
-        // Initialize recycler view
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Initialize message adapter
-        messageAdapter = new MessageAdapter(messageList, this);
-        recyclerView.setAdapter(messageAdapter);
-
-        // Create thread pool for socket activities
-        executorService = Executors.newFixedThreadPool(4);
-
         //init chat room
         Intent intent = getIntent();
         chatRoom = (ChatRoom) intent.getSerializableExtra("chatRoom");
         socket = SocketManager.getSocket();
+
+        // Get messages in current room
+        messagesInCurrentRoom = new ArrayList<>();
+        for (Message message : messageList) {
+            if (message.getRoomID() == chatRoom.getRoomID()) {
+                messagesInCurrentRoom.add(message);
+            }
+        }
+        // Initialize recycler view
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Initialize message adapter
+        messageAdapter = new MessageAdapter(messagesInCurrentRoom, this);
+        recyclerView.setAdapter(messageAdapter);
+
+        // Create thread pool for socket activities
+        executorService = Executors.newFixedThreadPool(4);
 
         receiveMessage();
 
@@ -95,9 +100,15 @@ public class MessageActivity extends AppCompatActivity {
         btnSend.setOnClickListener(v -> {
             String message = etMessage.getText().toString();
             if (!message.isEmpty()) {
-                sendMessage(chatRoom.getRoomID() + "//@//" + message);
+                sendMessage("MESSAGE//@//" + chatRoom.getRoomID() + "//@//" + message);
                 etMessage.setText("");
             }
+        });
+
+        // Back
+        tvBack = findViewById(R.id.tvBack);
+        tvBack.setOnClickListener(v -> {
+            finish();
         });
     }
     // Send message
@@ -107,7 +118,8 @@ public class MessageActivity extends AppCompatActivity {
                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
                 output.println(message);
                 output.flush();
-                messageList.add(new Message(chatRoom.getRoomID(), user, message.split("//@//")[1]));
+                messageList.add(new Message(chatRoom.getRoomID(), user, message.split("//@//")[2]));
+                messagesInCurrentRoom.add(new Message(chatRoom.getRoomID(), user, message.split("//@//")[2]));
                 runOnUiThread(this::loadNewMessage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -122,10 +134,14 @@ public class MessageActivity extends AppCompatActivity {
                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 while (true) {
                     String message = input.readLine();
-                    String[] messageParts = message.split("//@//");
-                    if(messageParts[0].equals(String.valueOf(chatRoom.getRoomID()))){
-                        messageList.add(new Message(chatRoom.getRoomID(), null, message.split("//@//")[1]));
-                        runOnUiThread(this::loadNewMessage);
+                    if(message!=null){
+                        if(message.startsWith("MESSAGE")) {
+                            String[] messageParts = message.split("//@//");
+                            if(messageParts[1].equals(String.valueOf(chatRoom.getRoomID()))){
+                                messageList.add(new Message(chatRoom.getRoomID(), new Account("user"), message.split("//@//")[1]));
+                                runOnUiThread(this::loadNewMessage);
+                            }
+                        }
                     }
                 }
             } catch (IOException e) {

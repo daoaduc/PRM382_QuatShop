@@ -55,6 +55,9 @@ public class Account implements Serializable {
     public Account(int accID) {
         this.accID = accID;
     }
+    public Account(String fullname) {
+        this.fullname = fullname;
+    }
 
     // Getters and setters
     public int getAccID() {

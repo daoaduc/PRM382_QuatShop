@@ -3,10 +3,12 @@ package com.example.prm392.activity.User;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -48,21 +50,22 @@ public class ResetPasswordActivity extends AppCompatActivity {
             tvMessage.setTextColor(R.color.red);
             tvMessage.setText("Please fill in all fields");
             tvMessage.setTextColor(tvMessage.getTextColors().getDefaultColor());
+            return;
         }
 
-        // Check password format
-
+        // Check input password
+        if (edtNewPassword.length() < 4 || edtNewPassword.length() > 16) {
+            Toast.makeText(this, "Password must be 4 to 16 characters!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Check input password fields
         if(!edtNewPassword.getText().toString().equals(edtConfirmPassword.getText().toString())){
             tvMessage.setTextColor(R.color.red);
             tvMessage.setText("Confirm password does not match");
             tvMessage.setTextColor(tvMessage.getTextColors().getDefaultColor());
+            return;
         }
-
-        // Check if password is same as old password
-
-
 
         // Update password in database
         new Thread(() -> {

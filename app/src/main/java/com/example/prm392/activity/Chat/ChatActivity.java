@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ChatAdapter chatAdapter;
-    private List<ChatRoom> chatList = new ArrayList<>();
+    private static List<ChatRoom> chatList = new ArrayList<>();
 
     int userId;
     int roleId;
@@ -44,6 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     private final String SERVER_IP = "192.168.36.100";
     private final int SERVER_PORT = 8080;
     FloatingActionButton btnCreateChat;
+    TextView tvBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,21 +72,22 @@ public class ChatActivity extends AppCompatActivity {
             Account user = accountDAO.getAccountById(userId);
             roleId = user.getRoleID().getRoleID();
             // Display button for creating chat
-            if(roleId == 1){
+            if(roleId == 2){
                 runOnUiThread(() -> btnCreateChat.setVisibility(View.VISIBLE));
             }else{
                 runOnUiThread(() -> btnCreateChat.setVisibility(View.INVISIBLE));
             }
         }).start();
 
-        if(roleId == 2){
-
-        }
-
         // Create chat
         btnCreateChat.setOnClickListener(v -> {
             Log.d("ChatActivity", "Create chat button clicked");
             sendRequest("CREATE_CHAT");
+        });
+
+        tvBack = findViewById(R.id.tvBack);
+        tvBack.setOnClickListener(v -> {
+            finish();
         });
     }
 
@@ -109,13 +111,20 @@ public class ChatActivity extends AppCompatActivity {
                 while (input.hasNextLine()) {
                     String responseMessage = input.nextLine();
                     runOnUiThread(() -> {Log.d("ChatActivity", "Message received: " + responseMessage);});
-                    if(responseMessage.contains("CHAT_ROOM_CREATED")){
+
+                    // Handle response message
+                    if(responseMessage.startsWith("CHAT_ROOM_CREATED")){
                         String[] chatRoomInfo = responseMessage.split(":");
                         int chatRoomId = Integer.parseInt(chatRoomInfo[1].trim());
                         Log.d("ChatActivity", "Chat room created: " + chatRoomId);
-                        chatList.add(new ChatRoom(chatRoomId, "Conversation " + chatRoomId));
+                        chatList.add(new ChatRoom(chatRoomId, "Chat box " + chatRoomId));
                         runOnUiThread(this::loadNewChat);
-
+                    }else if(responseMessage.startsWith("CHAT_ROOMS")){
+                        String[] chatRooms = responseMessage.split(":");
+                        for(int i = 1; i < chatRooms.length; i++){
+                            chatList.add(new ChatRoom(Integer.parseInt(chatRooms[i].trim())));
+                        }
+                        runOnUiThread(this::loadNewChat);
                     }
                 }
             } catch (IOException e) {
@@ -148,8 +157,10 @@ public class ChatActivity extends AppCompatActivity {
 
     public void goToChat(View view) {
         String chatRoomId = ((TextView) view.findViewById(R.id.chatRoomId)).getText().toString();
+        if(roleId == 1){
+            sendRequest("JOIN_CHAT_ROOM:" + chatRoomId);
+        }
         Intent intent = new Intent(this, MessageActivity.class);
-        List<Socket> members = new ArrayList<>();
         intent.putExtra("chatRoom", new ChatRoom(Integer.parseInt(chatRoomId), "Conversation " + chatRoomId));
         startActivity(intent);
     }

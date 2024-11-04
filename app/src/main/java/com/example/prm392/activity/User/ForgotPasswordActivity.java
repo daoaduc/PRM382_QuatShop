@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Layout;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -106,6 +108,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceAsColor")
     private void executeEmailValidation(String email){
+        // Check empty email
+        if(email.isEmpty()){
+            tvMessage.setTextColor(R.color.red);
+            tvMessage.setText("Please enter your email");
+            return;
+        }
+        // Check email format
+        if (!isValidEmail(email)) {
+            Toast.makeText(this, "Email is invalid!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         new Thread (() -> {
             //check if email exists in database
             AccountDAO accountDAO = new AccountDAO();
@@ -142,6 +155,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    private boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 

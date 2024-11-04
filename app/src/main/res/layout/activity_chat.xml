@@ -20,7 +20,6 @@
             android:text="Back"
             android:clickable="true"
             android:textSize="20sp"
-            android:onClick="@{() -> onBackPressed()}"
             android:layout_gravity="center_vertical"
             />
         <TextView
