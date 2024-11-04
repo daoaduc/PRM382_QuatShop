@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ExecutorService executorService;
     private Socket socket;
-    private final String SERVER_IP = "192.168.36.100";
+    private final String SERVER_IP = "192.168.137.172";
     private final int SERVER_PORT = 8080;
     FloatingActionButton btnCreateChat;
     TextView tvBack;
