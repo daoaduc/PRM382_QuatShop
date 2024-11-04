@@ -136,9 +136,11 @@ public class CheckOutActivity extends AppCompatActivity {
 
         btnPlaceOrder.setOnClickListener(v -> {
             int selectedId = paymentMethodGroup.getCheckedRadioButtonId();
-            String phoneinput = txtPhone.getText().toString().trim();
+            String phoneInput = txtPhone.getText().toString().trim();
             String address = txtAddress.getText().toString().trim();
-            if (phoneinput.isEmpty()) {
+
+            // Kiểm tra số điện thoại và địa chỉ
+            if (phoneInput.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -146,6 +148,8 @@ public class CheckOutActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng nhập địa chỉ giao hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            // Gọi phương thức thanh toán tùy theo phương thức được chọn
             if (selectedId == R.id.radioZaloPay) {
                 handleZaloPay(totalString);
             } else if (selectedId == R.id.radioCash) {
@@ -154,6 +158,7 @@ public class CheckOutActivity extends AppCompatActivity {
                 Toast.makeText(CheckOutActivity.this, "Vui lòng chọn phương thức thanh toán!", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 
@@ -189,6 +194,8 @@ public class CheckOutActivity extends AppCompatActivity {
                                 order.setPromoID(new Promo(promoId));
                                 PromoDAO promoDAO = new PromoDAO();
                                 promoDAO.incrementUsageCount(promoId);
+                            }else{
+                                order.setPromoID(null);
                             }
 
                             OrderDAO orderDAO = new OrderDAO();
@@ -250,10 +257,12 @@ public class CheckOutActivity extends AppCompatActivity {
             order.setConfirmedDate(null);
             order.setStatus(new OrderStatus(1));
             order.setPhone_number(phoneNumber);
-            if (promoId != -1) { // Check if a promo is applied
+            if (promoId != -1) {
                 order.setPromoID(new Promo(promoId));
                 PromoDAO promoDAO = new PromoDAO();
                 promoDAO.incrementUsageCount(promoId);
+            }else{
+                order.setPromoID(null);
             }
 
             OrderDAO orderDAO = new OrderDAO();
@@ -299,34 +308,33 @@ public class CheckOutActivity extends AppCompatActivity {
         executorService.execute(() -> {
             PromoDAO promoDAO = new PromoDAO();
             Promo promo = promoDAO.getPromoByPromoCode(promoCode);
+
+            // Kiểm tra mã khuyến mãi
             if (promo != null && promoCode.equalsIgnoreCase(promo.getPromoCode())) {
                 discountAmount = promo.getPromoValue();
                 promoId = promo.getPromoID();
                 runOnUiThread(() -> {
-                    if(promo.isPromoType()) {
+                    // Hiển thị thông báo và tính lại giá
+                    if (promo.isPromoType()) {
                         Toast.makeText(this, "Mã giảm giá hợp lệ! Giảm " + discountAmount + "%", Toast.LENGTH_SHORT).show();
                         discountAmount = discountAmount / 100;
-                        calculatePrice();
-
-                    }
-                    else {
-                        if(discountAmount < Double.parseDouble(totalString)){
-                        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-                        String discountAmountString = String.format("%.0f", discountAmount); // Cập nhật totalString với tổng tiền
-                        Toast.makeText(this, "Mã giảm giá hợp lệ! Giảm " + discountAmountString + " VND", Toast.LENGTH_SHORT).show();
-                        calculatePrice();
-                        }
-                        else {
+                    } else {
+                        if (discountAmount < Double.parseDouble(totalString)) {
+                            NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+                            String discountAmountString = String.format("%.0f", discountAmount);
+                            Toast.makeText(this, "Mã giảm giá hợp lệ! Giảm " + discountAmountString + " VND", Toast.LENGTH_SHORT).show();
+                        } else {
                             Toast.makeText(this, "Không thể áp dụng mã giảm giá này", Toast.LENGTH_SHORT).show();
                         }
                     }
+                    calculatePrice();
                 });
             } else {
                 discountAmount = 0;
                 promoId = -1;
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Mã giảm giá không hợp lệ hoặc đã hết giá trị sử dụng!", Toast.LENGTH_SHORT).show();
-                    calculatePrice();
+                    calculatePrice(); // Tính toán lại giá để đảm bảo
                 });
             }
             executorService.shutdown();
@@ -342,24 +350,23 @@ public class CheckOutActivity extends AppCompatActivity {
                 sum += cart.getQuantity() * cart.getPrice();
             }
 
-            // Apply discount amount correctly
+            // Áp dụng số tiền giảm giá một cách chính xác
             double finalAmount;
             if (discountAmount < 1) {
                 finalAmount = sum * (1 - discountAmount);
             } else {
                 finalAmount = sum - discountAmount;
-                // Ensure finalAmount is not negative
                 if (finalAmount < 0) {
                     finalAmount = 0;
                 }
             }
 
-            // Format total after discount
+            // Định dạng tổng tiền sau khi giảm giá
             NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-            totalString = String.format("%.0f", finalAmount); // Update totalString with finalAmount
+            totalString = String.format("%.0f", finalAmount);
             String formattedPrice = formatter.format(finalAmount) + " VNĐ";
 
-            // Update TextView on the main thread
+            // Cập nhật TextView trên giao diện chính
             runOnUiThread(() -> txtTongTien.setText("Tổng tiền: " + formattedPrice));
         }).start();
     }

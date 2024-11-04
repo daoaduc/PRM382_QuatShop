@@ -39,7 +39,11 @@ public class OrderDAO {
                 stmt.setDate(7, (Date) order.getConfirmedDate());
                 stmt.setInt(8, order.getStatus().getStatusID());
                 stmt.setString(9, order.getPhone_number());
-                stmt.setInt(10, order.getPromoID().getPromoID());
+                if (order.getPromoID() != null) {
+                    stmt.setInt(10, order.getPromoID().getPromoID());
+                } else {
+                    stmt.setNull(10, java.sql.Types.INTEGER); // Chèn NULL vào trường promoID
+                }
 
                 stmt.executeUpdate();
 
@@ -78,7 +82,11 @@ public class OrderDAO {
                 stmt.setDate(7,orderDate);
                 stmt.setInt(8, order.getStatus().getStatusID());
                 stmt.setString(9, order.getPhone_number());
-                stmt.setInt(10, order.getPromoID().getPromoID());
+                if (order.getPromoID() != null) {
+                    stmt.setInt(10, order.getPromoID().getPromoID());
+                } else {
+                    stmt.setNull(10, java.sql.Types.INTEGER); // Chèn NULL vào trường promoID
+                }
 
                 stmt.executeUpdate();
 
